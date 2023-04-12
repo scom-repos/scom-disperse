@@ -1,4 +1,4 @@
-import { Erc20, Wallet } from '@ijstech/eth-wallet';
+import { Erc20, IClientSideProvider, Wallet } from '@ijstech/eth-wallet';
 import {
   EventId,
   INetwork,
@@ -255,8 +255,7 @@ export async function switchNetwork(chainId: number) {
     return;
   }
   const wallet = Wallet.getClientInstance();
-  // if (wallet?.clientSideProvider?.name === WalletPlugin.MetaMask) {
-  if (wallet?.clientSideProvider?.walletPlugin === WalletPlugin.MetaMask) {
+  if (wallet?.clientSideProvider?.name === WalletPlugin.MetaMask) {
     await wallet.switchNetwork(chainId);
   }
 }
@@ -281,9 +280,8 @@ export function getWalletProvider() {
 }
 
 export const hasMetaMask = function () {
-  // const provider = getWalletPluginProvider(WalletPlugin.MetaMask);
-  // return provider?.installed();
-  return Wallet.isInstalled(WalletPlugin.MetaMask);
+  const provider = getWalletPluginProvider(WalletPlugin.MetaMask);
+  return provider?.installed();
 }
 
 export function getErc20(address: string) {
@@ -333,20 +331,20 @@ export const state = {
   transactionDeadline: 30,
   infuraId: "",
   userTokens: {} as { [key: string]: ITokenObject[] },
-  // walletPluginMap: {} as Record<WalletPlugin, IClientSideProvider>
+  walletPluginMap: {} as Record<WalletPlugin, IClientSideProvider>
 }
 
-// export const setWalletPluginProvider = (walletPlugin: WalletPlugin, wallet: IClientSideProvider) => {
-//   state.walletPluginMap[walletPlugin] = wallet;
-// }
+export const setWalletPluginProvider = (walletPlugin: WalletPlugin, wallet: IClientSideProvider) => {
+  state.walletPluginMap[walletPlugin] = wallet;
+}
 
-// export const getWalletPluginMap = () => {
-//   return state.walletPluginMap;
-// }
+export const getWalletPluginMap = () => {
+  return state.walletPluginMap;
+}
 
-// export const getWalletPluginProvider = (walletPlugin: WalletPlugin) => {
-//   return state.walletPluginMap[walletPlugin];
-// }
+export const getWalletPluginProvider = (walletPlugin: WalletPlugin) => {
+  return state.walletPluginMap[walletPlugin];
+}
 
 export const projectNativeToken = (): ITokenObject & { address: string } | null => {
   let chainId = getChainId();

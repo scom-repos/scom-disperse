@@ -12,18 +12,21 @@ import {
   VStack,
   GridLayout
 } from '@ijstech/components';
-import { Wallet, WalletPlugin, WalletPluginConfig } from '@ijstech/eth-wallet';
+import { Wallet } from '@ijstech/eth-wallet';
 import { EventId, SITE_ENV } from '../global/index';
 import {
-  walletList,
   connectWallet,
   switchNetwork,
-  hasWallet,
   listsNetworkShow,
   getWalletProvider,
   getSiteEnv,
   tokenStore,
-  isWalletConnected
+  isWalletConnected,
+  getWalletPluginProvider,
+  initWalletPlugins,
+  WalletPlugin,
+  WalletPluginConfig,
+  getWalletPluginMap
 } from '../store/index';
 import { walletModalStyle } from './wallet.css';
 import Assets from '../assets';
@@ -88,19 +91,10 @@ export class DisperseWallet extends Module {
   }
 
   async initData() {
-    let accountsChangedEventHandler = async (account: string) => {
-      tokenStore.updateTokenMapData();
-    }
-    let chainChangedEventHandler = async (hexChainId: number) => {
-      tokenStore.updateTokenMapData();
-    }
     const selectedProvider = localStorage.getItem('walletProvider') as WalletPlugin;
     const isValidProvider = Object.values(WalletPlugin).includes(selectedProvider);
-    if (hasWallet() && isValidProvider) {
-      this.wallet = await connectWallet(selectedProvider, {
-        'accountsChanged': accountsChangedEventHandler,
-        'chainChanged': chainChangedEventHandler
-      });
+    if (isValidProvider) {
+      this.wallet = await connectWallet(selectedProvider);
     }
   }
 
@@ -114,8 +108,8 @@ export class DisperseWallet extends Module {
   }
 
   isLive(walletPlugin: WalletPlugin) {
-    const provider = walletPlugin?.toLowerCase();
-    return Wallet.isInstalled(walletPlugin) && Wallet.getClientInstance().clientSideProvider?.walletPlugin === provider;
+    const provider = getWalletPluginProvider(walletPlugin);
+    return provider ? provider.installed() && Wallet.getClientInstance().clientSideProvider?.name === walletPlugin : false;
   }
 
   isNetworkLive(chainId: number) {
@@ -129,12 +123,12 @@ export class DisperseWallet extends Module {
   }
 
   async connectToProviderFunc(walletPlugin: WalletPlugin) {
-    if (Wallet.isInstalled(walletPlugin)) {
+    const provider = getWalletPluginProvider(walletPlugin);
+    if (provider?.installed()) {
       await connectWallet(walletPlugin);
     }
     else {
-      let config = WalletPluginConfig[walletPlugin];
-      let homepage = config?.homepage ? config.homepage() : '';
+      const homepage = provider.homepage;
       window.open(homepage, '_blank');
     }
     this.connectModal.visible = false;
@@ -206,26 +200,38 @@ export class DisperseWallet extends Module {
   }
 
   renderWalletList() {
+    let accountsChangedEventHandler = async (account: string) => {
+      tokenStore.updateTokenMapData();
+    }
+    let chainChangedEventHandler = async (hexChainId: number) => {
+      tokenStore.updateTokenMapData();
+    }
+    initWalletPlugins({
+      'accountsChanged': accountsChangedEventHandler,
+      'chainChanged': chainChangedEventHandler
+    });
     this.walletListElm.clearInnerHTML();
     let wallets: any[] = [];
     let walletsDisabled: any[] = [];
-    walletList.forEach(wallet => {
-      let walletEnabled = this.isWalletEnabled(wallet.name);
+    const walletPluginMap = getWalletPluginMap();
+    for (let pluginName in walletPluginMap) {
+      const walletPlugin = walletPluginMap[pluginName];
+      let walletEnabled = this.isWalletEnabled(walletPlugin.name);
       let walletJSX = (
         <i-hstack
-          onClick={() => this.connectToProviderFunc(wallet.name)}
-          class={this.isLive(wallet.name) ? 'is-actived list-item' : 'list-item'}
-          data-key={wallet.name}
+          onClick={() => this.connectToProviderFunc(walletPlugin.name)}
+          class={this.isLive(walletPlugin.name) ? 'is-actived list-item' : 'list-item'}
+          data-key={walletPlugin.name}
           enabled={walletEnabled}
           verticalAlignment="center"
           gap={10}
         >
-          <i-image url={Assets.fullPath(`img/wallet/${wallet.iconFile}`)} width={32} height={32} class="inline-block custom-img" />
-          <i-label caption={wallet.displayName} />
+          <i-image url={walletPlugin.image} width={32} height={32} class="inline-block custom-img" />
+          <i-label caption={walletPlugin.displayName} />
         </i-hstack>
       )
       walletEnabled ? wallets.push(walletJSX) : walletsDisabled.push(walletJSX);
-    })
+    }
     this.walletListElm.append(...wallets);
     this.walletListElm.append(...walletsDisabled);
   }
@@ -236,7 +242,7 @@ export class DisperseWallet extends Module {
 
     if (connected) {
       const wallet = Wallet.getClientInstance();
-      const connectingVal = type === 'network' ? wallet.chainId : wallet.clientSideProvider?.walletPlugin;
+      const connectingVal = type === 'network' ? wallet.chainId : wallet.clientSideProvider?.name;
       const connectingElm = parent.querySelector(`[data-key="${connectingVal}"]`);
       connectingElm && connectingElm.classList.add('is-actived');
     }

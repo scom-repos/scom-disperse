@@ -123,7 +123,7 @@ export class Result extends Module {
       const label = await Label.create({
         caption: 'Transaction Submitted',
         margin: {bottom: 10},
-        font: { size: '20px', color: '#F6C958' }
+        font: { size: '20px', color: '#F6C958' }  
       });
       mainSection.appendChild(label);
 
@@ -133,19 +133,20 @@ export class Result extends Module {
 
       const contentLabel = await Label.create();
       contentLabel.caption = this.message.content || '';
+      contentLabel.style.overflowWrap = 'anywhere';
       contentSection.appendChild(contentLabel);
 
       if (this.message.txtHash) {
         const section = new VStack();
 
         const label1 = await Label.create({
-          caption: this.message.txtHash.substr(0, 33),
-          margin: {bottom: 15}
+          caption: this.message.txtHash.substring(0, 33),
+          margin: { bottom: 15 }
         });
         section.appendChild(label1);
 
         const label2 = await Label.create({
-          caption: this.message.txtHash.substr(33, this.message.txtHash.length),
+          caption: this.message.txtHash.substring(33, this.message.txtHash.length),
           margin: {bottom: 15}
         });
         section.appendChild(label2);

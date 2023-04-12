@@ -25,6 +25,7 @@ export default {
     }
   },
   "dependencies": {
+    "@ijstech/eth-wallet-web3modal": "*",
     "@ijstech/eth-contract": "*",
     "@scom/oswap-openswap-contract": "*",
     "@scom/scom-binance-chain-wallet": "*",

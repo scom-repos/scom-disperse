@@ -11,7 +11,7 @@
   },
   "scripts": {
     "copy": "sh ./scripts/copy.sh",
-    "build": "rm -rf dist && npx @ijstech/compiler",
+    "build": "rm -rf dist && npm run copy && npx @ijstech/compiler",
     "test": "cd test && npm run test && cd .."
   },
   "devDependencies": {
@@ -19,13 +19,15 @@
     "@ijstech/compiler": "^0.1.22",
     "@ijstech/components": "^0.1.47",
     "@ijstech/eth-contract": "^0.1.14",
-    "@ijstech/eth-wallet": "0.1.50",
+    "@ijstech/eth-wallet": "^0.1.52",
+    "@ijstech/eth-wallet-web3modal": "^0.1.15",
     "@scom/oswap-openswap-contract": "0.1.2",
     "@scom/scom-binance-chain-wallet": "^0.1.0",
     "@scom/scom-bit-keep-wallet": "^0.1.0",
     "@scom/scom-coin98-wallet": "^0.1.0",
     "@scom/scom-frontier-wallet": "^0.1.0",
     "@scom/scom-onto-wallet": "^0.1.0",
-    "@scom/scom-trust-wallet": "^0.1.0"
+    "@scom/scom-trust-wallet": "^0.1.0",
+    "@scom/scom-disperse-contract": "file:./repos/scom-disperse-contract"
   }
 }
