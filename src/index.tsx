@@ -507,7 +507,7 @@ export default class ScomDisperse extends Module {
         </i-vstack>
         <i-hstack gap={30} maxWidth="100%" horizontalAlignment="center" verticalAlignment="center">
           <i-button caption="DOWNLOAD CSV" background={{ color: "#34343A" }} width={270} border={{ radius: 12 }} padding={{ top: 12, bottom: 12 }} onClick={() => this.onDownloadFile(true)} />
-          <i-button caption="DOWNLOAD REPORT" background={{ color: 'transparent linear-gradient(270deg, #FF9900 0%, #FC7428 100%) 0% 0% no-repeat padding-box' }} width={270} border={{ radius: 12 }} padding={{ top: 12, bottom: 12 }} onClick={() => this.onDownloadReport({ symbol: token.symbol, ...data })} />
+          {/* <i-button caption="DOWNLOAD REPORT" background={{ color: 'transparent linear-gradient(270deg, #FF9900 0%, #FC7428 100%) 0% 0% no-repeat padding-box' }} width={270} border={{ radius: 12 }} padding={{ top: 12, bottom: 12 }} onClick={() => this.onDownloadReport({ symbol: token.symbol, ...data })} /> */}
           <i-button caption="DISPERSE AGAIN" background={{ color: 'linear-gradient(90deg, #456ED7 0%, #67BBBB 99.97%)' }} width={270} border={{ radius: 12 }} padding={{ top: 12, bottom: 12 }} onClick={this.onDisperseAgain} />
         </i-hstack>
       </i-vstack>

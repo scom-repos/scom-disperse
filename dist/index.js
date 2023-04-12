@@ -20044,7 +20044,6 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                             this.$render("i-icon", { class: "link-icon", name: "external-link-alt", width: 20, height: 20, fill: "#fff" }))),
                     this.$render("i-hstack", { gap: 30, maxWidth: "100%", horizontalAlignment: "center", verticalAlignment: "center" },
                         this.$render("i-button", { caption: "DOWNLOAD CSV", background: { color: "#34343A" }, width: 270, border: { radius: 12 }, padding: { top: 12, bottom: 12 }, onClick: () => this.onDownloadFile(true) }),
-                        this.$render("i-button", { caption: "DOWNLOAD REPORT", background: { color: 'transparent linear-gradient(270deg, #FF9900 0%, #FC7428 100%) 0% 0% no-repeat padding-box' }, width: 270, border: { radius: 12 }, padding: { top: 12, bottom: 12 }, onClick: () => this.onDownloadReport(Object.assign({ symbol: token.symbol }, data)) }),
                         this.$render("i-button", { caption: "DISPERSE AGAIN", background: { color: 'linear-gradient(90deg, #456ED7 0%, #67BBBB 99.97%)' }, width: 270, border: { radius: 12 }, padding: { top: 12, bottom: 12 }, onClick: this.onDisperseAgain }))));
                 this.containerElm.visible = false;
                 this.resultElm.visible = true;
