@@ -16,9 +16,4 @@ cp -r node_modules/@scom/scom-coin98-wallet/src/* src/wallets/scom-coin98-wallet
 cp -r node_modules/@scom/scom-frontier-wallet/src/* src/wallets/scom-frontier-wallet &&
 cp -r node_modules/@scom/scom-onto-wallet/src/* src/wallets/scom-onto-wallet &&
 cp -r node_modules/@scom/scom-trust-wallet/src/* src/wallets/scom-trust-wallet &&
-cp -r src/wallets/scom-binance-chain-wallet/img/* src/img &&
-cp -r src/wallets/scom-bit-keep-wallet/img/* src/img &&
-cp -r src/wallets/scom-coin98-wallet/img/* src/img &&
-cp -r src/wallets/scom-frontier-wallet/img/* src/img &&
-cp -r src/wallets/scom-onto-wallet/img/* src/img &&
-cp -r src/wallets/scom-trust-wallet/img/* src/img
+cp -r src/wallets/*/img/* src/img
