@@ -9,7 +9,7 @@ function fullPath(path: string): string{
     return `${moduleDir}/${path}`
 }
 
-export class Coin98Provider extends EthereumProvider {
+export default class Coin98Provider extends EthereumProvider {
     get displayName() {
         return 'Coin98 Wallet';
     }

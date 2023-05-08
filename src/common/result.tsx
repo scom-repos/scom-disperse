@@ -1,6 +1,6 @@
 
-import { customElements, Module, ControlElement, Modal, Panel, Label, Image, Button, Container, VStack, Styles } from '@ijstech/components';
-import { getNetworkType } from '../store/index';
+import { customElements, Module, ControlElement, Modal, Panel, Label, Image, Button, Container, VStack } from '@ijstech/components';
+import { getNetworkExplorerName } from '../store/index';
 import { viewOnExplorerByTxHash, parseContractError } from '../global/index';
 import styleClass from './result.css';
 import Assets from '../assets';
@@ -110,7 +110,7 @@ export class Result extends Module {
       mainSection.appendChild(section);
     } else if (this.message.status === 'success') {
       const chainId: number = Wallet.getClientInstance().chainId;
-      const networkType = getNetworkType(chainId);
+      const networkType = getNetworkExplorerName(chainId);
       
       const image = await Image.create({
         width: '50px',

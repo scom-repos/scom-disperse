@@ -9,7 +9,7 @@ function fullPath(path: string): string {
     return `${moduleDir}/${path}`
 }
 
-export class BinanceChainWalletProvider extends EthereumProvider {
+export default class BinanceChainWalletProvider extends EthereumProvider {
     get displayName() {
         return 'Binance Chain Wallet';
     }

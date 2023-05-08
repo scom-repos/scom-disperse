@@ -1,7 +1,7 @@
-import { application, moment, Button, Container, customModule, EventBus, HStack, Image, Input, Label, Module, Panel, VStack, Modal, ControlElement, customElements, RequireJS } from '@ijstech/components'
+import { application, moment, Button, Container, customModule, EventBus, HStack, Image, Input, Label, Module, Panel, VStack, Modal, ControlElement, customElements, RequireJS, IDataSchema } from '@ijstech/components'
 import { TokenSelection, Result } from './common/index';
-import { EventId, ITokenObject, toDisperseData, downloadCSVFile, formatNumber, viewOnExplorerByTxHash, isAddressValid, DisperseData, disperseDataToString, registerSendTxEvents, formatUTCDate } from './global/index';
-import { getTokenIconPath, Networks, dummyAddressList, ImportFileWarning, isWalletConnected, tokenStore, setDataFromSCConfig, setTokenStore } from './store/index';
+import { EventId, ITokenObject, toDisperseData, downloadCSVFile, formatNumber, viewOnExplorerByTxHash, isAddressValid, DisperseData, disperseDataToString, registerSendTxEvents, formatUTCDate, PageBlock } from './global/index';
+import { getTokenIconPath, dummyAddressList, ImportFileWarning, isWalletConnected, tokenStore, setDataFromSCConfig, setTokenStore, getNetworkInfo } from './store/index';
 import { BigNumber, Wallet } from '@ijstech/eth-wallet';
 import { onApproveToken, onCheckAllowance, onDisperse, getDisperseAddress } from './disperse-utils/index';
 import Assets from './assets';
@@ -9,8 +9,11 @@ import { disperseStyle } from './disperse.css';
 import { disperseLayout } from './index.css';
 import { RenderResultData, DownloadReportData } from './disperse.type';
 import scconfig from './scconfig.json';
+const moduleDir = application.currentModuleDir;
 // import { jsPDF } from 'jspdf';
 // import autoTable from 'jspdf-autotable';
+
+declare const window: any;
 
 declare global {
   namespace JSX {
@@ -22,7 +25,7 @@ declare global {
 
 @customModule
 @customElements('i-scom-disperse')
-export default class ScomDisperse extends Module {
+export default class ScomDisperse extends Module implements PageBlock {
   private $eventBus: EventBus;
   private containerElm: VStack;
   private resultElm: Panel;
@@ -52,6 +55,113 @@ export default class ScomDisperse extends Module {
   private invalidElm: Label;
   private messageModal: Modal;
   private messageElm: Label;
+
+  private _oldData: null;
+  private _data: null;
+  private oldTag: any = {};
+  tag: any = {};
+  defaultEdit: boolean = true;
+  readonly onConfirm: () => Promise<void>;
+  readonly onDiscard: () => Promise<void>;
+  readonly onEdit: () => Promise<void>;
+
+  getData() {
+    return this._data;
+  }
+
+  async setData(data: any) {
+    this._oldData = this._data;
+    this._data = data;
+  }
+
+  getTag() {
+    return this.tag;
+  }
+
+  async setTag(value: any) {
+    this.tag = value || {};
+  }
+
+  getConfigSchema() {
+    return this.getThemeSchema();
+  }
+
+  onConfigSave(config: any) {
+    this.tag = config;
+  }
+
+  async edit() { }
+
+  async confirm() { }
+
+  async discard() { }
+
+  async config() { }
+
+  private getPropertiesSchema(readOnly?: boolean) {
+    return {}
+  }
+
+  private getThemeSchema(readOnly?: boolean) {
+    return {}
+  }
+
+  getEmbedderActions() {
+    return this._getActions(this.getPropertiesSchema(true), this.getThemeSchema(true));
+  }
+
+  getActions() {
+    return this._getActions(this.getPropertiesSchema(), this.getThemeSchema());
+  }
+
+  _getActions(propertiesSchema: IDataSchema, themeSchema: IDataSchema) {
+    const actions = [
+      {
+        name: 'Settings',
+        icon: 'cog',
+        command: (builder: any, userInputData: any) => {
+          return {
+            execute: async () => {
+              if (builder?.setData) {
+                builder.setData(userInputData);
+              }
+              this.setData(userInputData);
+            },
+            undo: () => {
+              if (builder?.setData) {
+                builder.setData(this._oldData);
+              }
+              this.setData(this._oldData);
+            },
+            redo: () => { }
+          }
+        },
+        userInputDataSchema: propertiesSchema
+      },
+      {
+        name: 'Theme Settings',
+        icon: 'palette',
+        command: (builder: any, userInputData: any) => {
+          return {
+            execute: async () => {
+              if (!userInputData) return;
+              this.oldTag = { ...this.tag };
+              this.setTag(userInputData);
+              if (builder) builder.setTag(userInputData);
+            },
+            undo: () => {
+              if (!userInputData) return;
+              this.setTag(this.oldTag);
+              if (builder) builder.setTag(this.oldTag);
+            },
+            redo: () => { }
+          }
+        },
+        userInputDataSchema: themeSchema
+      }
+    ]
+    return actions
+  }
 
   private DummyDisperseData(): DisperseData[] {
     return [
@@ -197,22 +307,22 @@ export default class ScomDisperse extends Module {
       this.btnNetwork.visible = false;
       return;
     }
-    const network = Networks[Wallet.getClientInstance().chainId];
+    const network = getNetworkInfo(Wallet.getClientInstance().chainId);
     const hStack = await HStack.create({
       verticalAlignment: 'center',
       padding: { top: 12, bottom: 12, left: 24, right: 24 },
     });
-    if (network?.icon) {
+    if (network?.image) {
       const image = await Image.create({
         width: '24px',
         height: '24px',
-        url: Assets.fullPath(`img/network/${network.icon}`),
+        url: network.image,
         class: 'inline-block',
       });
       hStack.appendChild(image);
     }
     const label = await Label.create({
-      caption: network?.label || 'Unsupported Network',
+      caption: network?.chainName || 'Unsupported Network',
       font: { size: '15px' },
       margin: { left: 4 },
     });
@@ -239,7 +349,7 @@ export default class ScomDisperse extends Module {
       this.containerUserInfo.appendChild(
         <i-vstack gap={16}>
           <i-label caption="LOGGED IN AS" font={{ size: '16px', name: 'Montserrat', bold: true }} />
-          <i-label display="block" caption={Wallet.getInstance().address} font={{ size: '16px', name: 'Montserrat Medium' }} class="break-word" />
+          <i-label display="block" caption={Wallet.getClientInstance().address} font={{ size: '16px', name: 'Montserrat Medium' }} class="break-word" />
         </i-vstack>
       );
     }
@@ -249,7 +359,7 @@ export default class ScomDisperse extends Module {
     this.token = token;
     this.tokenInfoElm.clearInnerHTML();
     if (token) {
-      const img = Assets.fullPath(getTokenIconPath(token, Wallet.getInstance().chainId));
+      const img = Assets.fullPath(getTokenIconPath(token, Wallet.getClientInstance().chainId));
       this.tokenInfoElm.appendChild(<i-hstack gap="16px" verticalAlignment="center">
         <i-image width={40} height={40} url={img} />
         <i-label caption={`$${token.symbol}`} font={{ size: '20px', name: 'Montserrat Medium' }} />
@@ -271,21 +381,34 @@ export default class ScomDisperse extends Module {
   }
 
   private onDownloadReport = (data: DownloadReportData) => {
-    // const doc = new jsPDF();
-    // const logo = Assets.fullPath('./img/sc-header.png');
-    // const totalAmount = this.resultAddresses.reduce((pv, cv) => pv.plus(cv.amount), new BigNumber('0'));
-    // const rows = this.resultAddresses.map(item => [item.address, formatNumber(item.amount)]);
-    // rows.push(['Total', formatNumber(totalAmount)]);
+    const doc = new window.jsPDF();
+    const logo = Assets.fullPath('./img/sc-header.png');
+    const totalAmount = this.resultAddresses.reduce((pv, cv) => pv.plus(cv.amount), new BigNumber('0'));
+    const rows = this.resultAddresses.map(item => [item.address, formatNumber(item.amount)]);
+    rows.push(['Total', formatNumber(totalAmount)]);
     // doc.addImage(logo, 'png', 15, 10, 20, 24);
-    // doc.setFontSize(36);
-    // doc.setFont('helvetica', 'bold');
-    // doc.text('Disperse Result', 42, 26.5);
-    // doc.setFontSize(11);
-    // doc.setFont('helvetica', 'normal');
-    // doc.text(`Transaction Hash: ${data.receipt}`, 15, 42);
-    // doc.text(`Timestamp: ${data.timestamp}`, 15, 50);
-    // doc.text(`From Address: ${data.address}`, 15, 58);
-    // doc.text(`Total Amount: ${formatNumber(totalAmount)} ${data.symbol}`, 15, 66);
+    doc.setFontSize(36);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Disperse Result', 42, 26.5);
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Transaction Hash: ${data.receipt}`, 15, 42);
+    doc.text(`Timestamp: ${data.timestamp}`, 15, 50);
+    doc.text(`From Address: ${data.address}`, 15, 58);
+    doc.text(`Total Amount: ${formatNumber(totalAmount)} ${data.symbol}`, 15, 66);
+    const cols = ['TRANSFER TO', 'TRANSFER AMOUNT'];
+    const table = [cols, ...rows]
+    let y = 75;
+    for (let i = 0; i < table.length; i++) {
+      let row = table[i];
+      let x = 15;
+      for (let j = 0; j < cols.length; j++) {
+        const data = row[j];
+        doc.text(`${data}`, x, y);
+        x += 120;
+      }
+      y += 8;
+    }
     // doc.autoTable({
     //   head: [['TRANSFER TO', 'TRANSFER AMOUNT']],
     //   body: rows,
@@ -293,7 +416,7 @@ export default class ScomDisperse extends Module {
     //   theme: 'grid',
     //   startY: 75,
     // });
-    // doc.save('report.pdf');
+    doc.save('report.pdf');
   }
 
   private onDownloadFile = (isResult?: boolean) => {
@@ -483,9 +606,15 @@ export default class ScomDisperse extends Module {
     onDisperse(token, this.listAddresses);
   }
 
+  private loadLib() {
+    if (!window.jsPDF) {
+      RequireJS.require([`${moduleDir}/lib/jspdf.js`], () => { });
+    }
+  }
+
   private renderResult = (token: ITokenObject, data: RenderResultData) => {
-    const img = Assets.fullPath(getTokenIconPath(token, Wallet.getInstance().chainId));
-    const chainId = Wallet.getInstance().chainId;
+    const img = Assets.fullPath(getTokenIconPath(token, Wallet.getClientInstance().chainId));
+    const chainId = Wallet.getClientInstance().chainId;
     this.resultElm.clearInnerHTML();
     this.resultElm.appendChild(
       <i-vstack gap={50} horizontalAlignment="center">
@@ -507,7 +636,7 @@ export default class ScomDisperse extends Module {
         </i-vstack>
         <i-hstack gap={30} maxWidth="100%" horizontalAlignment="center" verticalAlignment="center">
           <i-button caption="DOWNLOAD CSV" background={{ color: "#34343A" }} width={270} border={{ radius: 12 }} padding={{ top: 12, bottom: 12 }} onClick={() => this.onDownloadFile(true)} />
-          {/* <i-button caption="DOWNLOAD REPORT" background={{ color: 'transparent linear-gradient(270deg, #FF9900 0%, #FC7428 100%) 0% 0% no-repeat padding-box' }} width={270} border={{ radius: 12 }} padding={{ top: 12, bottom: 12 }} onClick={() => this.onDownloadReport({ symbol: token.symbol, ...data })} /> */}
+          <i-button caption="DOWNLOAD REPORT" background={{ color: 'transparent linear-gradient(270deg, #FF9900 0%, #FC7428 100%) 0% 0% no-repeat padding-box' }} width={270} border={{ radius: 12 }} padding={{ top: 12, bottom: 12 }} onClick={() => this.onDownloadReport({ symbol: token.symbol, ...data })} />
           <i-button caption="DISPERSE AGAIN" background={{ color: 'linear-gradient(90deg, #456ED7 0%, #67BBBB 99.97%)' }} width={270} border={{ radius: 12 }} padding={{ top: 12, bottom: 12 }} onClick={this.onDisperseAgain} />
         </i-hstack>
       </i-vstack>
@@ -524,6 +653,7 @@ export default class ScomDisperse extends Module {
 
   init() {
     super.init();
+    this.loadLib();
     this.classList.add(disperseLayout);
     const connected = isWalletConnected();
     this.checkStepStatus(connected);

@@ -1,10 +1,13 @@
-export interface INetwork {
-    chainId: number;
-    name: string;
-    label: string;
-    icon: string;
-    rpc?: string;
+import { INetwork } from '@ijstech/eth-wallet';
+
+export interface IExtendedNetwork extends INetwork {
+    shortName?: string;
     isDisabled?: boolean;
+    isMainChain?: boolean;
+    isCrossChainSupported?: boolean;
+    explorerName?: string;
+    explorerTxUrl?: string;
+    explorerAddressUrl?: string;
     isTestnet?: boolean;
 };
 
@@ -31,3 +34,5 @@ export {
     registerSendTxEvents,
     isAddressValid,
 } from './utils/common';
+
+export { PageBlock } from './pagablock';

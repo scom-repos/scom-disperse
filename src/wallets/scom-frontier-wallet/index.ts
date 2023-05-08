@@ -9,7 +9,7 @@ function fullPath(path: string): string {
     return `${moduleDir}/${path}`
 }
 
-export class FrontierWalletProvider extends EthereumProvider {
+export default class FrontierWalletProvider extends EthereumProvider {
     get displayName() {
         return 'Frontier Wallet';
     }

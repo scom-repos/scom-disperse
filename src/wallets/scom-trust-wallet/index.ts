@@ -9,7 +9,7 @@ function fullPath(path: string): string {
     return `${moduleDir}/${path}`
 }
 
-export class TrustWalletProvider extends EthereumProvider {
+export default class TrustWalletProvider extends EthereumProvider {
     get displayName() {
         return 'Trust Wallet';
     }

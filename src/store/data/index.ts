@@ -10,14 +10,7 @@ export {
 } from './tokens/index';
 
 export {
-  InfuraId,
-  Networks,
-  Mainnets,
-  Testnets,
-  getNetworkType,
-  ChainNetwork,
-  listNetworks,
-  getNetworkImg,
+  ChainNetwork
 } from './networks';
 
 export {CoreContractAddressesByChainId} from './core';

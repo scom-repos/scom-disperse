@@ -19,17 +19,14 @@ import {
   switchNetwork,
   listsNetworkShow,
   getWalletProvider,
-  getSiteEnv,
   tokenStore,
   isWalletConnected,
   getWalletPluginProvider,
   initWalletPlugins,
   WalletPlugin,
-  WalletPluginConfig,
   getWalletPluginMap
 } from '../store/index';
 import { walletModalStyle } from './wallet.css';
-import Assets from '../assets';
 
 declare global {
   namespace JSX {
@@ -188,8 +185,8 @@ export class DisperseWallet extends Module {
           verticalAlignment="center"
           gap={10}
         >
-          <i-image url={Assets.fullPath(`img/network/${network.img}`)} width={32} height={32} display="inline-block" margin={{ left: 12 }} />
-          <i-label caption={network.label} />
+          <i-image url={network.image} width={32} height={32} display="inline-block" margin={{ left: 12 }} />
+          <i-label caption={network.chainName} />
         </i-hstack>
       )
     }));
@@ -249,25 +246,25 @@ export class DisperseWallet extends Module {
   }
 
   isWalletEnabled(walletName: WalletPlugin) {
-    switch (getSiteEnv()) {
-      case SITE_ENV.TESTNET: {
-        switch (walletName) {
-          case WalletPlugin.ONTOWallet:
-          case WalletPlugin.Coin98:
-          case WalletPlugin.TrustWallet:
-            return false;
-        }
-        break;
-      }
-      case SITE_ENV.MAINNET: {
+    // switch (getSiteEnv()) {
+    //   case SITE_ENV.TESTNET: {
+    //     switch (walletName) {
+    //       case WalletPlugin.ONTOWallet:
+    //       case WalletPlugin.Coin98:
+    //       case WalletPlugin.TrustWallet:
+    //         return false;
+    //     }
+    //     break;
+    //   }
+    //   case SITE_ENV.MAINNET: {
 
-        break;
-      }
-      case SITE_ENV.DEV: {
+    //     break;
+    //   }
+    //   case SITE_ENV.DEV: {
 
-        break;
-      }
-    }
+    //     break;
+    //   }
+    // }
     return true;
   }
 

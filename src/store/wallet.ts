@@ -1,13 +1,13 @@
-import { getCurrentChainId, getDefaultChainId, getInfuraId, getSiteSupportedNetworks, getWalletPluginProvider, setCurrentChainId, setWalletPluginProvider, WalletPlugin } from "./utils";
-import { Coin98Provider } from '../wallets/scom-coin98-wallet/index';
-import { TrustWalletProvider } from '../wallets/scom-trust-wallet/index';
-import { BinanceChainWalletProvider } from '../wallets/scom-binance-chain-wallet/index';
-import { ONTOWalletProvider } from '../wallets/scom-onto-wallet/index';
-import { BitKeepWalletProvider } from '../wallets/scom-bit-keep-wallet/index';
-import { FrontierWalletProvider } from '../wallets/scom-frontier-wallet/index';
-import { IClientProviderOptions, IClientSideProvider, IClientSideProviderEvents, MetaMaskProvider, Wallet, Web3ModalProvider } from "@ijstech/eth-wallet";
-import { application } from "@ijstech/components";
-import { EventId } from "../global/index";
+import { getCurrentChainId, getDefaultChainId, getInfuraId, getSiteSupportedNetworks, getWalletPluginProvider, setCurrentChainId, setWalletPluginProvider, WalletPlugin } from './utils';
+import Coin98Provider from '../wallets/scom-coin98-wallet/index';
+import TrustWalletProvider from '../wallets/scom-trust-wallet/index';
+import BinanceChainWalletProvider from '../wallets/scom-binance-chain-wallet/index';
+import ONTOWalletProvider from '../wallets/scom-onto-wallet/index';
+import BitKeepWalletProvider from '../wallets/scom-bit-keep-wallet/index';
+import FrontierWalletProvider from '../wallets/scom-frontier-wallet/index';
+import { IClientProviderOptions, IClientSideProvider, IClientSideProviderEvents, MetaMaskProvider, Wallet, Web3ModalProvider } from '@ijstech/eth-wallet';
+import { application } from '@ijstech/components';
+import { EventId } from '../global/index';
 import { tokenStore } from './token';
 
 export type WalletPluginItemType = {
@@ -94,7 +94,7 @@ export function initWalletPlugins(eventHandlers?: { [key: string]: Function }) {
   let networkList = getSiteSupportedNetworks();
   const rpcs: { [chainId: number]: string } = {}
   for (const network of networkList) {
-    let rpc = network.rpc
+    let rpc = network.rpcUrls[0];
     if (rpc) rpcs[network.chainId] = rpc;
   }
 
@@ -108,7 +108,8 @@ export function initWalletPlugins(eventHandlers?: { [key: string]: Function }) {
         rpc: rpcs,
         useDefaultProvider: true
       }
-    } else {
+    }
+    else {
       providerOptions = {
         name: pluginName,
         infuraId: getInfuraId(),

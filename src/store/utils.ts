@@ -1,7 +1,7 @@
-import { Erc20, IClientSideProvider, Wallet } from '@ijstech/eth-wallet';
+import { Erc20, IClientSideProvider, IClientWalletConfig, Wallet } from '@ijstech/eth-wallet';
 import {
   EventId,
-  INetwork,
+  IExtendedNetwork,
   ITokenObject,
   SITE_ENV
 } from '../global/index';
@@ -12,16 +12,14 @@ import {
   CoreContractAddressesByChainId,
   ChainNativeTokenByChainId,
   WETHByChainId,
-  listNetworks,
-  Networks,
-  ChainNetwork,
-  Testnets,
-  Mainnets
+  ChainNetwork
 } from './data/index';
 
 export * from './data/index';
 
 import { application } from '@ijstech/components';
+import { getMulticallInfoList } from '../wallets/scom-multicall/index';
+import getNetworkList from '../wallets/scom-network-list/index';
 
 export enum WalletPlugin {
   MetaMask = 'metamask',
@@ -119,7 +117,7 @@ function matchFilter<O extends { [keys: string]: any }>(list: O[], filter: Parti
   }));
 }
 
-export const getMatchNetworks = (conditions: NetworkConditions): INetwork[] => {
+export const getMatchNetworks = (conditions: NetworkConditions): IExtendedNetwork[] => {
   let networkFullList = Object.values(state.networkMap);
   let out = matchFilter(networkFullList, conditions);
   return out;
@@ -128,37 +126,50 @@ export const getMatchNetworks = (conditions: NetworkConditions): INetwork[] => {
 export const getSiteSupportedNetworks = () => {
   let networkFullList = Object.values(state.networkMap);
   let list = networkFullList.filter(network => !getNetworkInfo(network.chainId).isDisabled);
-  const siteEnv = getSiteEnv();
-  if (siteEnv === SITE_ENV.TESTNET) {
-    return list.filter((network) => network.isTestnet);
-  }
-  if (siteEnv === SITE_ENV.DEV) {
-    return list;
-  }
-  return list.filter((network) => !network.isTestnet);
+  return list;
+  // const siteEnv = getSiteEnv();
+  // if (siteEnv === SITE_ENV.TESTNET) {
+  //   return list.filter((network) => network.isTestnet);
+  // }
+  // if (siteEnv === SITE_ENV.DEV) {
+  //   return list;
+  // }
+  // return list.filter((network) => !network.isTestnet);
 }
 
-const setNetworkList = (networkList: INetwork[], infuraId?: string) => {
+const setNetworkList = (networkList: IExtendedNetwork[], infuraId?: string) => {
   const wallet = Wallet.getClientInstance();
   state.networkMap = {};
+  const defaultNetworkList = getNetworkList();
+  const defaultNetworkMap = defaultNetworkList.reduce((acc, cur) => {
+    acc[cur.chainId] = cur;
+    return acc;
+  }, {});
   for (let network of networkList) {
-    if (infuraId && network.rpc) {
-      network.rpc = network.rpc.replace(/{InfuraId}/g, infuraId);
+    const networkInfo = defaultNetworkMap[network.chainId];
+    if (!networkInfo) continue;
+    if (infuraId && network.rpcUrls && network.rpcUrls.length > 0) {
+      for (let i = 0; i < network.rpcUrls.length; i++) {
+        network.rpcUrls[i] = network.rpcUrls[i].replace(/{InfuraId}/g, infuraId);
+      }
     }
-    state.networkMap[network.chainId] = network;
-
-    if (network.rpc) {
-      const networkInfo = wallet.getNetworkInfo(network.chainId);
-      wallet.setNetworkInfo({
-        ...networkInfo,
-        rpcUrls: [network.rpc]
-      });
-    }
+    state.networkMap[network.chainId] = {
+      ...networkInfo,
+      ...network
+    };
+    wallet.setNetworkInfo(state.networkMap[network.chainId]);
   }
 }
 
 export const getNetworkInfo = (chainId: number) => {
   return state.networkMap[chainId];
+}
+
+export const getNetworkExplorerName = (chainId: number) => {
+  if (getNetworkInfo(chainId)) {
+    return getNetworkInfo(chainId).explorerName;
+  }
+  return 'Unknown';
 }
 
 export const setCurrentChainId = (value: number) => {
@@ -174,7 +185,8 @@ export function getAddresses(chainId: number) {
 };
 
 export function getDisperseAddress(chainId: number) {
-  return CoreContractAddressesByChainId[chainId][Disperse] || null;
+  const address = CoreContractAddressesByChainId[chainId];
+  return address ? address[Disperse] : null;
 }
 
 export function canDisperse(chainId: number) {
@@ -182,35 +194,8 @@ export function canDisperse(chainId: number) {
 }
 
 export const listsNetworkShow = () => {
-  let list = listNetworks.filter(network => !Networks[network.chainId].isDisabled);
-  const siteEnv = getSiteEnv();
-  if (siteEnv === SITE_ENV.TESTNET) {
-    return list.filter((network) =>
-      [
-        ChainNetwork.AminoTestnet,
-        ChainNetwork.BSCTestnet,
-        ChainNetwork.Fuji,
-        ChainNetwork.FantomTestnet,
-        ChainNetwork.Mumbai,
-        ChainNetwork.AminoXTestnet,
-        ChainNetwork.CronosTestnet,
-      ].includes(network.chainId),
-    );
-  }
-  if (siteEnv === SITE_ENV.DEV) {
-    return list;
-  }
-  return list.filter((network) =>
-    [
-      //production
-      ChainNetwork.EthMainnet,
-      ChainNetwork.BSCMainnet,
-      ChainNetwork.Avalanche,
-      ChainNetwork.Polygon,
-      ChainNetwork.Fantom,
-      ChainNetwork.CronosMainnet,
-    ].includes(network.chainId) && canDisperse(network.chainId),
-  );
+  const list = getSiteSupportedNetworks();
+  return list.filter(v => canDisperse(v.chainId));
 };
 
 export const getChainNativeToken = (chainId: number): ITokenObject => {
@@ -240,6 +225,14 @@ export const setDataFromSCConfig = (options: any) => {
   if (options.networks) {
     setNetworkList(options.networks, options.infuraId)
   }
+
+  const clientWalletConfig: IClientWalletConfig = {
+    defaultChainId: getDefaultChainId(),
+    networks: Object.values(state.networkMap),
+    infuraId: state.infuraId,
+    multicalls: getMulticallInfoList()
+  }
+  Wallet.getClientInstance().initClientWallet(clientWalletConfig);
 }
 
 export function isWalletConnected() {
@@ -248,15 +241,10 @@ export function isWalletConnected() {
 }
 
 export async function switchNetwork(chainId: number) {
-  if (!isWalletConnected()) {
-    setCurrentChainId(chainId);
-    Wallet.getClientInstance().chainId = chainId;
-    application.EventBus.dispatch(EventId.chainChanged, chainId);
-    return;
-  }
   const wallet = Wallet.getClientInstance();
-  if (wallet?.clientSideProvider?.name === WalletPlugin.MetaMask) {
-    await wallet.switchNetwork(chainId);
+  await wallet.switchNetwork(chainId);
+  if (!isWalletConnected()) {
+    application.EventBus.dispatch(EventId.chainChanged, chainId);
   }
 }
 
@@ -267,11 +255,11 @@ export function getChainId() {
 export const getDefaultChainId = () => {
   switch (getSiteEnv()) {
     case SITE_ENV.TESTNET:
-      return Testnets.avalanche.chainId
+      // return ChainNetwork.Fuju;
     case SITE_ENV.DEV:
     case SITE_ENV.MAINNET:
     default:
-      return Mainnets.avalanche.chainId
+      return ChainNetwork.Avalanche;
   }
 }
 
@@ -324,7 +312,7 @@ export const getTokenList = (chainId: number) => {
 
 export const state = {
   siteEnv: SITE_ENV.TESTNET,
-  networkMap: {} as { [key: number]: INetwork },
+  networkMap: {} as { [key: number]: IExtendedNetwork },
   currentChainId: 0,
   isExpertMode: false,
   slippageTolerance: 0.5,
@@ -359,7 +347,7 @@ export const projectNativeTokenSymbol = () => {
 };
 
 export const getTokenObject = async (address: string, showBalance?: boolean) => {
-  const ERC20Contract = new OpenSwapContracts.ERC20(Wallet.getInstance(), address);
+  const ERC20Contract = new OpenSwapContracts.ERC20(Wallet.getClientInstance(), address);
   const symbol = await ERC20Contract.symbol();
   const name = await ERC20Contract.name();
   const decimals = (await ERC20Contract.decimals()).toFixed();
