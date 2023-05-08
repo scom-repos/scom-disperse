@@ -12,8 +12,7 @@
     "declaration": false,
     "baseUrl": ".",
     "paths": {
-      "@scom-disperse/*": ["src/*"],
-      "@scom/disperse-sdk": ["packages/disperse-sdk/types"]
+      "@scom-disperse/*": ["src/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],

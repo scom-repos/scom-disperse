@@ -85,15 +85,36 @@ declare module "@scom/scom-disperse/global/utils/common.ts" {
     export const registerSendTxEvents: (sendTxEventHandlers: ISendTxEventsOptions) => void;
     export const isAddressValid: (address: string) => Promise<any>;
 }
+/// <amd-module name="@scom/scom-disperse/global/pagablock.ts" />
+declare module "@scom/scom-disperse/global/pagablock.ts" {
+    export interface PageBlock {
+        getData: () => any;
+        setData: (data: any) => Promise<void>;
+        getTag: () => any;
+        setTag: (tag: any) => Promise<void>;
+        validate?: () => boolean;
+        defaultEdit?: boolean;
+        tag?: any;
+        readonly onEdit: () => Promise<void>;
+        readonly onConfirm: () => Promise<void>;
+        readonly onDiscard: () => Promise<void>;
+        edit: () => Promise<void>;
+        confirm: () => Promise<void>;
+        discard: () => Promise<void>;
+        config: () => Promise<void>;
+    }
+}
 /// <amd-module name="@scom/scom-disperse/global/index.ts" />
 declare module "@scom/scom-disperse/global/index.ts" {
-    export interface INetwork {
-        chainId: number;
-        name: string;
-        label: string;
-        icon: string;
-        rpc?: string;
+    import { INetwork } from '@ijstech/eth-wallet';
+    export interface IExtendedNetwork extends INetwork {
+        shortName?: string;
         isDisabled?: boolean;
+        isMainChain?: boolean;
+        isCrossChainSupported?: boolean;
+        explorerName?: string;
+        explorerTxUrl?: string;
+        explorerAddressUrl?: string;
         isTestnet?: boolean;
     }
     export const enum EventId {
@@ -114,6 +135,7 @@ declare module "@scom/scom-disperse/global/index.ts" {
     }
     export * from "@scom/scom-disperse/global/utils/index.ts";
     export { registerSendTxEvents, isAddressValid, } from "@scom/scom-disperse/global/utils/common.ts";
+    export { PageBlock } from "@scom/scom-disperse/global/pagablock.ts";
 }
 /// <amd-module name="@scom/scom-disperse/store/data/tokens/mainnet/avalanche.ts" />
 declare module "@scom/scom-disperse/store/data/tokens/mainnet/avalanche.ts" {
@@ -455,29 +477,6 @@ declare module "@scom/scom-disperse/store/data/tokens/index.ts" {
 }
 /// <amd-module name="@scom/scom-disperse/store/data/networks.ts" />
 declare module "@scom/scom-disperse/store/data/networks.ts" {
-    import { INetwork } from "@scom/scom-disperse/global/index.ts";
-    const InfuraId = "adc596bf88b648e2a8902bc9093930c5";
-    const Networks: {
-        [key: number]: INetwork;
-    };
-    const Mainnets: {
-        binance: INetwork;
-        ethereum: INetwork;
-        avalanche: INetwork;
-        cronos: INetwork;
-        fantom: INetwork;
-        polygon: INetwork;
-    };
-    const Testnets: {
-        binance: INetwork;
-        cronos: INetwork;
-        kovan: INetwork;
-        avalanche: INetwork;
-        fantom: INetwork;
-        polygon: INetwork;
-        aminox: INetwork;
-    };
-    const getNetworkType: (chainId: number) => "BSCScan" | "Etherscan" | "SnowTrace" | "PolygonScan" | "FTMScan" | "AminoX Explorer" | "Unknown";
     enum ChainNetwork {
         BSCMainnet = 56,
         BSCTestnet = 97,
@@ -494,14 +493,7 @@ declare module "@scom/scom-disperse/store/data/networks.ts" {
         CronosTestnet = 338,
         AminoXTestnet = 13370
     }
-    const listNetworks: {
-        label: string;
-        value: string;
-        chainId: ChainNetwork;
-        img: string;
-    }[];
-    const getNetworkImg: (chainId: number) => string;
-    export { InfuraId, Networks, Mainnets, Testnets, getNetworkType, ChainNetwork, listNetworks, getNetworkImg };
+    export { ChainNetwork };
 }
 /// <amd-module name="@scom/scom-disperse/store/data/core.ts" />
 declare module "@scom/scom-disperse/store/data/core.ts" {
@@ -528,7 +520,7 @@ declare module "@scom/scom-disperse/store/data/warning.ts" {
 /// <amd-module name="@scom/scom-disperse/store/data/index.ts" />
 declare module "@scom/scom-disperse/store/data/index.ts" {
     export { DefaultERC20Tokens, ChainNativeTokenByChainId, WETHByChainId, DefaultTokens, ToUSDPriceFeedAddressesMap, tokenPriceAMMReference, getTokenIconPath, getOpenSwapToken, } from "@scom/scom-disperse/store/data/tokens/index.ts";
-    export { InfuraId, Networks, Mainnets, Testnets, getNetworkType, ChainNetwork, listNetworks, getNetworkImg, } from "@scom/scom-disperse/store/data/networks.ts";
+    export { ChainNetwork } from "@scom/scom-disperse/store/data/networks.ts";
     export { CoreContractAddressesByChainId } from "@scom/scom-disperse/store/data/core.ts";
     export { dummyAddressList } from "@scom/scom-disperse/store/data/dummy.ts";
     export { ImportFileWarning } from "@scom/scom-disperse/store/data/warning.ts";
@@ -10103,10 +10095,142 @@ declare module "@scom/scom-disperse/contracts/oswap-openswap-contract/index.ts" 
     export { deploy, deployCoreContracts, deployOracleContracts, deployRangeContracts, deployRestrictedContracts, deployHybridRouter, initHybridRouterRegistry, deployRestrictedPairOracle, IDeploymentResult, IDeploymentContracts, toDeploymentContracts } from "@scom/scom-disperse/contracts/oswap-openswap-contract/deploy.ts";
     export { OpenSwap } from "@scom/scom-disperse/contracts/oswap-openswap-contract/OpenSwap.ts";
 }
+/// <amd-module name="@scom/scom-disperse/wallets/scom-multicall/contracts/MultiCall.json.ts" />
+declare module "@scom/scom-disperse/wallets/scom-multicall/contracts/MultiCall.json.ts" {
+    const _default_49: {
+        abi: {
+            inputs: ({
+                components: {
+                    internalType: string;
+                    name: string;
+                    type: string;
+                }[];
+                internalType: string;
+                name: string;
+                type: string;
+            } | {
+                internalType: string;
+                name: string;
+                type: string;
+                components?: undefined;
+            })[];
+            name: string;
+            outputs: {
+                internalType: string;
+                name: string;
+                type: string;
+            }[];
+            stateMutability: string;
+            type: string;
+        }[];
+        bytecode: string;
+    };
+    export default _default_49;
+}
+/// <amd-module name="@scom/scom-disperse/wallets/scom-multicall/contracts/MultiCall.ts" />
+declare module "@scom/scom-disperse/wallets/scom-multicall/contracts/MultiCall.ts" {
+    import { IWallet, Contract as _Contract, TransactionReceipt, BigNumber, TransactionOptions } from "@ijstech/eth-contract";
+    export interface IMulticallWithGasLimitationParams {
+        calls: {
+            to: string;
+            data: string;
+        }[];
+        gasBuffer: number | BigNumber;
+    }
+    export class MultiCall extends _Contract {
+        static _abi: any;
+        constructor(wallet: IWallet, address?: string);
+        deploy(options?: TransactionOptions): Promise<string>;
+        gasLeft: {
+            (options?: TransactionOptions): Promise<BigNumber>;
+        };
+        gaslimit: {
+            (options?: TransactionOptions): Promise<BigNumber>;
+        };
+        multicall: {
+            (calls: {
+                to: string;
+                data: string;
+            }[], options?: TransactionOptions): Promise<TransactionReceipt>;
+            call: (calls: {
+                to: string;
+                data: string;
+            }[], options?: TransactionOptions) => Promise<string[]>;
+        };
+        multicallWithGas: {
+            (calls: {
+                to: string;
+                data: string;
+            }[], options?: TransactionOptions): Promise<TransactionReceipt>;
+            call: (calls: {
+                to: string;
+                data: string;
+            }[], options?: TransactionOptions) => Promise<{
+                results: string[];
+                gasUsed: BigNumber[];
+            }>;
+        };
+        multicallWithGasLimitation: {
+            (params: IMulticallWithGasLimitationParams, options?: TransactionOptions): Promise<TransactionReceipt>;
+            call: (params: IMulticallWithGasLimitationParams, options?: TransactionOptions) => Promise<{
+                results: string[];
+                lastSuccessIndex: BigNumber;
+            }>;
+        };
+        private assign;
+    }
+}
+/// <amd-module name="@scom/scom-disperse/wallets/scom-multicall/contracts/index.ts" />
+declare module "@scom/scom-disperse/wallets/scom-multicall/contracts/index.ts" {
+    export { MultiCall } from "@scom/scom-disperse/wallets/scom-multicall/contracts/MultiCall.ts";
+}
+/// <amd-module name="@scom/scom-disperse/wallets/scom-multicall/utils.ts" />
+declare module "@scom/scom-disperse/wallets/scom-multicall/utils.ts" {
+    export interface IMulticallInfo {
+        chainId: number;
+        contractAddress: string;
+        gasBuffer: string;
+    }
+    export function getMulticallInfoList(): {
+        chainId: number;
+        contractAddress: string;
+        gasBuffer: string;
+    }[];
+    export function getMulticallInfo(chainId: number): {
+        chainId: number;
+        contractAddress: string;
+        gasBuffer: string;
+    };
+}
+/// <amd-module name="@scom/scom-disperse/wallets/scom-multicall/index.ts" />
+declare module "@scom/scom-disperse/wallets/scom-multicall/index.ts" {
+    import * as Contracts from "@scom/scom-disperse/wallets/scom-multicall/contracts/index.ts";
+    export { Contracts };
+    import { IWallet } from '@ijstech/eth-wallet';
+    export interface IDeployOptions {
+    }
+    export interface IDeployResult {
+        multicall: string;
+    }
+    export var DefaultDeployOptions: IDeployOptions;
+    export function deploy(wallet: IWallet, options: IDeployOptions, onProgress: (msg: string) => void): Promise<IDeployResult>;
+    const _default_50: {
+        Contracts: typeof Contracts;
+        deploy: typeof deploy;
+        DefaultDeployOptions: IDeployOptions;
+    };
+    export default _default_50;
+    export { IMulticallInfo, getMulticallInfoList, getMulticallInfo } from "@scom/scom-disperse/wallets/scom-multicall/utils.ts";
+}
+/// <amd-module name="@scom/scom-disperse/wallets/scom-network-list/index.ts" />
+declare module "@scom/scom-disperse/wallets/scom-network-list/index.ts" {
+    import { INetwork } from "@ijstech/eth-wallet";
+    export default function getNetworkList(): INetwork[];
+}
 /// <amd-module name="@scom/scom-disperse/store/utils.ts" />
 declare module "@scom/scom-disperse/store/utils.ts" {
-    import { Erc20, Wallet } from '@ijstech/eth-wallet';
-    import { INetwork, ITokenObject, SITE_ENV } from "@scom/scom-disperse/global/index.ts";
+    import { Erc20, IClientSideProvider, Wallet } from '@ijstech/eth-wallet';
+    import { IExtendedNetwork, ITokenObject, SITE_ENV } from "@scom/scom-disperse/global/index.ts";
     import { ChainNetwork } from "@scom/scom-disperse/store/data/index.ts";
     export * from "@scom/scom-disperse/store/data/index.ts";
     export enum WalletPlugin {
@@ -10132,9 +10256,10 @@ declare module "@scom/scom-disperse/store/utils.ts" {
         isCrossChainSupported?: boolean;
         isMainChain?: boolean;
     }
-    export const getMatchNetworks: (conditions: NetworkConditions) => INetwork[];
-    export const getSiteSupportedNetworks: () => INetwork[];
-    export const getNetworkInfo: (chainId: number) => INetwork;
+    export const getMatchNetworks: (conditions: NetworkConditions) => IExtendedNetwork[];
+    export const getSiteSupportedNetworks: () => IExtendedNetwork[];
+    export const getNetworkInfo: (chainId: number) => IExtendedNetwork;
+    export const getNetworkExplorerName: (chainId: number) => string;
     export const setCurrentChainId: (value: number) => void;
     export const getCurrentChainId: () => number;
     export function getAddresses(chainId: number): {
@@ -10142,12 +10267,7 @@ declare module "@scom/scom-disperse/store/utils.ts" {
     };
     export function getDisperseAddress(chainId: number): string;
     export function canDisperse(chainId: number): boolean;
-    export const listsNetworkShow: () => {
-        label: string;
-        value: string;
-        chainId: ChainNetwork;
-        img: string;
-    }[];
+    export const listsNetworkShow: () => IExtendedNetwork[];
     export const getChainNativeToken: (chainId: number) => ITokenObject;
     export const getWETH: (chainId: number) => ITokenObject;
     export function setGovToken(wallet: Wallet): ITokenObject;
@@ -10155,7 +10275,7 @@ declare module "@scom/scom-disperse/store/utils.ts" {
     export function isWalletConnected(): boolean;
     export function switchNetwork(chainId: number): Promise<void>;
     export function getChainId(): number;
-    export const getDefaultChainId: () => number;
+    export const getDefaultChainId: () => ChainNetwork;
     export function getWalletProvider(): string;
     export const hasMetaMask: () => boolean;
     export function getErc20(address: string): Erc20;
@@ -10169,7 +10289,7 @@ declare module "@scom/scom-disperse/store/utils.ts" {
     export const state: {
         siteEnv: SITE_ENV;
         networkMap: {
-            [key: number]: INetwork;
+            [key: number]: IExtendedNetwork;
         };
         currentChainId: number;
         isExpertMode: boolean;
@@ -10179,7 +10299,11 @@ declare module "@scom/scom-disperse/store/utils.ts" {
         userTokens: {
             [key: string]: ITokenObject[];
         };
+        walletPluginMap: Record<WalletPlugin, IClientSideProvider>;
     };
+    export const setWalletPluginProvider: (walletPlugin: WalletPlugin, wallet: IClientSideProvider) => void;
+    export const getWalletPluginMap: () => Record<WalletPlugin, IClientSideProvider>;
+    export const getWalletPluginProvider: (walletPlugin: WalletPlugin) => IClientSideProvider;
     export const projectNativeToken: () => (ITokenObject & {
         address: string;
     }) | null;
@@ -10221,21 +10345,86 @@ declare module "@scom/scom-disperse/store/token.ts" {
     export let tokenStore: TokenStore;
     export const setTokenStore: () => void;
 }
+/// <amd-module name="@scom/scom-disperse/wallets/scom-coin98-wallet/index.ts" />
+declare module "@scom/scom-disperse/wallets/scom-coin98-wallet/index.ts" {
+    import { EthereumProvider } from '@ijstech/eth-wallet';
+    export default class Coin98Provider extends EthereumProvider {
+        get displayName(): string;
+        get image(): string;
+        get provider(): any;
+        get homepage(): string;
+        installed(): boolean;
+    }
+}
+/// <amd-module name="@scom/scom-disperse/wallets/scom-trust-wallet/index.ts" />
+declare module "@scom/scom-disperse/wallets/scom-trust-wallet/index.ts" {
+    import { EthereumProvider } from '@ijstech/eth-wallet';
+    export default class TrustWalletProvider extends EthereumProvider {
+        get displayName(): string;
+        get image(): string;
+        get provider(): any;
+        get homepage(): string;
+        installed(): boolean;
+    }
+}
+/// <amd-module name="@scom/scom-disperse/wallets/scom-binance-chain-wallet/index.ts" />
+declare module "@scom/scom-disperse/wallets/scom-binance-chain-wallet/index.ts" {
+    import { EthereumProvider } from '@ijstech/eth-wallet';
+    export default class BinanceChainWalletProvider extends EthereumProvider {
+        get displayName(): string;
+        get image(): string;
+        get provider(): any;
+        get homepage(): string;
+        installed(): boolean;
+    }
+}
+/// <amd-module name="@scom/scom-disperse/wallets/scom-onto-wallet/index.ts" />
+declare module "@scom/scom-disperse/wallets/scom-onto-wallet/index.ts" {
+    import { EthereumProvider } from '@ijstech/eth-wallet';
+    export default class ONTOWalletProvider extends EthereumProvider {
+        get displayName(): string;
+        get image(): string;
+        get provider(): any;
+        get homepage(): string;
+        installed(): boolean;
+    }
+}
+/// <amd-module name="@scom/scom-disperse/wallets/scom-bit-keep-wallet/index.ts" />
+declare module "@scom/scom-disperse/wallets/scom-bit-keep-wallet/index.ts" {
+    import { EthereumProvider } from '@ijstech/eth-wallet';
+    export default class BitKeepWalletProvider extends EthereumProvider {
+        get displayName(): string;
+        get image(): string;
+        get provider(): any;
+        get homepage(): string;
+        installed(): boolean;
+    }
+}
+/// <amd-module name="@scom/scom-disperse/wallets/scom-frontier-wallet/index.ts" />
+declare module "@scom/scom-disperse/wallets/scom-frontier-wallet/index.ts" {
+    import { EthereumProvider } from '@ijstech/eth-wallet';
+    export default class FrontierWalletProvider extends EthereumProvider {
+        get displayName(): string;
+        get image(): string;
+        get provider(): any;
+        get homepage(): string;
+        installed(): boolean;
+    }
+}
 /// <amd-module name="@scom/scom-disperse/store/wallet.ts" />
 declare module "@scom/scom-disperse/store/wallet.ts" {
-    import { IClientProviderOptions, WalletPlugin } from "@ijstech/eth-wallet";
-    export const hasWallet: () => boolean;
-    export const walletOptions: {
-        [key in WalletPlugin]?: IClientProviderOptions;
+    import { WalletPlugin } from "@scom/scom-disperse/store/utils.ts";
+    import { IClientProviderOptions, IClientSideProvider, IClientSideProviderEvents, Wallet } from '@ijstech/eth-wallet';
+    export type WalletPluginItemType = {
+        provider: (wallet: Wallet, events?: IClientSideProviderEvents, options?: IClientProviderOptions) => IClientSideProvider;
     };
-    export function connectWallet(walletPlugin: WalletPlugin, eventHandlers?: {
+    export type WalletPluginConfigType = Record<WalletPlugin, WalletPluginItemType>;
+    export const WalletPluginConfig: WalletPluginConfigType;
+    export function initWalletPlugins(eventHandlers?: {
         [key: string]: Function;
-    }): Promise<any>;
-    export const walletList: {
-        name: WalletPlugin;
-        displayName: string;
-        iconFile: string;
-    }[];
+    }): void;
+    export function connectWallet(walletPlugin: WalletPlugin): Promise<any>;
+    export function logoutWallet(): Promise<void>;
 }
 /// <amd-module name="@scom/scom-disperse/store/index.ts" />
 declare module "@scom/scom-disperse/store/index.ts" {
@@ -10380,8 +10569,8 @@ declare module "@scom/scom-disperse/common/tokenSelection.tsx" {
 }
 /// <amd-module name="@scom/scom-disperse/common/result.css.ts" />
 declare module "@scom/scom-disperse/common/result.css.ts" {
-    const _default_49: string;
-    export default _default_49;
+    const _default_51: string;
+    export default _default_51;
 }
 /// <amd-module name="@scom/scom-disperse/common/result.tsx" />
 declare module "@scom/scom-disperse/common/result.tsx" {
@@ -10424,7 +10613,7 @@ declare module "@scom/scom-disperse/common/wallet.css.ts" {
 /// <amd-module name="@scom/scom-disperse/common/wallet.tsx" />
 declare module "@scom/scom-disperse/common/wallet.tsx" {
     import { Module, ControlElement, Container } from '@ijstech/components';
-    import { WalletPlugin } from '@ijstech/eth-wallet';
+    import { WalletPlugin } from "@scom/scom-disperse/store/index.ts";
     global {
         namespace JSX {
             interface IntrinsicElements {
@@ -10472,6 +10661,95 @@ declare module "@scom/scom-disperse/common/index.ts" {
     export { Result } from "@scom/scom-disperse/common/result.tsx";
     export { DisperseWallet } from "@scom/scom-disperse/common/wallet.tsx";
 }
+/// <amd-module name="@scom/scom-disperse/contracts/scom-disperse-contract/contracts/Disperse.json.ts" />
+declare module "@scom/scom-disperse/contracts/scom-disperse-contract/contracts/Disperse.json.ts" {
+    const _default_52: {
+        abi: {
+            inputs: {
+                internalType: string;
+                name: string;
+                type: string;
+            }[];
+            name: string;
+            outputs: any[];
+            stateMutability: string;
+            type: string;
+        }[];
+        bytecode: string;
+    };
+    export default _default_52;
+}
+/// <amd-module name="@scom/scom-disperse/contracts/scom-disperse-contract/contracts/Disperse.ts" />
+declare module "@scom/scom-disperse/contracts/scom-disperse-contract/contracts/Disperse.ts" {
+    import { IWallet, Contract as _Contract, TransactionReceipt, BigNumber, TransactionOptions } from "@ijstech/eth-contract";
+    export interface IDisperseEtherParams {
+        recipients: string[];
+        values: (number | BigNumber)[];
+    }
+    export interface IDisperseTokenParams {
+        token: string;
+        recipients: string[];
+        values: (number | BigNumber)[];
+    }
+    export interface IDisperseTokenSimpleParams {
+        token: string;
+        recipients: string[];
+        values: (number | BigNumber)[];
+    }
+    export class Disperse extends _Contract {
+        static _abi: any;
+        constructor(wallet: IWallet, address?: string);
+        deploy(options?: TransactionOptions): Promise<string>;
+        disperseEther: {
+            (params: IDisperseEtherParams, options?: number | BigNumber | TransactionOptions): Promise<TransactionReceipt>;
+            call: (params: IDisperseEtherParams, options?: number | BigNumber | TransactionOptions) => Promise<void>;
+            txData: (params: IDisperseEtherParams, options?: number | BigNumber | TransactionOptions) => Promise<string>;
+        };
+        disperseToken: {
+            (params: IDisperseTokenParams, options?: TransactionOptions): Promise<TransactionReceipt>;
+            call: (params: IDisperseTokenParams, options?: TransactionOptions) => Promise<void>;
+            txData: (params: IDisperseTokenParams, options?: TransactionOptions) => Promise<string>;
+        };
+        disperseTokenSimple: {
+            (params: IDisperseTokenSimpleParams, options?: TransactionOptions): Promise<TransactionReceipt>;
+            call: (params: IDisperseTokenSimpleParams, options?: TransactionOptions) => Promise<void>;
+            txData: (params: IDisperseTokenSimpleParams, options?: TransactionOptions) => Promise<string>;
+        };
+        private assign;
+    }
+}
+/// <amd-module name="@scom/scom-disperse/contracts/scom-disperse-contract/contracts/index.ts" />
+declare module "@scom/scom-disperse/contracts/scom-disperse-contract/contracts/index.ts" {
+    export { Disperse } from "@scom/scom-disperse/contracts/scom-disperse-contract/contracts/Disperse.ts";
+}
+/// <amd-module name="@scom/scom-disperse/contracts/scom-disperse-contract/utils.ts" />
+declare module "@scom/scom-disperse/contracts/scom-disperse-contract/utils.ts" {
+    import { BigNumber, IWallet } from "@ijstech/eth-contract";
+    export interface DisperseData {
+        address: string;
+        amount: BigNumber;
+    }
+    export function doDisperse(wallet: IWallet, contractAddress: string, tokenAddress: string | null, tokenDecimals: number | null, data: DisperseData[]): Promise<import("@ijstech/eth-contract").TransactionReceipt>;
+}
+/// <amd-module name="@scom/scom-disperse/contracts/scom-disperse-contract/index.ts" />
+declare module "@scom/scom-disperse/contracts/scom-disperse-contract/index.ts" {
+    import { IWallet } from '@ijstech/eth-wallet';
+    import * as Contracts from "@scom/scom-disperse/contracts/scom-disperse-contract/contracts/index.ts";
+    export * as DisperseActions from "@scom/scom-disperse/contracts/scom-disperse-contract/utils.ts";
+    export { DisperseData } from "@scom/scom-disperse/contracts/scom-disperse-contract/utils.ts";
+    export { Contracts };
+    export interface IDeployResult {
+        disperse: string;
+    }
+    export function deploy(wallet: IWallet): Promise<IDeployResult>;
+    export function onProgress(handler: any): void;
+    const _default_53: {
+        Contracts: typeof Contracts;
+        deploy: typeof deploy;
+        onProgress: typeof onProgress;
+    };
+    export default _default_53;
+}
 /// <amd-module name="@scom/scom-disperse/disperse-utils/API.ts" />
 declare module "@scom/scom-disperse/disperse-utils/API.ts" {
     import { DisperseData, ITokenObject } from "@scom/scom-disperse/global/index.ts";
@@ -10479,7 +10757,7 @@ declare module "@scom/scom-disperse/disperse-utils/API.ts" {
     const getDisperseAddress: () => string;
     const onCheckAllowance: (token: ITokenObject, spender: string) => Promise<BigNumber>;
     const onApproveToken: (token: ITokenObject, spender: string) => Promise<import("@ijstech/eth-contract").TransactionReceipt>;
-    const onDisperse: (token: ITokenObject, disperseData: DisperseData[]) => Promise<void>;
+    const onDisperse: (token: ITokenObject, disperseData: DisperseData[]) => Promise<import("@ijstech/eth-contract").TransactionReceipt>;
     export { getDisperseAddress, onCheckAllowance, onApproveToken, onDisperse, };
 }
 /// <amd-module name="@scom/scom-disperse/disperse-utils/index.ts" />
@@ -10507,10 +10785,10 @@ declare module "@scom/scom-disperse/disperse.type.ts" {
 }
 /// <amd-module name="@scom/scom-disperse/scconfig.json.ts" />
 declare module "@scom/scom-disperse/scconfig.json.ts" {
-    const _default_50: {
+    const _default_54: {
         name: string;
-        env: string;
         version: string;
+        env: string;
         moduleDir: string;
         main: string;
         modules: {
@@ -10534,23 +10812,101 @@ declare module "@scom/scom-disperse/scconfig.json.ts" {
             };
         };
         dependencies: {
+            "@ijstech/eth-wallet-web3modal": string;
             "@ijstech/eth-contract": string;
-            "@scom/oswap-openswap-contract": string;
-            "@scom/scom-binance-chain-wallet": string;
-            "@scom/scom-bit-keep-wallet": string;
-            "@scom/scom-coin98-wallet": string;
-            "@scom/scom-frontier-wallet": string;
-            "@scom/scom-onto-wallet": string;
-            "@scom/scom-trust-wallet": string;
+            "@ijstech/eth-wallet": string;
+            "@scom/scom-network-list": string;
+            "@scom/scom-multicall": string;
         };
-        InfuraId: string;
+        infuraId: string;
+        networks: ({
+            chainId: number;
+            explorerName: string;
+            explorerTxUrl: string;
+            explorerAddressUrl: string;
+            isDisabled?: undefined;
+            shortName?: undefined;
+            isMainChain?: undefined;
+            isCrossChainSupported?: undefined;
+            isTestnet?: undefined;
+        } | {
+            chainId: number;
+            isDisabled: boolean;
+            explorerName?: undefined;
+            explorerTxUrl?: undefined;
+            explorerAddressUrl?: undefined;
+            shortName?: undefined;
+            isMainChain?: undefined;
+            isCrossChainSupported?: undefined;
+            isTestnet?: undefined;
+        } | {
+            chainId: number;
+            shortName: string;
+            isMainChain: boolean;
+            isCrossChainSupported: boolean;
+            explorerName: string;
+            explorerTxUrl: string;
+            explorerAddressUrl: string;
+            isDisabled?: undefined;
+            isTestnet?: undefined;
+        } | {
+            chainId: number;
+            isMainChain: boolean;
+            isCrossChainSupported: boolean;
+            explorerName: string;
+            explorerTxUrl: string;
+            explorerAddressUrl: string;
+            isTestnet: boolean;
+            isDisabled?: undefined;
+            shortName?: undefined;
+        } | {
+            chainId: number;
+            explorerName: string;
+            explorerTxUrl: string;
+            explorerAddressUrl: string;
+            isTestnet: boolean;
+            isDisabled?: undefined;
+            shortName?: undefined;
+            isMainChain?: undefined;
+            isCrossChainSupported?: undefined;
+        } | {
+            chainId: number;
+            shortName: string;
+            isCrossChainSupported: boolean;
+            explorerName: string;
+            explorerTxUrl: string;
+            explorerAddressUrl: string;
+            isTestnet: boolean;
+            isDisabled?: undefined;
+            isMainChain?: undefined;
+        } | {
+            chainId: number;
+            shortName: string;
+            isCrossChainSupported: boolean;
+            explorerName: string;
+            explorerTxUrl: string;
+            explorerAddressUrl: string;
+            isDisabled?: undefined;
+            isMainChain?: undefined;
+            isTestnet?: undefined;
+        } | {
+            chainId: number;
+            explorerName: string;
+            explorerTxUrl: string;
+            explorerAddressUrl: string;
+            isDisabled: boolean;
+            isTestnet: boolean;
+            shortName?: undefined;
+            isMainChain?: undefined;
+            isCrossChainSupported?: undefined;
+        })[];
     };
-    export default _default_50;
+    export default _default_54;
 }
 /// <amd-module name="@scom/scom-disperse" />
 declare module "@scom/scom-disperse" {
-    import { Container, Module, ControlElement } from '@ijstech/components';
-    import { DisperseData } from "@scom/scom-disperse/global/index.ts";
+    import { Container, Module, ControlElement, IDataSchema } from '@ijstech/components';
+    import { DisperseData, PageBlock } from "@scom/scom-disperse/global/index.ts";
     import { BigNumber } from '@ijstech/eth-wallet';
     global {
         namespace JSX {
@@ -10559,7 +10915,7 @@ declare module "@scom/scom-disperse" {
             }
         }
     }
-    export default class ScomDisperse extends Module {
+    export default class ScomDisperse extends Module implements PageBlock {
         private $eventBus;
         private containerElm;
         private resultElm;
@@ -10589,6 +10945,56 @@ declare module "@scom/scom-disperse" {
         private invalidElm;
         private messageModal;
         private messageElm;
+        private _oldData;
+        private _data;
+        private oldTag;
+        tag: any;
+        defaultEdit: boolean;
+        readonly onConfirm: () => Promise<void>;
+        readonly onDiscard: () => Promise<void>;
+        readonly onEdit: () => Promise<void>;
+        getData(): null;
+        setData(data: any): Promise<void>;
+        getTag(): any;
+        setTag(value: any): Promise<void>;
+        getConfigSchema(): {};
+        onConfigSave(config: any): void;
+        edit(): Promise<void>;
+        confirm(): Promise<void>;
+        discard(): Promise<void>;
+        config(): Promise<void>;
+        private getPropertiesSchema;
+        private getThemeSchema;
+        getEmbedderActions(): {
+            name: string;
+            icon: string;
+            command: (builder: any, userInputData: any) => {
+                execute: () => Promise<void>;
+                undo: () => void;
+                redo: () => void;
+            };
+            userInputDataSchema: IDataSchema;
+        }[];
+        getActions(): {
+            name: string;
+            icon: string;
+            command: (builder: any, userInputData: any) => {
+                execute: () => Promise<void>;
+                undo: () => void;
+                redo: () => void;
+            };
+            userInputDataSchema: IDataSchema;
+        }[];
+        _getActions(propertiesSchema: IDataSchema, themeSchema: IDataSchema): {
+            name: string;
+            icon: string;
+            command: (builder: any, userInputData: any) => {
+                execute: () => Promise<void>;
+                undo: () => void;
+                redo: () => void;
+            };
+            userInputDataSchema: IDataSchema;
+        }[];
         private DummyDisperseData;
         constructor(parent?: Container, options?: any);
         private registerEvent;
@@ -10621,6 +11027,7 @@ declare module "@scom/scom-disperse" {
         private getApprovalStatus;
         private handleApprove;
         private handleDisperse;
+        private loadLib;
         private renderResult;
         onLoad: () => void;
         init(): void;

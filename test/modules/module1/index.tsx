@@ -1,4 +1,5 @@
 import { Module, customModule, Container, VStack } from '@ijstech/components';
+import {} from '@ijstech/eth-contract';
 import ScomDisperse from '@scom/scom-disperse';
 
 @customModule

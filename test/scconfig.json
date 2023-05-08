@@ -1,6 +1,6 @@
 {
   "env": "testnet",
-  "main": "@scom/dapp",
+  "main": "@modules/module1",
   "assets": "@modules/assets",
   "moduleDir": "modules",
   "modules": {
@@ -12,7 +12,7 @@
     }
   },
   "dependencies": {
-    "@scom/dapp": "*",
+    "@ijstech/eth-wallet-web3modal": "*",
     "@scom/scom-disperse": "*",
     "@ijstech/eth-contract": "*",
     "@ijstech/eth-wallet": "*"
@@ -44,7 +44,8 @@
     }
   ],
   "wallets": [
-    "metamask"
+    { "name": "metamask" },
+    { "name": "walletconnect" }
   ],
   "themes": {
     "default": "light",

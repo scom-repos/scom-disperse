@@ -1,6 +1,6 @@
 
-import { customElements, Module, ControlElement, Modal, Panel, Label, Image, Button, Container, VStack, Styles } from '@ijstech/components';
-import { getNetworkType } from '../store/index';
+import { customElements, Module, ControlElement, Modal, Panel, Label, Image, Button, Container, VStack } from '@ijstech/components';
+import { getNetworkExplorerName } from '../store/index';
 import { viewOnExplorerByTxHash, parseContractError } from '../global/index';
 import styleClass from './result.css';
 import Assets from '../assets';
@@ -110,7 +110,7 @@ export class Result extends Module {
       mainSection.appendChild(section);
     } else if (this.message.status === 'success') {
       const chainId: number = Wallet.getClientInstance().chainId;
-      const networkType = getNetworkType(chainId);
+      const networkType = getNetworkExplorerName(chainId);
       
       const image = await Image.create({
         width: '50px',
@@ -123,7 +123,7 @@ export class Result extends Module {
       const label = await Label.create({
         caption: 'Transaction Submitted',
         margin: {bottom: 10},
-        font: { size: '20px', color: '#F6C958' }
+        font: { size: '20px', color: '#F6C958' }  
       });
       mainSection.appendChild(label);
 
@@ -133,19 +133,20 @@ export class Result extends Module {
 
       const contentLabel = await Label.create();
       contentLabel.caption = this.message.content || '';
+      contentLabel.style.overflowWrap = 'anywhere';
       contentSection.appendChild(contentLabel);
 
       if (this.message.txtHash) {
         const section = new VStack();
 
         const label1 = await Label.create({
-          caption: this.message.txtHash.substr(0, 33),
-          margin: {bottom: 15}
+          caption: this.message.txtHash.substring(0, 33),
+          margin: { bottom: 15 }
         });
         section.appendChild(label1);
 
         const label2 = await Label.create({
-          caption: this.message.txtHash.substr(33, this.message.txtHash.length),
+          caption: this.message.txtHash.substring(33, this.message.txtHash.length),
           margin: {bottom: 15}
         });
         section.appendChild(label2);

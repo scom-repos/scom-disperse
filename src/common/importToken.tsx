@@ -82,7 +82,7 @@ export class ImportToken extends Module {
   }
 
   viewContract() {
-    const chainId = Wallet.getInstance().chainId;
+    const chainId = Wallet.getClientInstance().chainId;
     viewOnExplorerByAddress(chainId, this._state.address);
   }
 

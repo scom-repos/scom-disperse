@@ -34,8 +34,8 @@ export const disperseLayout = Styles.style({
     'i-button': {
       color: '#fff',
       $nest: {
-        'i-icon': {
-          fill: '#fff'
+        'i-icon.is-spin': {
+          fill: '#fff !important'
         }
       }
     },

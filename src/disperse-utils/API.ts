@@ -2,7 +2,7 @@ import { getAddresses, INFINITE } from "../store/index";
 import { DisperseData, ITokenObject } from "../global/index"
 import { Wallet, BigNumber } from "@ijstech/eth-wallet";
 import { Contracts as OpenSwapContracts } from "../contracts/oswap-openswap-contract/index";
-// import { DisperseActions } from "../../packages/disperse-sdk";
+import { DisperseActions } from "../contracts/scom-disperse-contract/index";
 
 const getDisperseAddress = () => {
   return getAddresses(Wallet.getClientInstance().chainId)["Disperse"];
@@ -32,13 +32,13 @@ const onApproveToken = async (token: ITokenObject, spender: string) => {
 // TODO add disperse sdk
 const onDisperse = async (token: ITokenObject, disperseData: DisperseData[]) => {
   let disperseAddress = getDisperseAddress();
-  // return await DisperseActions.doDisperse(
-  //   Wallet.getClientInstance() as any,
-  //   disperseAddress,
-  //   token.address || null,
-  //   token.decimals,
-  //   disperseData
-  // );
+  return await DisperseActions.doDisperse(
+    Wallet.getClientInstance() as any,
+    disperseAddress,
+    token.address || null,
+    token.decimals,
+    disperseData
+  );
 }
 
 export {
