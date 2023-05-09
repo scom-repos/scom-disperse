@@ -14,23 +14,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-define("@scom/scom-disperse/assets.ts", ["require", "exports", "@ijstech/components"], function (require, exports, components_1) {
+define("@scom/scom-disperse/global/utils/helper.ts", ["require", "exports", "@ijstech/components", "@ijstech/eth-wallet"], function (require, exports, components_1, eth_wallet_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    let moduleDir = components_1.application.currentModuleDir;
-    function fullPath(path) {
-        if (path.indexOf('://') > 0)
-            return path;
-        return `${moduleDir}/${path}`;
-    }
-    exports.default = {
-        fullPath
-    };
-});
-define("@scom/scom-disperse/global/utils/helper.ts", ["require", "exports", "@ijstech/components", "@ijstech/eth-wallet"], function (require, exports, components_2, eth_wallet_1) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.downloadCSVFile = exports.toDisperseData = exports.disperseDataToString = exports.renderBalanceTooltip = exports.getWeekDays = exports.uniqWith = exports.formatNumberValue = exports.getParamsFromUrl = exports.numberToBytes32 = exports.padLeft = exports.toWeiInv = exports.viewOnExplorerByAddress = exports.viewOnExplorerByTxHash = exports.getAPI = exports.limitDecimals = exports.limitInputNumber = exports.isInvalidInput = exports.formatNumberWithSeparators = exports.formatPercentNumber = exports.formatNumber = exports.formatUTCDate = exports.DefaultDateFormat = exports.SITE_ENV = exports.explorerAddressUrlsByChainId = exports.explorerTxUrlsByChainId = void 0;
+    exports.isWalletAddress = exports.downloadCSVFile = exports.toDisperseData = exports.disperseDataToString = exports.renderBalanceTooltip = exports.getWeekDays = exports.uniqWith = exports.formatNumberValue = exports.getParamsFromUrl = exports.numberToBytes32 = exports.padLeft = exports.toWeiInv = exports.viewOnExplorerByAddress = exports.viewOnExplorerByTxHash = exports.getAPI = exports.limitDecimals = exports.limitInputNumber = exports.isInvalidInput = exports.formatNumberWithSeparators = exports.formatPercentNumber = exports.formatNumber = exports.formatUTCDate = exports.DefaultDateFormat = exports.SITE_ENV = exports.explorerAddressUrlsByChainId = exports.explorerTxUrlsByChainId = void 0;
     ;
     exports.explorerTxUrlsByChainId = {
         1: 'https://etherscan.io/tx/',
@@ -68,8 +55,8 @@ define("@scom/scom-disperse/global/utils/helper.ts", ["require", "exports", "@ij
     })(SITE_ENV = exports.SITE_ENV || (exports.SITE_ENV = {}));
     exports.DefaultDateFormat = 'YYYY/MM/DD HH:mm:ss';
     const formatUTCDate = (date, formatType = exports.DefaultDateFormat) => {
-        const formatted = components_2.moment(date).format(formatType);
-        return `${formatted} (UTC+${components_2.moment().utcOffset() / 60})`;
+        const formatted = components_1.moment(date).format(formatType);
+        return `${formatted} (UTC+${components_1.moment().utcOffset() / 60})`;
     };
     exports.formatUTCDate = formatUTCDate;
     const formatNumber = (value, decimals) => {
@@ -479,6 +466,10 @@ define("@scom/scom-disperse/global/utils/helper.ts", ["require", "exports", "@ij
         link.click();
     };
     exports.downloadCSVFile = downloadCSVFile;
+    function isWalletAddress(address) {
+        return /^0x[a-fA-F0-9]{40}$/.test(address);
+    }
+    exports.isWalletAddress = isWalletAddress;
 });
 define("@scom/scom-disperse/global/utils/error.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -581,2653 +572,6 @@ define("@scom/scom-disperse/global/index.ts", ["require", "exports", "@scom/scom
     __exportStar(index_1, exports);
     Object.defineProperty(exports, "registerSendTxEvents", { enumerable: true, get: function () { return common_1.registerSendTxEvents; } });
     Object.defineProperty(exports, "isAddressValid", { enumerable: true, get: function () { return common_1.isAddressValid; } });
-});
-define("@scom/scom-disperse/store/data/tokens/mainnet/avalanche.ts", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Tokens_Avalanche = void 0;
-    ///<amd-module name='@scom/scom-disperse/store/data/tokens/mainnet/avalanche.ts'/> 
-    exports.Tokens_Avalanche = [
-        {
-            "address": "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7",
-            "name": "Wrapped AVAX",
-            "symbol": "WAVAX",
-            "decimals": 18,
-            "isCommon": true,
-            "isWETH": true
-        },
-        {
-            "name": "OpenSwap",
-            "symbol": "OSWAP",
-            "address": "0xb32aC3C79A94aC1eb258f3C830bBDbc676483c93",
-            "decimals": 18,
-            "isCommon": true
-        },
-        { "address": "0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664", "name": "USD Coin", "symbol": "USDC.e", "decimals": 6, "isCommon": true },
-        {
-            "address": "0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB",
-            "name": "Wrapped Ether",
-            "symbol": "WETH.e",
-            "decimals": 18,
-            "isCommon": true
-        },
-        { "address": "0xc7198437980c041c805A1EDcbA50c1Ce5db95118", "name": "Tether USD", "symbol": "USDT.e", "decimals": 6, "isCommon": true },
-        { "address": "0x8729438EB15e2C8B576fCc6AeCdA6A148776C0F5", "name": "BENQI", "symbol": "QI", "decimals": 18 },
-        { "address": "0x60781C2586D68229fde47564546784ab3fACA982", "name": "Pangolin", "symbol": "PNG", "decimals": 18 },
-        {
-            "address": "0xd586E7F844cEa2F87f50152665BCbc2C279D8d70",
-            "name": "Dai Stablecoin",
-            "symbol": "DAI.e",
-            "decimals": 18,
-            "isCommon": true
-        },
-        { "address": "0xd1c3f94DE7e5B45fa4eDBBA472491a9f4B166FC4", "name": "Avalaunch", "symbol": "XAVA", "decimals": 18 },
-        { "address": "0x130966628846BFd36ff31a822705796e8cb8C18D", "name": "Magic Internet Money", "symbol": "MIM", "decimals": 18 },
-        { "address": "0x50b7545627a5162F82A992c33b87aDc75187B218", "name": "Wrapped BTC", "symbol": "WBTC.e", "decimals": 8 },
-        { "address": "0x5947BB275c521040051D82396192181b413227A3", "name": "Chainlink Token", "symbol": "LINK.e", "decimals": 18 },
-        { "address": "0xD24C2Ad096400B6FBcd2ad8B24E7acBc21A1da64", "name": "Frax", "symbol": "FRAX", "decimals": 18 },
-        { "address": "0x4f60a160D8C2DDdaAfe16FCC57566dB84D674BD6", "name": "Jewels", "symbol": "JEWEL", "decimals": 18 },
-        { "address": "0x59414b3089ce2AF0010e7523Dea7E2b35d776ec7", "name": "Yak Token", "symbol": "YAK", "decimals": 18 },
-        { "address": "0x214DB107654fF987AD859F34125307783fC8e387", "name": "Frax Share", "symbol": "FXS", "decimals": 18 },
-        { "address": "0x1C20E891Bab6b1727d14Da358FAe2984Ed9B59EB", "name": "TrueUSD", "symbol": "TUSD", "decimals": 18 },
-        { "address": "0xCE1bFFBD5374Dac86a2893119683F4911a2F7814", "name": "Spell Token", "symbol": "SPELL", "decimals": 18 },
-        { "address": "0xe896CDeaAC9615145c0cA09C8Cd5C25bced6384c", "name": "PenguinToken", "symbol": "PEFI", "decimals": 18 },
-        { "address": "0x346A59146b9b4a77100D369a3d18E8007A9F46a6", "name": "AVAI", "symbol": "AVAI", "decimals": 18 },
-        { "address": "0x321E7092a180BB43555132ec53AaA65a5bF84251", "name": "Governance OHM", "symbol": "gOHM", "decimals": 18 },
-        { "address": "0x6e84a6216eA6dACC71eE8E6b0a5B7322EEbC0fDd", "name": "JoeToken", "symbol": "JOE", "decimals": 18 },
-        { "address": "0xdef1fac7Bf08f173D286BbBDcBeeADe695129840", "name": "Cerby Token", "symbol": "CERBY", "decimals": 18 },
-        { "address": "0x63682bDC5f875e9bF69E201550658492C9763F89", "name": "Betswap.gg", "symbol": "BSGG", "decimals": 18 },
-        { "address": "0x57319d41F71E81F3c65F2a47CA4e001EbAFd4F33", "name": "JoeBar", "symbol": "xJOE", "decimals": 18 },
-        { "address": "0xe0Ce60AF0850bF54072635e66E79Df17082A1109", "name": "Ice Token", "symbol": "ICE", "decimals": 18 },
-        { "address": "0x3Ee97d514BBef95a2f110e6B9b73824719030f7a", "name": "Staked Spell Token", "symbol": "sSPELL", "decimals": 18 },
-        { "address": "0xCDEB5641dC5BF05845317B00643A713CCC3b22e6", "name": "Huobi", "symbol": "HT", "decimals": 18 },
-        { "address": "0xA56B1b9f4e5A1A1e0868F5Fd4352ce7CdF0C2A4F", "name": "Matic", "symbol": "MATIC", "decimals": 18 },
-        { "address": "0xF873633DF9D5cDd62BB1f402499CC470a72A02D7", "name": "MoonRiver", "symbol": "MOVR", "decimals": 18 },
-        { "address": "0xA384Bc7Cdc0A93e686da9E7B8C0807cD040F4E0b", "name": "WOWSwap", "symbol": "WOW", "decimals": 18 },
-        { "address": "0x0da67235dD5787D67955420C84ca1cEcd4E5Bb3b", "name": "Wrapped Memo", "symbol": "wMEMO", "decimals": 18 },
-        { "address": "0xb54f16fB19478766A268F172C9480f8da1a7c9C3", "name": "Time", "symbol": "TIME", "decimals": 18 },
-        { "address": "0x37B608519F91f70F2EeB0e5Ed9AF4061722e4F76", "name": "SushiToken", "symbol": "SUSHI", "decimals": 18 },
-        { "address": "0x63a72806098Bd3D9520cC43356dD78afe5D386D9", "name": "Aave Token", "symbol": "AAVE", "decimals": 18 }
-    ];
-});
-define("@scom/scom-disperse/store/data/tokens/mainnet/ethereum.ts", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Tokens_Ethereuem = void 0;
-    ///<amd-module name='@scom/scom-disperse/store/data/tokens/mainnet/ethereum.ts'/> 
-    exports.Tokens_Ethereuem = [
-        {
-            "address": "0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9",
-            "name": "Aave",
-            "symbol": "AAVE",
-            "decimals": 18
-        },
-        {
-            "address": "0xfF20817765cB7f73d4bde2e66e067E58D11095C2",
-            "name": "Amp",
-            "symbol": "AMP",
-            "decimals": 18
-        },
-        {
-            "name": "Aragon Network Token",
-            "address": "0x960b236A07cf122663c4303350609A66A7B288C0",
-            "symbol": "ANT",
-            "decimals": 18
-        },
-        {
-            "name": "Balancer",
-            "address": "0xba100000625a3754423978a60c9317c58a424e3D",
-            "symbol": "BAL",
-            "decimals": 18
-        },
-        {
-            "address": "0xBA11D00c5f74255f56a5E366F4F77f5A186d7f55",
-            "name": "Band Protocol",
-            "symbol": "BAND",
-            "decimals": 18
-        },
-        {
-            "name": "Bancor Network Token",
-            "address": "0x1F573D6Fb3F13d689FF844B4cE37794d79a7FF1C",
-            "symbol": "BNT",
-            "decimals": 18
-        },
-        {
-            "name": "Compound",
-            "address": "0xc00e94Cb662C3520282E6f5717214004A7f26888",
-            "symbol": "COMP",
-            "decimals": 18
-        },
-        {
-            "name": "Curve DAO Token",
-            "address": "0xD533a949740bb3306d119CC777fa900bA034cd52",
-            "symbol": "CRV",
-            "decimals": 18
-        },
-        {
-            "address": "0x41e5560054824eA6B0732E656E3Ad64E20e94E45",
-            "name": "Civic",
-            "symbol": "CVC",
-            "decimals": 8
-        },
-        {
-            "name": "Dai Stablecoin",
-            "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
-            "symbol": "DAI",
-            "decimals": 18,
-            "isCommon": true
-        },
-        {
-            "address": "0x0AbdAce70D3790235af448C88547603b945604ea",
-            "name": "district0x",
-            "symbol": "DNT",
-            "decimals": 18
-        },
-        {
-            "name": "Gnosis Token",
-            "address": "0x6810e776880C02933D47DB1b9fc05908e5386b96",
-            "symbol": "GNO",
-            "decimals": 18
-        },
-        {
-            "address": "0xc944E90C64B2c07662A292be6244BDf05Cda44a7",
-            "name": "The Graph",
-            "symbol": "GRT",
-            "decimals": 18
-        },
-        {
-            "address": "0x85Eee30c52B0b379b046Fb0F85F4f3Dc3009aFEC",
-            "name": "Keep Network",
-            "symbol": "KEEP",
-            "decimals": 18
-        },
-        {
-            "name": "Kyber Network Crystal",
-            "address": "0xdd974D5C2e2928deA5F71b9825b8b646686BD200",
-            "symbol": "KNC",
-            "decimals": 18
-        },
-        {
-            "name": "ChainLink Token",
-            "address": "0x514910771AF9Ca656af840dff83E8264EcF986CA",
-            "symbol": "LINK",
-            "decimals": 18
-        },
-        {
-            "name": "Loom Network",
-            "address": "0xA4e8C3Ec456107eA67d3075bF9e3DF3A75823DB0",
-            "symbol": "LOOM",
-            "decimals": 18
-        },
-        {
-            "name": "LoopringCoin V2",
-            "address": "0xBBbbCA6A901c926F240b89EacB641d8Aec7AEafD",
-            "symbol": "LRC",
-            "decimals": 18
-        },
-        {
-            "address": "0x0F5D2fB29fb7d3CFeE444a200298f468908cC942",
-            "name": "Decentraland",
-            "symbol": "MANA",
-            "decimals": 18
-        },
-        {
-            "name": "Maker",
-            "address": "0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2",
-            "symbol": "MKR",
-            "decimals": 18
-        },
-        {
-            "address": "0xec67005c4E498Ec7f55E092bd1d35cbC47C91892",
-            "name": "Melon",
-            "symbol": "MLN",
-            "decimals": 18
-        },
-        {
-            "name": "Numeraire",
-            "address": "0x1776e1F26f98b1A5dF9cD347953a26dd3Cb46671",
-            "symbol": "NMR",
-            "decimals": 18
-        },
-        {
-            "address": "0x4fE83213D56308330EC302a8BD641f1d0113A4Cc",
-            "name": "NuCypher",
-            "symbol": "NU",
-            "decimals": 18
-        },
-        {
-            "name": "Orchid",
-            "address": "0x4575f41308EC1483f3d399aa9a2826d74Da13Deb",
-            "symbol": "OXT",
-            "decimals": 18
-        },
-        {
-            "name": "Republic Token",
-            "address": "0x408e41876cCCDC0F92210600ef50372656052a38",
-            "symbol": "REN",
-            "decimals": 18
-        },
-        {
-            "name": "Reputation Augur v1",
-            "address": "0x1985365e9f78359a9B6AD760e32412f4a445E862",
-            "symbol": "REP",
-            "decimals": 18
-        },
-        {
-            "name": "Reputation Augur v2",
-            "address": "0x221657776846890989a759BA2973e427DfF5C9bB",
-            "symbol": "REPv2",
-            "decimals": 18
-        },
-        {
-            "name": "Synthetix Network Token",
-            "address": "0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F",
-            "symbol": "SNX",
-            "decimals": 18
-        },
-        {
-            "name": "Storj Token",
-            "address": "0xB64ef51C888972c908CFacf59B47C1AfBC0Ab8aC",
-            "symbol": "STORJ",
-            "decimals": 8
-        },
-        {
-            "address": "0x8dAEBADE922dF735c38C80C7eBD708Af50815fAa",
-            "name": "tBTC",
-            "symbol": "TBTC",
-            "decimals": 18
-        },
-        {
-            "name": "UMA Voting Token v1",
-            "address": "0x04Fa0d235C4abf4BcF4787aF4CF447DE572eF828",
-            "symbol": "UMA",
-            "decimals": 18
-        },
-        {
-            "name": "Uniswap",
-            "address": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
-            "symbol": "UNI",
-            "decimals": 18
-        },
-        {
-            "name": "USDCoin",
-            "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-            "symbol": "USDC",
-            "decimals": 6,
-            "isCommon": true
-        },
-        {
-            "name": "Tether USD",
-            "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
-            "symbol": "USDT",
-            "decimals": 6,
-            "isCommon": true
-        },
-        {
-            "name": "Wrapped BTC",
-            "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
-            "symbol": "WBTC",
-            "decimals": 8,
-            "isCommon": true
-        },
-        {
-            "address": "0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e",
-            "name": "yearn finance",
-            "symbol": "YFI",
-            "decimals": 18
-        },
-        {
-            "name": "0x Protocol Token",
-            "address": "0xE41d2489571d322189246DaFA5ebDe1F4699F498",
-            "symbol": "ZRX",
-            "decimals": 18
-        },
-        {
-            "name": "openANX Token",
-            "address": "0x701C244b988a513c945973dEFA05de933b23Fe1D",
-            "symbol": "OAX",
-            "decimals": 18
-        },
-        {
-            "name": "Wrapped Ether",
-            "symbol": "WETH",
-            "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-            "decimals": 18,
-            "isCommon": true,
-            "isWETH": true
-        }
-    ];
-});
-define("@scom/scom-disperse/store/data/tokens/mainnet/polygon.ts", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Tokens_Polygon = void 0;
-    ///<amd-module name='@scom/scom-disperse/store/data/tokens/mainnet/polygon.ts'/> 
-    exports.Tokens_Polygon = [
-        {
-            "address": "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
-            "name": "Wrapped Matic",
-            "symbol": "WMATIC",
-            "decimals": 18,
-            "isCommon": true,
-            "isWETH": true
-        },
-        { "address": "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619", "name": "Wrapped Ether", "symbol": "WETH", "decimals": 18 },
-        { "address": "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174", "name": "USD Coin (PoS)", "symbol": "USDC", "decimals": 6, "isCommon": true },
-        { "address": "0xBbba073C31bF03b8ACf7c28EF0738DeCF3695683", "name": "SAND", "symbol": "SAND", "decimals": 18 },
-        { "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F", "name": "(PoS) Tether USD", "symbol": "USDT", "decimals": 6 },
-        { "address": "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6", "name": "(PoS) Wrapped BTC", "symbol": "WBTC", "decimals": 8 },
-        { "address": "0xa3Fa99A148fA48D14Ed51d610c367C61876997F1", "name": "miMATIC", "symbol": "miMATIC", "decimals": 18 },
-        {
-            "address": "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
-            "name": "(PoS) Dai Stablecoin",
-            "symbol": "DAI",
-            "decimals": 18,
-            "isCommon": true
-        },
-        { "address": "0x831753DD7087CaC61aB5644b308642cc1c33Dc13", "name": "Quickswap", "symbol": "QUICK", "decimals": 18 },
-        { "address": "0xdF7837DE1F2Fa4631D716CF2502f8b230F1dcc32", "name": "Telcoin (PoS)", "symbol": "TEL", "decimals": 2 },
-        { "address": "0x385Eeac5cB85A38A9a07A70c73e0a3271CfB54A7", "name": "Aavegotchi GHST Token (PoS)", "symbol": "GHST", "decimals": 18 },
-        { "address": "0x580A84C73811E1839F75d86d75d88cCa0c241fF4", "name": "Qi Dao", "symbol": "QI", "decimals": 18 },
-        { "address": "0xE5417Af564e4bFDA1c483642db72007871397896", "name": "Gains Network", "symbol": "GNS", "decimals": 18 },
-        { "address": "0xD6DF932A45C0f255f85145f286eA0b292B21C90B", "name": "Aave (PoS)", "symbol": "AAVE", "decimals": 18, "isCommon": true },
-        { "address": "0xc6C855AD634dCDAd23e64DA71Ba85b8C51E5aD7c", "name": "Decentral Games ICE", "symbol": "ICE", "decimals": 18 },
-        { "address": "0x53E0bca35eC356BD5ddDFebbD1Fc0fD03FaBad39", "name": "ChainLink Token", "symbol": "LINK", "decimals": 18 },
-        { "address": "0x2C89bbc92BD86F8075d1DEcc58C7F4E0107f286b", "name": "Avalanche Token", "symbol": "AVAX", "decimals": 18 },
-        { "address": "0xB85517b87BF64942adf3A0B9E4c71E4Bc5Caa4e5", "name": "Fantom Token", "symbol": "FTM", "decimals": 18 },
-        { "address": "0x229b1b6C23ff8953D663C4cBB519717e323a0a84", "name": "BLOK", "symbol": "BLOK", "decimals": 18 }
-    ];
-});
-define("@scom/scom-disperse/store/data/tokens/mainnet/bsc.ts", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Tokens_BSC = void 0;
-    ///<amd-module name='@scom/scom-disperse/store/data/tokens/mainnet/bsc.ts'/> 
-    exports.Tokens_BSC = [
-        {
-            "name": "OpenSwap",
-            "symbol": "OSWAP",
-            "address": "0xb32aC3C79A94aC1eb258f3C830bBDbc676483c93",
-            "decimals": 18,
-            "isCommon": true
-        },
-        {
-            "name": "PancakeSwap Token",
-            "symbol": "CAKE",
-            "address": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
-            "decimals": 18
-        },
-        {
-            "name": "Cardano Token",
-            "symbol": "ADA",
-            "address": "0x3EE2200Efb3400fAbB9AacF31297cBdD1d435D47",
-            "decimals": 18
-        },
-        {
-            "name": "AdEx Network",
-            "symbol": "ADX",
-            "address": "0x6bfF4Fb161347ad7de4A625AE5aa3A1CA7077819",
-            "decimals": 18
-        },
-        {
-            "name": "My Neigbor Alice",
-            "symbol": "ALICE",
-            "address": "0xAC51066d7bEC65Dc4589368da368b212745d63E8",
-            "decimals": 6
-        },
-        {
-            "name": "AlpaToken",
-            "symbol": "ALPA",
-            "address": "0xc5E6689C9c8B02be7C49912Ef19e79cF24977f03",
-            "decimals": 18
-        },
-        {
-            "name": "Alpaca",
-            "symbol": "ALPACA",
-            "address": "0x8F0528cE5eF7B51152A59745bEfDD91D97091d2F",
-            "decimals": 18
-        },
-        {
-            "name": "AlphaToken",
-            "symbol": "ALPHA",
-            "address": "0xa1faa113cbE53436Df28FF0aEe54275c13B40975",
-            "decimals": 18
-        },
-        {
-            "name": "Ampleforth",
-            "symbol": "AMPL",
-            "address": "0xDB021b1B247fe2F1fa57e0A87C748Cc1E321F07F",
-            "decimals": 9
-        },
-        {
-            "name": "Ankr",
-            "symbol": "ANKR",
-            "address": "0xf307910A4c7bbc79691fD374889b36d8531B08e3",
-            "decimals": 18
-        },
-        {
-            "name": "anyMTLX",
-            "symbol": "anyMTLX",
-            "address": "0x5921DEE8556c4593EeFCFad3CA5e2f618606483b",
-            "decimals": 18
-        },
-        {
-            "name": "APYSwap",
-            "symbol": "APYS",
-            "address": "0x37dfACfaeDA801437Ff648A1559d73f4C40aAcb7",
-            "decimals": 18
-        },
-        {
-            "name": "ARPA",
-            "symbol": "ARPA",
-            "address": "0x6F769E65c14Ebd1f68817F5f1DcDb61Cfa2D6f7e",
-            "decimals": 18
-        },
-        {
-            "name": "ARIVA",
-            "symbol": "ARV",
-            "address": "0x6679eB24F59dFe111864AEc72B443d1Da666B360",
-            "decimals": 8
-        },
-        {
-            "name": "AS Roma",
-            "symbol": "ASR",
-            "address": "0x80D5f92C2c8C682070C95495313dDB680B267320",
-            "decimals": 2
-        },
-        {
-            "name": "Automata",
-            "symbol": "ATA",
-            "address": "0xA2120b9e674d3fC3875f415A7DF52e382F141225",
-            "decimals": 18
-        },
-        {
-            "name": "Atletico de Madrid",
-            "symbol": "ATM",
-            "address": "0x25E9d05365c867E59C1904E7463Af9F312296f9E",
-            "decimals": 2
-        },
-        {
-            "name": "Cosmos Token",
-            "symbol": "ATOM",
-            "address": "0x0Eb3a705fc54725037CC9e008bDede697f62F335",
-            "decimals": 18
-        },
-        {
-            "name": "AUTOv2",
-            "symbol": "AUTO",
-            "address": "0xa184088a740c695E156F91f5cC086a06bb78b827",
-            "decimals": 18
-        },
-        {
-            "name": "Axie Infinity Shard",
-            "symbol": "AXS",
-            "address": "0x715D400F88C167884bbCc41C5FeA407ed4D2f8A0",
-            "decimals": 18
-        },
-        {
-            "name": "BabyCake",
-            "symbol": "BABYCAKE",
-            "address": "0xdB8D30b74bf098aF214e862C90E647bbB1fcC58c",
-            "decimals": 18
-        },
-        {
-            "name": "Bakery Token",
-            "symbol": "BAKE",
-            "address": "0xE02dF9e3e622DeBdD69fb838bB799E3F168902c5",
-            "decimals": 18
-        },
-        {
-            "name": "AllianceBlock",
-            "symbol": "bALBT",
-            "address": "0x72fAa679E1008Ad8382959FF48E392042A8b06f7",
-            "decimals": 18
-        },
-        {
-            "name": "BAND Protocol Token",
-            "symbol": "BAND",
-            "address": "0xAD6cAEb32CD2c308980a548bD0Bc5AA4306c6c18",
-            "decimals": 18
-        },
-        {
-            "name": "Basic Attention Token",
-            "symbol": "BAT",
-            "address": "0x101d82428437127bF1608F699CD651e6Abf9766E",
-            "decimals": 18
-        },
-        {
-            "name": "bBADGER",
-            "symbol": "bBADGER",
-            "address": "0x1F7216fdB338247512Ec99715587bb97BBf96eae",
-            "decimals": 18
-        },
-        {
-            "name": "Conflux",
-            "symbol": "bCFX",
-            "address": "0x045c4324039dA91c52C55DF5D785385Aab073DcF",
-            "decimals": 18
-        },
-        {
-            "name": "Bitcoin Cash Token",
-            "symbol": "BCH",
-            "address": "0x8fF795a6F4D97E7887C79beA79aba5cc76444aDf",
-            "decimals": 18
-        },
-        {
-            "name": "bDIGG",
-            "symbol": "bDIGG",
-            "address": "0x5986D5c77c65e5801a5cAa4fAE80089f870A71dA",
-            "decimals": 18
-        },
-        {
-            "name": "bDollar",
-            "symbol": "BDO",
-            "address": "0x190b589cf9Fb8DDEabBFeae36a813FFb2A702454",
-            "decimals": 18
-        },
-        {
-            "name": "Bella Protocol",
-            "symbol": "BEL",
-            "address": "0x8443f091997f06a61670B735ED92734F5628692F",
-            "decimals": 18
-        },
-        {
-            "name": "Belt",
-            "symbol": "BELT",
-            "address": "0xE0e514c71282b6f4e823703a39374Cf58dc3eA4f",
-            "decimals": 18
-        },
-        {
-            "name": "Beta Finance",
-            "symbol": "BETA",
-            "address": "0xBe1a001FE942f96Eea22bA08783140B9Dcc09D28",
-            "decimals": 18
-        },
-        {
-            "name": "Beacon ETH",
-            "symbol": "BETH",
-            "address": "0x250632378E573c6Be1AC2f97Fcdf00515d0Aa91B",
-            "decimals": 18
-        },
-        {
-            "name": "b.earnfi",
-            "symbol": "BFI",
-            "address": "0x81859801b01764D4f0Fa5E64729f5a6C3b91435b",
-            "decimals": 18
-        },
-        {
-            "name": "Beefy.finance",
-            "symbol": "BIFI",
-            "address": "0xCa3F508B8e4Dd382eE878A314789373D80A5190A",
-            "decimals": 18
-        },
-        {
-            "name": "BLINk",
-            "symbol": "BLK",
-            "address": "0x63870A18B6e42b01Ef1Ad8A2302ef50B7132054F",
-            "decimals": 6
-        },
-        {
-            "name": "Binamon",
-            "symbol": "BMON",
-            "address": "0x08ba0619b1e7A582E0BCe5BBE9843322C954C340",
-            "decimals": 18
-        },
-        {
-            "name": "Multiplier",
-            "symbol": "bMXX",
-            "address": "0x4131b87F74415190425ccD873048C708F8005823",
-            "decimals": 18
-        },
-        {
-            "name": "Bondly",
-            "symbol": "BONDLY",
-            "address": "0x5D0158A5c3ddF47d4Ea4517d8DB0D76aA2e87563",
-            "decimals": 18
-        },
-        {
-            "name": "OPEN Governance Token",
-            "symbol": "bOPEN",
-            "address": "0xF35262a9d427F96d2437379eF090db986eaE5d42",
-            "decimals": 18
-        },
-        {
-            "name": "BoringDAO",
-            "symbol": "BORING",
-            "address": "0xffEecbf8D7267757c2dc3d13D730E97E15BfdF7F",
-            "decimals": 18
-        },
-        {
-            "name": "BunnyPark",
-            "symbol": "BP",
-            "address": "0xACB8f52DC63BB752a51186D1c55868ADbFfEe9C1",
-            "decimals": 18
-        },
-        {
-            "name": "ROOBEE",
-            "symbol": "bROOBEE",
-            "address": "0xE64F5Cb844946C1F102Bd25bBD87a5aB4aE89Fbe",
-            "decimals": 18
-        },
-        {
-            "name": "Berry",
-            "symbol": "BRY",
-            "address": "0xf859Bf77cBe8699013d6Dbc7C2b926Aaf307F830",
-            "decimals": 18
-        },
-        {
-            "name": "BSC Ecosystem Defi blue chips",
-            "symbol": "BSCDEFI",
-            "address": "0x40E46dE174dfB776BB89E04dF1C47d8a66855EB3",
-            "decimals": 18
-        },
-        {
-            "name": "BSCPad",
-            "symbol": "BSCPAD",
-            "address": "0x5A3010d4d8D3B5fB49f8B6E57FB9E48063f16700",
-            "decimals": 18
-        },
-        {
-            "name": "BSCEX",
-            "symbol": "BSCX",
-            "address": "0x5Ac52EE5b2a633895292Ff6d8A89bB9190451587",
-            "decimals": 18
-        },
-        {
-            "name": "Binance Pegged Bitcoin",
-            "symbol": "BTCB",
-            "address": "0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c",
-            "decimals": 18
-        },
-        {
-            "name": "Standard BTC Hashrate Token",
-            "symbol": "BTCST",
-            "address": "0x78650B139471520656b9E7aA7A5e9276814a38e9",
-            "decimals": 17
-        },
-        {
-            "name": "Bittrue",
-            "symbol": "BTR",
-            "address": "0x5a16E8cE8cA316407c6E6307095dc9540a8D62B3",
-            "decimals": 18
-        },
-        {
-            "name": "Bittorrent",
-            "symbol": "BTT",
-            "address": "0x8595F9dA7b868b1822194fAEd312235E43007b49",
-            "decimals": 18
-        },
-        {
-            "name": "Bunny Token",
-            "symbol": "BUNNY",
-            "address": "0xC9849E6fdB743d08fAeE3E34dd2D1bc69EA11a51",
-            "decimals": 18
-        },
-        {
-            "name": "Burger Swap",
-            "symbol": "BURGER",
-            "address": "0xAe9269f27437f0fcBC232d39Ec814844a51d6b8f",
-            "decimals": 18
-        },
-        {
-            "name": "Binance Pegged BUSD",
-            "symbol": "BUSD",
-            "address": "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
-            "decimals": 18,
-            "isCommon": true
-        },
-        {
-            "name": "BUX",
-            "symbol": "BUX",
-            "address": "0x211FfbE424b90e25a15531ca322adF1559779E45",
-            "decimals": 18
-        },
-        {
-            "name": "Coin98",
-            "symbol": "C98",
-            "address": "0xaEC945e04baF28b135Fa7c640f624f8D90F1C3a6",
-            "decimals": 18
-        },
-        {
-            "name": "CanYaCoin",
-            "symbol": "CAN",
-            "address": "0x007EA5C0Ea75a8DF45D288a4debdD5bb633F9e56",
-            "decimals": 18
-        },
-        {
-            "name": "CryptoArt.ai",
-            "symbol": "CART",
-            "address": "0x5C8C8D560048F34E5f7f8ad71f2f81a89DBd273e",
-            "decimals": 18
-        },
-        {
-            "name": "ChainGuardians",
-            "symbol": "CGG",
-            "address": "0x1613957159E9B0ac6c80e824F7Eea748a32a0AE2",
-            "decimals": 18
-        },
-        {
-            "name": "Tranchess",
-            "symbol": "CHESS",
-            "address": "0x20de22029ab63cf9A7Cf5fEB2b737Ca1eE4c82A6",
-            "decimals": 18
-        },
-        {
-            "name": "Chromia",
-            "symbol": "CHR",
-            "address": "0xf9CeC8d50f6c8ad3Fb6dcCEC577e05aA32B224FE",
-            "decimals": 6
-        },
-        {
-            "name": "Compound Finance",
-            "symbol": "COMP",
-            "address": "0x52CE071Bd9b1C4B00A0b92D298c512478CaD67e8",
-            "decimals": 18
-        },
-        {
-            "name": "Contentos",
-            "symbol": "COS",
-            "address": "0x96Dd399F9c3AFda1F194182F71600F1B65946501",
-            "decimals": 18
-        },
-        {
-            "name": "Cream",
-            "symbol": "CREAM",
-            "address": "0xd4CB328A82bDf5f03eB737f37Fa6B370aef3e888",
-            "decimals": 18
-        },
-        {
-            "name": "CertiK Token",
-            "symbol": "CTK",
-            "address": "0xA8c2B8eec3d368C0253ad3dae65a5F2BBB89c929",
-            "decimals": 6
-        },
-        {
-            "name": "Concentrated Voting Power",
-            "symbol": "CVP",
-            "address": "0x5Ec3AdBDae549Dce842e24480Eb2434769e22B2E",
-            "decimals": 18
-        },
-        {
-            "name": "Cyclone",
-            "symbol": "CYC",
-            "address": "0x810EE35443639348aDbbC467b33310d2AB43c168",
-            "decimals": 18
-        },
-        {
-            "name": "Binance Pegged DAI",
-            "symbol": "DAI",
-            "address": "0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3",
-            "decimals": 18,
-            "isCommon": true
-        },
-        {
-            "name": "Dego.Finance",
-            "symbol": "DEGO",
-            "address": "0x3FdA9383A84C05eC8f7630Fe10AdF1fAC13241CC",
-            "decimals": 18
-        },
-        {
-            "name": "Deri",
-            "symbol": "DERI",
-            "address": "0xe60eaf5A997DFAe83739e035b005A33AfdCc6df5",
-            "decimals": 18
-        },
-        {
-            "name": "DeXe",
-            "symbol": "DEXE",
-            "address": "0x039cB485212f996A9DBb85A9a75d898F94d38dA6",
-            "decimals": 18
-        },
-        {
-            "name": "DefiDollar DAO",
-            "symbol": "DFD",
-            "address": "0x9899a98b222fCb2f3dbee7dF45d943093a4ff9ff",
-            "decimals": 18
-        },
-        {
-            "name": "DFuture",
-            "symbol": "DFT",
-            "address": "0x42712dF5009c20fee340B245b510c0395896cF6e",
-            "decimals": 18
-        },
-        {
-            "name": "Decentral Games",
-            "symbol": "DG",
-            "address": "0x9Fdc3ae5c814b79dcA2556564047C5e7e5449C19",
-            "decimals": 18
-        },
-        {
-            "name": "Ditto",
-            "symbol": "DITTO",
-            "address": "0x233d91A0713155003fc4DcE0AFa871b508B3B715",
-            "decimals": 9
-        },
-        {
-            "name": "Dodo",
-            "symbol": "DODO",
-            "address": "0x67ee3Cb086F8a16f34beE3ca72FAD36F7Db929e2",
-            "decimals": 18
-        },
-        {
-            "name": "Dogecoin",
-            "symbol": "DOGE",
-            "address": "0xbA2aE424d960c26247Dd6c32edC70B295c744C43",
-            "decimals": 8
-        },
-        {
-            "name": "Dopple Finance",
-            "symbol": "DOP",
-            "address": "0x844FA82f1E54824655470970F7004Dd90546bB28",
-            "decimals": 18
-        },
-        {
-            "name": "Polkadot Token",
-            "symbol": "DOT",
-            "address": "0x7083609fCE4d1d8Dc0C979AAb8c869Ea2C873402",
-            "decimals": 18
-        },
-        {
-            "name": "Dusk",
-            "symbol": "DUSK",
-            "address": "0xB2BD0749DBE21f623d9BABa856D3B0f0e1BFEc9C",
-            "decimals": 18
-        },
-        {
-            "name": "Dvision Network",
-            "symbol": "DVI",
-            "address": "0x758FB037A375F17c7e195CC634D77dA4F554255B",
-            "decimals": 18
-        },
-        {
-            "name": "Elrond",
-            "symbol": "EGLD",
-            "address": "0xbF7c81FFF98BbE61B40Ed186e4AfD6DDd01337fe",
-            "decimals": 18
-        },
-        {
-            "name": "EOS Token",
-            "symbol": "EOS",
-            "address": "0x56b6fB708fC5732DEC1Afc8D8556423A2EDcCbD6",
-            "decimals": 18
-        },
-        {
-            "name": "Ellipsis",
-            "symbol": "EPS",
-            "address": "0xA7f552078dcC247C2684336020c03648500C6d9F",
-            "decimals": 18
-        },
-        {
-            "name": "Binance Pegged ETH",
-            "symbol": "ETH",
-            "address": "0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
-            "decimals": 18
-        },
-        {
-            "name": "Easy V2",
-            "symbol": "EZ",
-            "address": "0x5512014efa6Cd57764Fa743756F7a6Ce3358cC83",
-            "decimals": 18
-        },
-        {
-            "name": "Filecoin",
-            "symbol": "FIL",
-            "address": "0x0D8Ce2A99Bb6e3B7Db580eD848240e4a0F9aE153",
-            "decimals": 18
-        },
-        {
-            "name": "Refinable",
-            "symbol": "FINE",
-            "address": "0x4e6415a5727ea08aAE4580057187923aeC331227",
-            "decimals": 18
-        },
-        {
-            "name": "ForTube",
-            "symbol": "FOR",
-            "address": "0x658A109C5900BC6d2357c87549B651670E5b0539",
-            "decimals": 18
-        },
-        {
-            "name": "Formation Finance",
-            "symbol": "FORM",
-            "address": "0x25A528af62e56512A19ce8c3cAB427807c28CC19",
-            "decimals": 18
-        },
-        {
-            "name": "fry.world",
-            "symbol": "FRIES",
-            "address": "0x393B312C01048b3ed2720bF1B090084C09e408A1",
-            "decimals": 18
-        },
-        {
-            "name": "Frontier Token",
-            "symbol": "FRONT",
-            "address": "0x928e55daB735aa8260AF3cEDadA18B5f70C72f1b",
-            "decimals": 18
-        },
-        {
-            "name": "Fuel",
-            "symbol": "FUEL",
-            "address": "0x2090c8295769791ab7A3CF1CC6e0AA19F35e441A",
-            "decimals": 18
-        },
-        {
-            "name": "GreenTrust",
-            "symbol": "GNT",
-            "address": "0xF750A26EB0aCf95556e8529E72eD530f3b60f348",
-            "decimals": 18
-        },
-        {
-            "name": "Gourmet Galaxy",
-            "symbol": "GUM",
-            "address": "0xc53708664b99DF348dd27C3Ac0759d2DA9c40462",
-            "decimals": 18
-        },
-        {
-            "name": "Hacken",
-            "symbol": "HAI",
-            "address": "0xaA9E582e5751d703F85912903bacADdFed26484C",
-            "decimals": 8
-        },
-        {
-            "name": "Hakka Finance",
-            "symbol": "HAKKA",
-            "address": "0x1D1eb8E8293222e1a29d2C0E4cE6C0Acfd89AaaC",
-            "decimals": 18
-        },
-        {
-            "name": "HARD",
-            "symbol": "HARD",
-            "address": "0xf79037F6f6bE66832DE4E7516be52826BC3cBcc4",
-            "decimals": 6
-        },
-        {
-            "name": "Helmet.insure",
-            "symbol": "Helmet",
-            "address": "0x948d2a81086A075b3130BAc19e4c6DEe1D2E3fE8",
-            "decimals": 18
-        },
-        {
-            "name": "MetaHero",
-            "symbol": "HERO",
-            "address": "0xD40bEDb44C081D2935eebA6eF5a3c8A31A1bBE13",
-            "decimals": 18
-        },
-        {
-            "name": "StepHero",
-            "symbol": "HERO",
-            "address": "0xE8176d414560cFE1Bf82Fd73B986823B89E4F545",
-            "decimals": 18
-        },
-        {
-            "name": "Hedget",
-            "symbol": "HGET",
-            "address": "0xC7d8D35EBA58a0935ff2D5a33Df105DD9f071731",
-            "decimals": 6
-        },
-        {
-            "name": "Hoo",
-            "symbol": "HOO",
-            "address": "0xE1d1F66215998786110Ba0102ef558b22224C016",
-            "decimals": 8
-        },
-        {
-            "name": "Hot Cross Token",
-            "symbol": "HOTCROSS",
-            "address": "0x4FA7163E153419E0E1064e418dd7A99314Ed27b6",
-            "decimals": 18
-        },
-        {
-            "name": "Hotbit",
-            "symbol": "HTB",
-            "address": "0x4e840AADD28DA189B9906674B4Afcb77C128d9ea",
-            "decimals": 18
-        },
-        {
-            "name": "HYFI",
-            "symbol": "HYFI",
-            "address": "0x9a319b959e33369C5eaA494a770117eE3e585318",
-            "decimals": 18
-        },
-        {
-            "name": "Horizon Protocol",
-            "symbol": "HZN",
-            "address": "0xC0eFf7749b125444953ef89682201Fb8c6A917CD",
-            "decimals": 18
-        },
-        {
-            "name": "Impossible Finance",
-            "symbol": "IF",
-            "address": "0xB0e1fc65C1a741b4662B813eB787d369b8614Af1",
-            "decimals": 18
-        },
-        {
-            "name": "Injective Protocol",
-            "symbol": "INJ",
-            "address": "0xa2B726B1145A4773F68593CF171187d8EBe4d495",
-            "decimals": 18
-        },
-        {
-            "name": "IoTeX",
-            "symbol": "IOTX",
-            "address": "0x9678E42ceBEb63F23197D726B29b1CB20d0064E5",
-            "decimals": 18
-        },
-        {
-            "name": "Itam",
-            "symbol": "ITAM",
-            "address": "0x04C747b40Be4D535fC83D09939fb0f626F32800B",
-            "decimals": 18
-        },
-        {
-            "name": "Juggernaut Finance",
-            "symbol": "JGN",
-            "address": "0xC13B7a43223BB9Bf4B69BD68Ab20ca1B79d81C75",
-            "decimals": 18
-        },
-        {
-            "name": "Juventus",
-            "symbol": "JUV",
-            "address": "0xC40C9A843E1c6D01b7578284a9028854f6683b1B",
-            "decimals": 2
-        },
-        {
-            "name": "Kalmar",
-            "symbol": "KALM",
-            "address": "0x4BA0057f784858a48fe351445C672FF2a3d43515",
-            "decimals": 18
-        },
-        {
-            "name": "KAVA",
-            "symbol": "KAVA",
-            "address": "0x5F88AB06e8dfe89DF127B2430Bba4Af600866035",
-            "decimals": 6
-        },
-        {
-            "name": "Kattana",
-            "symbol": "KTN",
-            "address": "0xDAe6c2A48BFAA66b43815c5548b10800919c993E",
-            "decimals": 18
-        },
-        {
-            "name": "Qian Governance Token",
-            "symbol": "KUN",
-            "address": "0x1A2fb0Af670D0234c2857FaD35b789F8Cb725584",
-            "decimals": 18
-        },
-        {
-            "name": "FC Lazio Fan Token",
-            "symbol": "LAZIO",
-            "address": "0x77d547256A2cD95F32F67aE0313E450Ac200648d",
-            "decimals": 8
-        },
-        {
-            "name": "Lien",
-            "symbol": "LIEN",
-            "address": "0x5d684ADaf3FcFe9CFb5ceDe3abf02F0Cdd1012E3",
-            "decimals": 8
-        },
-        {
-            "name": "Lightning",
-            "symbol": "LIGHT",
-            "address": "0x037838b556d9c9d654148a284682C55bB5f56eF4",
-            "decimals": 18
-        },
-        {
-            "name": "Linear Finance",
-            "symbol": "LINA",
-            "address": "0x762539b45A1dCcE3D36d080F74d1AED37844b878",
-            "decimals": 18
-        },
-        {
-            "name": "ChainLink Token",
-            "symbol": "LINK",
-            "address": "0xF8A0BF9cF54Bb92F17374d9e9A321E6a111a51bD",
-            "decimals": 18
-        },
-        {
-            "name": "Litentry",
-            "symbol": "LIT",
-            "address": "0xb59490aB09A0f526Cc7305822aC65f2Ab12f9723",
-            "decimals": 18
-        },
-        {
-            "name": "Lympo Market Token",
-            "symbol": "LMT",
-            "address": "0x9617857E191354dbEA0b714d78Bc59e57C411087",
-            "decimals": 18
-        },
-        {
-            "name": "Litecoin Token",
-            "symbol": "LTC",
-            "address": "0x4338665CBB7B2485A8855A139b75D5e34AB0DB94",
-            "decimals": 18
-        },
-        {
-            "name": "LTO Network",
-            "symbol": "LTO",
-            "address": "0x857B222Fc79e1cBBf8Ca5f78CB133d1b7CF34BBd",
-            "decimals": 18
-        },
-        {
-            "name": "lUSD",
-            "symbol": "lUSD",
-            "address": "0x23e8a70534308a4AAF76fb8C32ec13d17a3BD89e",
-            "decimals": 18
-        },
-        {
-            "name": "Mirror AMZN Token",
-            "symbol": "mAMZN",
-            "address": "0x3947B992DC0147D2D89dF0392213781b04B25075",
-            "decimals": 18
-        },
-        {
-            "name": "Unmarshal",
-            "symbol": "MARSH",
-            "address": "0x2FA5dAF6Fe0708fBD63b1A7D1592577284f52256",
-            "decimals": 18
-        },
-        {
-            "name": "Mask Network",
-            "symbol": "MASK",
-            "address": "0x2eD9a5C8C13b93955103B9a7C167B67Ef4d568a3",
-            "decimals": 18
-        },
-        {
-            "name": "Math",
-            "symbol": "MATH",
-            "address": "0xF218184Af829Cf2b0019F8E6F0b2423498a36983",
-            "decimals": 18
-        },
-        {
-            "name": "Mobox",
-            "symbol": "MBOX",
-            "address": "0x3203c9E46cA618C8C1cE5dC67e7e9D75f5da2377",
-            "decimals": 18
-        },
-        {
-            "name": "MCDEX",
-            "symbol": "MCB",
-            "address": "0x5fE80d2CD054645b9419657d3d10d26391780A7B",
-            "decimals": 18
-        },
-        {
-            "name": "Mirror COIN",
-            "symbol": "mCOIN",
-            "address": "0x49022089e78a8D46Ec87A3AF86a1Db6c189aFA6f",
-            "decimals": 18
-        },
-        {
-            "name": "MacaronSwap",
-            "symbol": "MCRN",
-            "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
-            "decimals": 18
-        },
-        {
-            "name": "Mirror GOOGL Token",
-            "symbol": "mGOOGL",
-            "address": "0x62D71B23bF15218C7d2D7E48DBbD9e9c650B173f",
-            "decimals": 18
-        },
-        {
-            "name": "Mirror Finance",
-            "symbol": "MIR",
-            "address": "0x5B6DcF557E2aBE2323c48445E8CC948910d8c2c9",
-            "decimals": 18
-        },
-        {
-            "name": "Mix",
-            "symbol": "MIX",
-            "address": "0xB67754f5b4C704A24d2db68e661b2875a4dDD197",
-            "decimals": 18
-        },
-        {
-            "name": "Mirror NFLX Token",
-            "symbol": "mNFLX",
-            "address": "0xa04F060077D90Fe2647B61e4dA4aD1F97d6649dc",
-            "decimals": 18
-        },
-        {
-            "name": "Meter",
-            "symbol": "MTRG",
-            "address": "0xBd2949F67DcdC549c6Ebe98696449Fa79D988A9F",
-            "decimals": 18
-        },
-        {
-            "name": "Mirror TSLA Token",
-            "symbol": "mTSLA",
-            "address": "0xF215A127A196e3988C09d052e16BcFD365Cd7AA3",
-            "decimals": 18
-        },
-        {
-            "name": "MX Token",
-            "symbol": "MX",
-            "address": "0x9F882567A62a5560d147d64871776EeA72Df41D3",
-            "decimals": 18
-        },
-        {
-            "name": "NAOS Finance",
-            "symbol": "NAOS",
-            "address": "0x758d08864fB6cCE3062667225ca10b8F00496cc2",
-            "decimals": 18
-        },
-        {
-            "name": "NAR Token",
-            "symbol": "NAR",
-            "address": "0xA1303E6199b319a891b79685F0537D289af1FC83",
-            "decimals": 18
-        },
-        {
-            "name": "APENFT",
-            "symbol": "NFT",
-            "address": "0x1fC9004eC7E5722891f5f38baE7678efCB11d34D",
-            "decimals": 6
-        },
-        {
-            "name": "Nerve Finance",
-            "symbol": "NRV",
-            "address": "0x42F6f551ae042cBe50C739158b4f0CAC0Edb9096",
-            "decimals": 18
-        },
-        {
-            "name": "Nuls",
-            "symbol": "NULS",
-            "address": "0x8CD6e29d3686d24d3C2018CEe54621eA0f89313B",
-            "decimals": 8
-        },
-        {
-            "name": "NerveNetwork",
-            "symbol": "NVT",
-            "address": "0xf0E406c49C63AbF358030A299C0E00118C4C6BA5",
-            "decimals": 8
-        },
-        {
-            "name": "Nyanswop Token",
-            "symbol": "NYA",
-            "address": "0xbFa0841F7a90c4CE6643f651756EE340991F99D5",
-            "decimals": 18
-        },
-        {
-            "name": "O3 Swap",
-            "symbol": "O3",
-            "address": "0xEe9801669C6138E84bD50dEB500827b776777d28",
-            "decimals": 18
-        },
-        {
-            "name": "Oddz",
-            "symbol": "ODDZ",
-            "address": "0xCD40F2670CF58720b694968698A5514e924F742d",
-            "decimals": 18
-        },
-        {
-            "name": "OG",
-            "symbol": "OG",
-            "address": "0xf05E45aD22150677a017Fbd94b84fBB63dc9b44c",
-            "decimals": 2
-        },
-        {
-            "name": "Oin Finance",
-            "symbol": "OIN",
-            "address": "0x658E64FFcF40D240A43D52CA9342140316Ae44fA",
-            "decimals": 8
-        },
-        {
-            "name": "Harmony One",
-            "symbol": "ONE",
-            "address": "0x03fF0ff224f904be3118461335064bB48Df47938",
-            "decimals": 18
-        },
-        {
-            "name": "BigOne Token",
-            "symbol": "ONE",
-            "address": "0x04BAf95Fd4C52fd09a56D840bAEe0AB8D7357bf0",
-            "decimals": 18
-        },
-        {
-            "name": "Ontology Token",
-            "symbol": "ONT",
-            "address": "0xFd7B3A77848f1C2D67E05E54d78d174a0C850335",
-            "decimals": 18
-        },
-        {
-            "name": "The Orbs Network",
-            "symbol": "ORBS",
-            "address": "0xeBd49b26169e1b52c04cFd19FCf289405dF55F80",
-            "decimals": 18
-        },
-        {
-            "name": "pBTC",
-            "symbol": "pBTC",
-            "address": "0xeD28A457A5A76596ac48d87C0f577020F6Ea1c4C",
-            "decimals": 18
-        },
-        {
-            "name": "PolyCrowns",
-            "symbol": "pCWS",
-            "address": "0xbcf39F0EDDa668C58371E519AF37CA705f2bFcbd",
-            "decimals": 18
-        },
-        {
-            "name": "Perlin X",
-            "symbol": "PERL",
-            "address": "0x0F9E4D49f25de22c2202aF916B681FBB3790497B",
-            "decimals": 18
-        },
-        {
-            "name": "Phala Network",
-            "symbol": "PHA",
-            "address": "0x0112e557d400474717056C4e6D40eDD846F38351",
-            "decimals": 18
-        },
-        {
-            "name": "Polkamon",
-            "symbol": "PMON",
-            "address": "0x1796ae0b0fa4862485106a0de9b654eFE301D0b2",
-            "decimals": 18
-        },
-        {
-            "name": "PNT",
-            "symbol": "PNT",
-            "address": "0xdaacB0Ab6Fb34d24E8a67BfA14BF4D95D4C7aF92",
-            "decimals": 18
-        },
-        {
-            "name": "pTokens OPEN",
-            "symbol": "pOPEN",
-            "address": "0xaBaE871B7E3b67aEeC6B46AE9FE1A91660AadAC5",
-            "decimals": 18
-        },
-        {
-            "name": "Moonpot",
-            "symbol": "POTS",
-            "address": "0x3Fcca8648651E5b974DD6d3e50F61567779772A8",
-            "decimals": 18
-        },
-        {
-            "name": "Prometeus",
-            "symbol": "PROM",
-            "address": "0xaF53d56ff99f1322515E54FdDE93FF8b3b7DAFd5",
-            "decimals": 18
-        },
-        {
-            "name": "Prosper",
-            "symbol": "PROS",
-            "address": "0xEd8c8Aa8299C10f067496BB66f8cC7Fb338A3405",
-            "decimals": 18
-        },
-        {
-            "name": "Paris Saint-Germain",
-            "symbol": "PSG",
-            "address": "0xBc5609612b7C44BEf426De600B5fd1379DB2EcF1",
-            "decimals": 2
-        },
-        {
-            "name": "Qubit Token",
-            "symbol": "QBT",
-            "address": "0x17B7163cf1Dbd286E262ddc68b553D899B93f526",
-            "decimals": 18
-        },
-        {
-            "name": "QuarkChain Token",
-            "symbol": "QKC",
-            "address": "0xA1434F1FC3F437fa33F7a781E041961C0205B5Da",
-            "decimals": 18
-        },
-        {
-            "name": "QIAN second generation dollar",
-            "symbol": "QSD",
-            "address": "0x07AaA29E63FFEB2EBf59B33eE61437E1a91A3bb2",
-            "decimals": 18
-        },
-        {
-            "name": "QUSD Stablecoin",
-            "symbol": "QUSD",
-            "address": "0xb8C540d00dd0Bf76ea12E4B4B95eFC90804f924E",
-            "decimals": 18
-        },
-        {
-            "name": "Rabbit Finance",
-            "symbol": "RABBIT",
-            "address": "0x95a1199EBA84ac5f19546519e287d43D2F0E1b41",
-            "decimals": 18
-        },
-        {
-            "name": "Ramp DEFI",
-            "symbol": "RAMP",
-            "address": "0x8519EA49c997f50cefFa444d240fB655e89248Aa",
-            "decimals": 18
-        },
-        {
-            "name": "Reef",
-            "symbol": "REEF",
-            "address": "0xF21768cCBC73Ea5B6fd3C687208a7c2def2d966e",
-            "decimals": 18
-        },
-        {
-            "name": "renBTC",
-            "symbol": "renBTC",
-            "address": "0xfCe146bF3146100cfe5dB4129cf6C82b0eF4Ad8c",
-            "decimals": 8
-        },
-        {
-            "name": "renDOGE",
-            "symbol": "renDOGE",
-            "address": "0xc3fEd6eB39178A541D274e6Fc748d48f0Ca01CC3",
-            "decimals": 8
-        },
-        {
-            "name": "renZEC",
-            "symbol": "renZEC",
-            "address": "0x695FD30aF473F2960e81Dc9bA7cB67679d35EDb7",
-            "decimals": 8
-        },
-        {
-            "name": "REVV",
-            "symbol": "REVV",
-            "address": "0x833F307aC507D47309fD8CDD1F835BeF8D702a93",
-            "decimals": 18
-        },
-        {
-            "name": "RFOX",
-            "symbol": "RFOX",
-            "address": "0x0a3A21356793B49154Fd3BbE91CBc2A16c0457f5",
-            "decimals": 18
-        },
-        {
-            "name": "Rangers Protocol",
-            "symbol": "RPG",
-            "address": "0xc2098a8938119A52B1F7661893c0153A6CB116d5",
-            "decimals": 18
-        },
-        {
-            "name": "rUSD",
-            "symbol": "rUSD",
-            "address": "0x07663837218A003e66310a01596af4bf4e44623D",
-            "decimals": 18
-        },
-        {
-            "name": "SafeMoon",
-            "symbol": "SAFEMOON",
-            "address": "0x8076C74C5e3F5852037F31Ff0093Eeb8c8ADd8D3",
-            "decimals": 9
-        },
-        {
-            "name": "bDollar Share",
-            "symbol": "sBDO",
-            "address": "0x0d9319565be7f53CeFE84Ad201Be3f40feAE2740",
-            "decimals": 18
-        },
-        {
-            "name": "SafePal Token",
-            "symbol": "SFP",
-            "address": "0xD41FDb03Ba84762dD66a0af1a6C8540FF1ba5dfb",
-            "decimals": 18
-        },
-        {
-            "name": "Seedify",
-            "symbol": "SFUND",
-            "address": "0x477bC8d23c634C154061869478bce96BE6045D12",
-            "decimals": 18
-        },
-        {
-            "name": "CryptoBlades Skill Token",
-            "symbol": "SKILL",
-            "address": "0x154A9F9cbd3449AD22FDaE23044319D6eF2a1Fab",
-            "decimals": 18
-        },
-        {
-            "name": "SPARTAN PROTOCOL TOKEN",
-            "symbol": "SPARTA",
-            "address": "0x3910db0600eA925F63C36DdB1351aB6E2c6eb102",
-            "decimals": 18
-        },
-        {
-            "name": "Splintershards",
-            "symbol": "SPS",
-            "address": "0x1633b7157e7638C4d6593436111Bf125Ee74703F",
-            "decimals": 18
-        },
-        {
-            "name": "StableXSwap",
-            "symbol": "STAX",
-            "address": "0x0Da6Ed8B13214Ff28e9Ca979Dd37439e8a88F6c4",
-            "decimals": 18
-        },
-        {
-            "name": "Sushi",
-            "symbol": "SUSHI",
-            "address": "0x947950BcC74888a40Ffa2593C5798F11Fc9124C4",
-            "decimals": 18
-        },
-        {
-            "name": "Suterusu",
-            "symbol": "SUTER",
-            "address": "0x4CfbBdfBd5BF0814472fF35C72717Bd095ADa055",
-            "decimals": 18
-        },
-        {
-            "name": "Swampy",
-            "symbol": "SWAMP",
-            "address": "0xc5A49b4CBe004b6FD55B30Ba1dE6AC360FF9765d",
-            "decimals": 18
-        },
-        {
-            "name": "SWGToken",
-            "symbol": "SWG",
-            "address": "0xe792f64C582698b8572AAF765bDC426AC3aEfb6B",
-            "decimals": 18
-        },
-        {
-            "name": "Swingby",
-            "symbol": "SWINGBY",
-            "address": "0x71DE20e0C4616E7fcBfDD3f875d568492cBE4739",
-            "decimals": 18
-        },
-        {
-            "name": "Switcheo",
-            "symbol": "SWTH",
-            "address": "0x250b211EE44459dAd5Cd3bCa803dD6a7EcB5d46C",
-            "decimals": 8
-        },
-        {
-            "name": "Swipe",
-            "symbol": "SXP",
-            "address": "0x47BEAd2563dCBf3bF2c9407fEa4dC236fAbA485A",
-            "decimals": 18
-        },
-        {
-            "name": "Tau Bitcoin",
-            "symbol": "tBTC",
-            "address": "0x2cD1075682b0FCCaADd0Ca629e138E64015Ba11c",
-            "decimals": 9
-        },
-        {
-            "name": "Tau DOGE",
-            "symbol": "tDOGE",
-            "address": "0xe550a593d09FBC8DCD557b5C88Cea6946A8b404A",
-            "decimals": 8
-        },
-        {
-            "name": "Tenet",
-            "symbol": "TEN",
-            "address": "0xdFF8cb622790b7F92686c722b02CaB55592f152C",
-            "decimals": 18
-        },
-        {
-            "name": "TitanSwap",
-            "symbol": "TITAN",
-            "address": "0xe898EDc43920F357A93083F1d4460437dE6dAeC2",
-            "decimals": 18
-        },
-        {
-            "name": "TokoCrypto",
-            "symbol": "TKO",
-            "address": "0x9f589e3eabe42ebC94A44727b3f3531C0c877809",
-            "decimals": 18
-        },
-        {
-            "name": "Alien Worlds",
-            "symbol": "TLM",
-            "address": "0x2222227E22102Fe3322098e4CBfE18cFebD57c95",
-            "decimals": 4
-        },
-        {
-            "name": "Telos",
-            "symbol": "TLOS",
-            "address": "0xb6C53431608E626AC81a9776ac3e999c5556717c",
-            "decimals": 18
-        },
-        {
-            "name": "TokenPocket",
-            "symbol": "TPT",
-            "address": "0xECa41281c24451168a37211F0bc2b8645AF45092",
-            "decimals": 4
-        },
-        {
-            "name": "Unitrade",
-            "symbol": "TRADE",
-            "address": "0x7af173F350D916358AF3e218Bdf2178494Beb748",
-            "decimals": 18
-        },
-        {
-            "name": "Tron",
-            "symbol": "TRX",
-            "address": "0x85EAC5Ac2F758618dFa09bDbe0cf174e7d574D5B",
-            "decimals": 18
-        },
-        {
-            "name": "True USD",
-            "symbol": "TUSD",
-            "address": "0x14016E85a25aeb13065688cAFB43044C2ef86784",
-            "decimals": 18
-        },
-        {
-            "name": "Trust Wallet",
-            "symbol": "TWT",
-            "address": "0x4B0F1812e5Df2A09796481Ff14017e6005508003",
-            "decimals": 18
-        },
-        {
-            "name": "Tixl",
-            "symbol": "TXL",
-            "address": "0x1FFD0b47127fdd4097E54521C9E2c7f0D66AafC5",
-            "decimals": 18
-        },
-        {
-            "name": "UpBots",
-            "symbol": "UBXT",
-            "address": "0xBbEB90cFb6FAFa1F69AA130B7341089AbeEF5811",
-            "decimals": 18
-        },
-        {
-            "name": "Unifi Token",
-            "symbol": "UNFI",
-            "address": "0x728C5baC3C3e370E372Fc4671f9ef6916b814d8B",
-            "decimals": 18
-        },
-        {
-            "name": "Uniswap",
-            "symbol": "UNI",
-            "address": "0xBf5140A22578168FD562DCcF235E5D43A02ce9B1",
-            "decimals": 18
-        },
-        {
-            "name": "Binance Pegged USD Coin",
-            "symbol": "USDC",
-            "address": "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
-            "decimals": 18
-        },
-        {
-            "name": "Binance Pegged USDT",
-            "symbol": "USDT",
-            "address": "0x55d398326f99059fF775485246999027B3197955",
-            "decimals": 18,
-            "isCommon": true
-        },
-        {
-            "name": "USDX",
-            "symbol": "USDX",
-            "address": "0x1203355742e76875154C0D13eB81DCD7711dC7d9",
-            "decimals": 6
-        },
-        {
-            "name": "UST Token",
-            "symbol": "UST",
-            "address": "0x23396cF899Ca06c4472205fC903bDB4de249D6fC",
-            "decimals": 18
-        },
-        {
-            "name": "VAI Stablecoin",
-            "symbol": "VAI",
-            "address": "0x4BD17003473389A42DAF6a0a729f6Fdb328BbBd7",
-            "decimals": 18
-        },
-        {
-            "name": "Venus Reward Token",
-            "symbol": "VRT",
-            "address": "0x5F84ce30DC3cF7909101C69086c50De191895883",
-            "decimals": 18
-        },
-        {
-            "name": "Yieldwatch",
-            "symbol": "WATCH",
-            "address": "0x7A9f28EB62C791422Aa23CeAE1dA9C847cBeC9b0",
-            "decimals": 18
-        },
-        {
-            "name": "Wault",
-            "symbol": "WAULTx",
-            "address": "0xB64E638E60D154B43f660a6BF8fD8a3b249a6a21",
-            "decimals": 18
-        },
-        {
-            "name": "WBNB Token",
-            "symbol": "WBNB",
-            "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
-            "decimals": 18,
-            "isCommon": true,
-            "isWETH": true
-        },
-        {
-            "name": "BitWell Token",
-            "symbol": "WELL",
-            "address": "0xf07a32Eb035b786898c00bB1C64d8c6F8E7a46D5",
-            "decimals": 18
-        },
-        {
-            "name": "WaultSwap",
-            "symbol": "WEX",
-            "address": "0xa9c41A46a6B3531d28d5c32F6633dd2fF05dFB90",
-            "decimals": 18
-        },
-        {
-            "name": "WINk",
-            "symbol": "WIN",
-            "address": "0xaeF0d72a118ce24feE3cD1d43d383897D05B4e99",
-            "decimals": 18
-        },
-        {
-            "name": "Wrapped MASS",
-            "symbol": "WMASS",
-            "address": "0x7e396BfC8a2f84748701167c2d622F041A1D7a17",
-            "decimals": 8
-        },
-        {
-            "name": "Wootrade",
-            "symbol": "WOO",
-            "address": "0x4691937a7508860F876c9c0a2a617E7d9E945D4B",
-            "decimals": 18
-        },
-        {
-            "name": "Wall Street Games",
-            "symbol": "WSG",
-            "address": "0xA58950F05FeA2277d2608748412bf9F802eA4901",
-            "decimals": 18
-        },
-        {
-            "name": "Soteria",
-            "symbol": "wSOTE",
-            "address": "0x541E619858737031A1244A5d0Cd47E5ef480342c",
-            "decimals": 18
-        },
-        {
-            "name": "Xcademy",
-            "symbol": "XCAD",
-            "address": "0x431e0cD023a32532BF3969CddFc002c00E98429d",
-            "decimals": 18
-        },
-        {
-            "name": "Exeedme",
-            "symbol": "XED",
-            "address": "0x5621b5A3f4a8008c4CCDd1b942B121c8B1944F1f",
-            "decimals": 18
-        },
-        {
-            "name": "XEND",
-            "symbol": "XEND",
-            "address": "0x4a080377f83D669D7bB83B3184a8A5E61B500608",
-            "decimals": 18
-        },
-        {
-            "name": "xMARK",
-            "symbol": "xMARK",
-            "address": "0x26A5dFab467d4f58fB266648CAe769503CEC9580",
-            "decimals": 9
-        },
-        {
-            "name": "XRP Token",
-            "symbol": "XRP",
-            "address": "0x1D2F0da169ceB9fC7B3144628dB156f3F6c60dBE",
-            "decimals": 18
-        },
-        {
-            "name": "Tezos Token",
-            "symbol": "XTZ",
-            "address": "0x16939ef78684453bfDFb47825F8a5F714f12623a",
-            "decimals": 18
-        },
-        {
-            "name": "Venus Token",
-            "symbol": "XVS",
-            "address": "0xcF6BB5389c92Bdda8a3747Ddb454cB7a64626C63",
-            "decimals": 18
-        },
-        {
-            "name": "yearn.finance",
-            "symbol": "YFI",
-            "address": "0x88f1A5ae2A3BF98AEAF342D26B30a79438c9142e",
-            "decimals": 18
-        },
-        {
-            "name": "YFII.finance Token",
-            "symbol": "YFII",
-            "address": "0x7F70642d88cf1C4a3a7abb072B53B929b653edA5",
-            "decimals": 18
-        },
-        {
-            "name": "Zcash Token",
-            "symbol": "ZEC",
-            "address": "0x1Ba42e5193dfA8B03D15dd1B86a3113bbBEF8Eeb",
-            "decimals": 18
-        },
-        {
-            "name": "ZeroSwapToken",
-            "symbol": "ZEE",
-            "address": "0x44754455564474A89358B2C2265883DF993b12F0",
-            "decimals": 18
-        },
-        {
-            "name": "Zilliqa",
-            "symbol": "ZIL",
-            "address": "0xb86AbCb37C3A4B64f74f59301AFF131a1BEcC787",
-            "decimals": 12
-        },
-        {
-            "name": "openANX Token",
-            "symbol": "OAX",
-            "address": "0x31720B2276Df3b3B757B55845d17Eea184d4fc8f",
-            "decimals": 18
-        },
-        {
-            "name": "Impossible Decentralized Incubator Access Token",
-            "symbol": "IDIA",
-            "address": "0x0b15Ddf19D47E6a86A56148fb4aFFFc6929BcB89",
-            "decimals": 18
-        },
-        {
-            "name": "Biswap",
-            "symbol": "BSW",
-            "address": "0x965F527D9159dCe6288a2219DB51fc6Eef120dD1",
-            "decimals": 18
-        },
-        {
-            "name": "OpenSwap Booster - IDIA Series #1",
-            "symbol": "bqIDIA1",
-            "address": "0x46c5BC0656301c3DFb8EF8fc44CfBF89ef121348",
-            "decimals": 18
-        },
-        {
-            "name": "OGS",
-            "symbol": "OGS",
-            "address": "0x416947e6Fc78F158fd9B775fA846B72d768879c2",
-            "decimals": 18
-        },
-        {
-            "name": "dummy BVR",
-            "symbol": "dBVR",
-            "address": "0x16C5e51BFa38a6dD109bcc4921a92AEF13B14Ed9",
-            "decimals": 18
-        }
-    ];
-});
-define("@scom/scom-disperse/store/data/tokens/mainnet/fantom.ts", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Tokens_Fantom = void 0;
-    ///<amd-module name='@scom/scom-disperse/store/data/tokens/mainnet/fantom.ts'/> 
-    exports.Tokens_Fantom = [
-        {
-            "address": "0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83",
-            "name": "Wrapped Fantom",
-            "symbol": "WFTM",
-            "decimals": 18,
-            "isCommon": true,
-            "isWETH": true
-        },
-        { "address": "0x6c021Ae822BEa943b2E66552bDe1D2696a53fbB7", "name": "TOMB", "symbol": "TOMB", "decimals": 18 },
-        { "address": "0x4cdF39285D7Ca8eB3f090fDA0C069ba5F4145B37", "name": "TSHARE", "symbol": "TSHARE", "decimals": 18 },
-        { "address": "0x04068DA6C83AFCFA0e13ba15A6696662335D5B75", "name": "USD Coin", "symbol": "USDC", "decimals": 6, "isCommon": true },
-        { "address": "0x841FAD6EAe12c286d1Fd18d1d525DFfA75C7EFFE", "name": "SpookyToken", "symbol": "BOO", "decimals": 18 },
-        { "address": "0x8D11eC38a3EB5E956B052f67Da8Bdc9bef8Abf3E", "name": "Dai Stablecoin", "symbol": "DAI", "decimals": 18 },
-        { "address": "0x74b23882a30290451A17c44f4F05243b6b58C76d", "name": "Ethereum", "symbol": "ETH", "decimals": 18 },
-        { "address": "0x321162Cd933E2Be498Cd2267a90534A804051b11", "name": "Bitcoin", "symbol": "BTC", "decimals": 8 },
-        { "address": "0x049d68029688eAbF473097a2fC38ef61633A3C7A", "name": "Frapped USDT", "symbol": "fUSDT", "decimals": 6 },
-        { "address": "0x82f0B8B456c1A451378467398982d4834b6829c1", "name": "Magic Internet Money", "symbol": "MIM", "decimals": 18 },
-        { "address": "0xe0654C8e6fd4D733349ac7E09f6f23DA256bF475", "name": "Scream", "symbol": "SCREAM", "decimals": 18 },
-        { "address": "0x5602df4A94eB6C680190ACCFA2A475621E0ddBdc", "name": "Spartacus", "symbol": "SPA", "decimals": 9 },
-        { "address": "0xd8321AA83Fb0a4ECd6348D4577431310A6E0814d", "name": "Geist.Finance Protocol Token", "symbol": "GEIST", "decimals": 18 },
-        { "address": "0xD67de0e0a0Fd7b15dC8348Bb9BE742F3c5850454", "name": "Binance", "symbol": "BNB", "decimals": 18 },
-        { "address": "0x5C4FDfc5233f935f20D2aDbA572F770c2E377Ab0", "name": "Hector", "symbol": "HEC", "decimals": 9 },
-        { "address": "0xb3654dc3D10Ea7645f8319668E8F54d2574FBdC8", "name": "ChainLink", "symbol": "LINK", "decimals": 18 },
-        { "address": "0x9879aBDea01a879644185341F7aF7d8343556B7a", "name": "TrueUSD", "symbol": "TUSD", "decimals": 18 },
-        { "address": "0xfB98B335551a418cD0737375a2ea0ded62Ea213b", "name": "miMATIC", "symbol": "miMATIC", "decimals": 18 },
-        { "address": "0xae75A438b2E0cB8Bb01Ec1E1e376De11D44477CC", "name": "Sushi", "symbol": "SUSHI", "decimals": 18 },
-        { "address": "0xdDcb3fFD12750B45d32E084887fdf1aABAb34239", "name": "Anyswap", "symbol": "ANY", "decimals": 18 },
-        { "address": "0x511D35c52a3C244E7b8bd92c0C297755FbD89212", "name": "Avalanche", "symbol": "AVAX", "decimals": 18 },
-        { "address": "0x468003B688943977e6130F4F68F23aad939a1040", "name": "Spell Token", "symbol": "SPELL", "decimals": 18 },
-        { "address": "0x5Cc61A78F164885776AA610fb0FE1257df78E59B", "name": "SpiritSwap Token", "symbol": "SPIRIT", "decimals": 18 },
-        { "address": "0x10b620b2dbAC4Faa7D7FFD71Da486f5D44cd86f9", "name": "Liquid Driver", "symbol": "LQDR", "decimals": 18 },
-        { "address": "0xdc301622e621166BD8E82f2cA0A26c13Ad0BE355", "name": "Frax", "symbol": "FRAX", "decimals": 18 }
-    ];
-});
-define("@scom/scom-disperse/store/data/tokens/mainnet/cronos.ts", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Tokens_Cronos = void 0;
-    ///<amd-module name='@scom/scom-disperse/store/data/tokens/mainnet/cronos.ts'/> 
-    exports.Tokens_Cronos = [
-        {
-            "address": "0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23",
-            "name": "WCRO",
-            "symbol": "WCRO",
-            "decimals": 18,
-            "isCommon": true,
-            "isWETH": true
-        },
-        {
-            "address": "0xe44Fd7fCb2b1581822D0c862B68222998a0c299a",
-            "name": "WETH",
-            "symbol": "WCRO",
-            "decimals": 18,
-            "isCommon": true
-        },
-        {
-            "address": "0x062E66477Faf219F25D27dCED647BF57C3107d52",
-            "name": "WBTC",
-            "symbol": "WBTC",
-            "decimals": 8,
-            "isCommon": true
-        },
-        {
-            "address": "0xc21223249CA28397B4B6541dfFaEcC539BfF0c59",
-            "name": "USDC",
-            "symbol": "USDC",
-            "decimals": 6,
-            "isCommon": true
-        },
-        {
-            "address": "0x66e428c3f67a68878562e79A0234c1F83c208770",
-            "name": "USDT",
-            "symbol": "USDT",
-            "decimals": 6,
-            "isCommon": true
-        },
-        {
-            "address": "0xF2001B145b43032AAF5Ee2884e456CCd805F677D",
-            "name": "DAI",
-            "symbol": "DAI",
-            "decimals": 18,
-            "isCommon": true
-        }
-    ];
-});
-define("@scom/scom-disperse/store/data/tokens/mainnet/index.ts", ["require", "exports", "@scom/scom-disperse/store/data/tokens/mainnet/avalanche.ts", "@scom/scom-disperse/store/data/tokens/mainnet/ethereum.ts", "@scom/scom-disperse/store/data/tokens/mainnet/polygon.ts", "@scom/scom-disperse/store/data/tokens/mainnet/bsc.ts", "@scom/scom-disperse/store/data/tokens/mainnet/fantom.ts", "@scom/scom-disperse/store/data/tokens/mainnet/cronos.ts"], function (require, exports, avalanche_1, ethereum_1, polygon_1, bsc_1, fantom_1, cronos_1) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Tokens_Cronos = exports.Tokens_Fantom = exports.Tokens_BSC = exports.Tokens_Polygon = exports.Tokens_Ethereuem = exports.Tokens_Avalanche = void 0;
-    Object.defineProperty(exports, "Tokens_Avalanche", { enumerable: true, get: function () { return avalanche_1.Tokens_Avalanche; } });
-    Object.defineProperty(exports, "Tokens_Ethereuem", { enumerable: true, get: function () { return ethereum_1.Tokens_Ethereuem; } });
-    Object.defineProperty(exports, "Tokens_Polygon", { enumerable: true, get: function () { return polygon_1.Tokens_Polygon; } });
-    Object.defineProperty(exports, "Tokens_BSC", { enumerable: true, get: function () { return bsc_1.Tokens_BSC; } });
-    Object.defineProperty(exports, "Tokens_Fantom", { enumerable: true, get: function () { return fantom_1.Tokens_Fantom; } });
-    Object.defineProperty(exports, "Tokens_Cronos", { enumerable: true, get: function () { return cronos_1.Tokens_Cronos; } });
-});
-define("@scom/scom-disperse/store/data/tokens/testnet/bsc-testnet.ts", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Tokens_BSC_Testnet = void 0;
-    ///<amd-module name='@scom/scom-disperse/store/data/tokens/testnet/bsc-testnet.ts'/> 
-    exports.Tokens_BSC_Testnet = [
-        {
-            "name": "Wrapped BNB",
-            "address": "0xae13d989dac2f0debff460ac112a837c89baa7cd",
-            "symbol": "WBNB",
-            "decimals": 18,
-            "isCommon": true,
-            "isWETH": true
-        },
-        {
-            "name": "USDT",
-            "address": "0x29386B60e0A9A1a30e1488ADA47256577ca2C385",
-            "symbol": "USDT",
-            "decimals": 6,
-            "isCommon": true
-        },
-        {
-            "name": "BUSD Token",
-            "symbol": "BUSD",
-            "address": "0xDe9334C157968320f26e449331D6544b89bbD00F",
-            "decimals": 18,
-            "isCommon": true
-        },
-        {
-            "name": "USDC",
-            "address": "0x278B02d1b60AcD3334682F0dcF29AECcc62b28B3",
-            "symbol": "USDC",
-            "decimals": 18
-        },
-        {
-            "name": "DAI",
-            "address": "0xB78DAa2F1A2de8270a5641f052FaFC4b2b3ea3B1",
-            "symbol": "DAI",
-            "decimals": 18
-        },
-        {
-            "name": "openANX Token",
-            "address": "0x8677048f3eD472610514bA6EF6Ec2f03b550eBdB",
-            "symbol": "OAX",
-            "decimals": 18
-        },
-        {
-            "name": "CAKE",
-            "address": "0xEF899e45461F4614655AEe012ec69ae12F97F81e",
-            "symbol": "CAKE",
-            "decimals": 18
-        },
-        {
-            "name": "BakeryToken",
-            "address": "0xE02dF9e3e622DeBdD69fb838bB799E3F168902c5",
-            "symbol": "BAKE",
-            "decimals": 18
-        },
-        {
-            "name": "Polkadot Token",
-            "symbol": "DOT",
-            "address": "0x6679b8031519fA81fE681a93e98cdddA5aafa95b",
-            "decimals": 18
-        },
-        {
-            "name": "Impossible Finance",
-            "symbol": "IF",
-            "address": "0x3245fD889abe511A7d57643905368F8Ec8fd4A92",
-            "decimals": 18
-        },
-        {
-            "name": "Coin98",
-            "symbol": "C98",
-            "address": "0x5EB137B421AE7Be6Ce26C3dE7c828c475C9a69b1",
-            "decimals": 18
-        },
-        {
-            "name": "Impossible Decentralized Incubator Access Token",
-            "symbol": "IDIA",
-            "address": "0x52423B7F0769d0365EbdD79342ce167eB9C29AE2",
-            "decimals": 18
-        },
-        {
-            "name": "OpenSwap",
-            "address": "0x45eee762aaeA4e5ce317471BDa8782724972Ee19",
-            "symbol": "OSWAP",
-            "decimals": 18,
-            "isCommon": true
-        },
-        {
-            "name": "mOpenSwap",
-            "address": "0xC2C76387eB1cd15f2f55D2463b5AAd6fca062EB1",
-            "symbol": "mOSWAP",
-            "decimals": 18
-        },
-        {
-            "name": "Project",
-            "address": "0x100c8C9eFCb56A253d5A82059647A2adEFDC984A",
-            "symbol": "PRO",
-            "decimals": 18
-        },
-        {
-            "name": "mProject",
-            "address": "0x05039f76eB9Dcb6aB49b4D5860980e32f976e17b",
-            "symbol": "mPRO",
-            "decimals": 18
-        },
-        {
-            "name": "mIDIA",
-            "address": "0x18CE3F88De23DC2A72f3aDDeB048caa01059E9f3",
-            "symbol": "mIDIA",
-            "decimals": 18
-        },
-        {
-            "name": "Testing",
-            "address": "0xc9E10b2a33631c1F9b185Df07198591d507CcE20",
-            "symbol": "TS",
-            "decimals": 18
-        },
-        {
-            "name": "tokenT",
-            "address": "0xb79aA5c1730Ad78dD958f05fD87022aeF3e50721",
-            "symbol": "TT",
-            "decimals": 18
-        },
-        {
-            "name": "JetSwap Token",
-            "address": "0x8839903E0D698e5976C39E34bDED66F7B9a1b8c9",
-            "symbol": "WINGS",
-            "decimals": 18
-        },
-        {
-            "name": "dummy BVR",
-            "address": "0x9DbD7024804a2a6131BE7C8dE7A7773c5c119419",
-            "symbol": "dBVR",
-            "decimals": 18
-        }
-    ];
-});
-define("@scom/scom-disperse/store/data/tokens/testnet/fuji.ts", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Tokens_Fuji = void 0;
-    ///<amd-module name='@scom/scom-disperse/store/data/tokens/testnet/fuji.ts'/> 
-    exports.Tokens_Fuji = [
-        {
-            "name": "Wrapped AVAX",
-            "address": "0xd00ae08403B9bbb9124bB305C09058E32C39A48c",
-            "symbol": "WAVAX",
-            "decimals": 18,
-            "isCommon": true,
-            "isWETH": true
-        },
-        {
-            "name": "Pangolin",
-            "address": "0x6d0A79756774c7cbac6Ce5c5e3b0f40b0ccCcB20",
-            "symbol": "PNG",
-            "decimals": 18
-        },
-        {
-            "name": "OpenSwap",
-            "address": "0x78d9D80E67bC80A11efbf84B7c8A65Da51a8EF3C",
-            "symbol": "OSWAP",
-            "decimals": 18,
-            "isCommon": true
-        },
-        {
-            "name": "Tether USD",
-            "address": "0xb9C31Ea1D475c25E58a1bE1a46221db55E5A7C6e",
-            "symbol": "USDT.e",
-            "decimals": 6
-        },
-        {
-            "name": "HakuSwap Token",
-            "address": "0x2093f387FA92d3963A4Bc8Fd8E4f88cD82c0d14A",
-            "symbol": "HAKU",
-            "decimals": 18
-        },
-        {
-            "name": "Snowball",
-            "address": "0xF319e2f610462F846d6e93F51CdC862EEFF2a554",
-            "symbol": "SNOB",
-            "decimals": 18
-        },
-        {
-            "name": "TEDDY",
-            "address": "0x7B635b81920F2C9B7a217DD898BeC9F6D309470D",
-            "symbol": "TEDDY",
-            "decimals": 18
-        },
-        {
-            "name": "AxialToken",
-            "address": "0x57b8a194230ef402584130B1eD31d2C4682d7a71",
-            "symbol": "AXIAL",
-            "decimals": 18
-        },
-        {
-            "name": "USDC",
-            "address": "0xA269756ccf60766FB311BeE71c07F53Af1d15bDE",
-            "symbol": "USDC",
-            "decimals": 6
-        }
-    ];
-});
-define("@scom/scom-disperse/store/data/tokens/testnet/mumbai.ts", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Tokens_Mumbai = void 0;
-    ///<amd-module name='@scom/scom-disperse/store/data/tokens/testnet/mumbai.ts'/> 
-    exports.Tokens_Mumbai = [
-        {
-            "name": "USDT",
-            "address": "0xF6Bf7c1213fdCe4AA92e7c91865cD586891B9cF6",
-            "symbol": "USDT",
-            "decimals": 6,
-            "isCommon": true
-        },
-        {
-            "name": "OpenSwap",
-            "address": "0xA9d603421e2777b8BEa685272611A01fF3bc6523",
-            "symbol": "OSWAP",
-            "decimals": 18,
-            "isCommon": true
-        },
-        {
-            "name": "Wrapped MATIC",
-            "address": "0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889",
-            "symbol": "WMATIC",
-            "decimals": 18,
-            "isCommon": true,
-            "isWETH": true
-        },
-        {
-            "name": "USDC",
-            "address": "0x87a86a498E50D9cb81cE7B4682Db90eDB32A2A01",
-            "symbol": "USDC",
-            "decimals": 6
-        },
-        {
-            "name": "Tidal Token",
-            "address": "0xE4c020c5B74A44cf21549C36E8762Da77FAaf134",
-            "symbol": "TIDAL",
-            "decimals": 18
-        }
-    ];
-});
-define("@scom/scom-disperse/store/data/tokens/testnet/fantom-testnet.ts", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Tokens_Fantom_Testnet = void 0;
-    ///<amd-module name='@scom/scom-disperse/store/data/tokens/testnet/fantom-testnet.ts'/> 
-    exports.Tokens_Fantom_Testnet = [
-        {
-            "address": "0xf1277d1Ed8AD466beddF92ef448A132661956621",
-            "decimals": 18,
-            "name": "Wrapped Fantom",
-            "symbol": "WFTM",
-            "isWETH": true
-        },
-        {
-            "name": "OpenSwap",
-            "address": "0xDe0399014ED809e0E5976D391013dEd315c6B778",
-            "symbol": "OSWAP",
-            "decimals": 18,
-            "isCommon": true
-        }
-    ];
-});
-define("@scom/scom-disperse/store/data/tokens/testnet/amino.ts", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Tokens_Amino = void 0;
-    ///<amd-module name='@scom/scom-disperse/store/data/tokens/testnet/amino.ts'/> 
-    exports.Tokens_Amino = [
-        {
-            "name": "USDT",
-            "address": "0x28A6a9079fA8e041179cD13F4652af2B315b6fd8",
-            "symbol": "USDT",
-            "decimals": 18
-        },
-        {
-            "name": "CAKE",
-            "address": "0x8dc927D1c259A2EdA099712eAFB57509aD4164b7",
-            "symbol": "CAKE",
-            "decimals": 18
-        },
-        {
-            "name": "BUSD",
-            "address": "0x5d3e849B757afD8500b0F514933eEb55a92EB757",
-            "symbol": "BUSD",
-            "decimals": 18
-        },
-        {
-            "name": "Wrapped ACT",
-            "address": "0xBB04C4927A05Cf7d3e329E6333658D48A9313356",
-            "symbol": "WACT",
-            "decimals": 18,
-            "isCommon": true,
-            "isWETH": true
-        }
-    ];
-});
-define("@scom/scom-disperse/store/data/tokens/testnet/aminoX-testnet.ts", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Tokens_AminoXTestnet = void 0;
-    ///<amd-module name='@scom/scom-disperse/store/data/tokens/testnet/aminoX-testnet.ts'/> 
-    exports.Tokens_AminoXTestnet = [
-        {
-            "name": "OpenSwap",
-            "address": "0xA0AF68AB35fa4618b57C1A7CFc07A8caa0cBf07E",
-            "symbol": "OSWAP",
-            "decimals": 18,
-            "isCommon": true
-        },
-        {
-            "name": "Tether USD",
-            "address": "0xFFfffffF8d2EE523a2206206994597c13D831EC7",
-            "symbol": "USDT",
-            "decimals": 6,
-            "isCommon": true
-        },
-        {
-            "name": "DAI Stablecoin",
-            "address": "0xFFFffffFE89094c44da98B954eEDEac495271D0f",
-            "symbol": "DAI",
-            "decimals": 18,
-            "isCommon": true
-        },
-        {
-            "name": "Wrapped ACT",
-            "address": "0xCb5e100fdF7d24f25865fa85673D9bD6Bb4674ab",
-            "symbol": "WACT",
-            "decimals": 18,
-            "isCommon": true,
-            "isWETH": true
-        }
-    ];
-});
-define("@scom/scom-disperse/store/data/tokens/testnet/cronos-testnet.ts", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Tokens_Cronos_Testnet = void 0;
-    ///<amd-module name='@scom/scom-disperse/store/data/tokens/testnet/cronos-testnet.ts'/> 
-    exports.Tokens_Cronos_Testnet = [
-        {
-            "address": "0x6a3173618859C7cd40fAF6921b5E9eB6A76f1fD4",
-            "name": "Wrapped CRO",
-            "symbol": "WCRO",
-            "decimals": 18,
-            "isCommon": true,
-            "isWETH": true
-        },
-        {
-            "name": "WETH",
-            "address": "0x796135E94527c38433e9c42f4Cd91ca931E5e6A6",
-            "symbol": "WETH",
-            "decimals": 18,
-            "isCommon": true
-        },
-        {
-            "name": "WBTC",
-            "address": "0xEE200f25d7B1B9518AC944fd60b113d39bee209c",
-            "symbol": "WBTC",
-            "decimals": 8,
-            "isCommon": true
-        },
-        {
-            "name": "USDC",
-            "address": "0x25f0965F285F03d6F6B3B21c8EC3367412Fd0ef6",
-            "symbol": "USDC",
-            "decimals": 6,
-            "isCommon": true
-        },
-        {
-            "name": "USDT",
-            "address": "0xa144617Afd9205AF1ceDE3Cc671da1a409A82c5a",
-            "symbol": "USDT",
-            "decimals": 6,
-            "isCommon": true
-        },
-        {
-            "name": "DAI",
-            "address": "0x8662A8111daEC7570a1bDF3dbd3E163d41563904",
-            "symbol": "DAI",
-            "decimals": 18,
-            "isCommon": true
-        },
-        {
-            "name": "OSWAP",
-            "address": "0xA09d20Bac0A83b0d1454a2B3BA7A39D55ca00628",
-            "symbol": "OSWAP",
-            "decimals": 18,
-            "isCommon": true
-        }
-    ];
-});
-define("@scom/scom-disperse/store/data/tokens/testnet/index.ts", ["require", "exports", "@scom/scom-disperse/store/data/tokens/testnet/bsc-testnet.ts", "@scom/scom-disperse/store/data/tokens/testnet/fuji.ts", "@scom/scom-disperse/store/data/tokens/testnet/mumbai.ts", "@scom/scom-disperse/store/data/tokens/testnet/fantom-testnet.ts", "@scom/scom-disperse/store/data/tokens/testnet/amino.ts", "@scom/scom-disperse/store/data/tokens/testnet/aminoX-testnet.ts", "@scom/scom-disperse/store/data/tokens/testnet/cronos-testnet.ts"], function (require, exports, bsc_testnet_1, fuji_1, mumbai_1, fantom_testnet_1, amino_1, aminoX_testnet_1, cronos_testnet_1) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Tokens_Cronos_Testnet = exports.Tokens_AminoXTestnet = exports.Tokens_Amino = exports.Tokens_Fantom_Testnet = exports.Tokens_Mumbai = exports.Tokens_Fuji = exports.Tokens_BSC_Testnet = void 0;
-    Object.defineProperty(exports, "Tokens_BSC_Testnet", { enumerable: true, get: function () { return bsc_testnet_1.Tokens_BSC_Testnet; } });
-    Object.defineProperty(exports, "Tokens_Fuji", { enumerable: true, get: function () { return fuji_1.Tokens_Fuji; } });
-    Object.defineProperty(exports, "Tokens_Mumbai", { enumerable: true, get: function () { return mumbai_1.Tokens_Mumbai; } });
-    Object.defineProperty(exports, "Tokens_Fantom_Testnet", { enumerable: true, get: function () { return fantom_testnet_1.Tokens_Fantom_Testnet; } });
-    Object.defineProperty(exports, "Tokens_Amino", { enumerable: true, get: function () { return amino_1.Tokens_Amino; } });
-    Object.defineProperty(exports, "Tokens_AminoXTestnet", { enumerable: true, get: function () { return aminoX_testnet_1.Tokens_AminoXTestnet; } });
-    Object.defineProperty(exports, "Tokens_Cronos_Testnet", { enumerable: true, get: function () { return cronos_testnet_1.Tokens_Cronos_Testnet; } });
-});
-define("@scom/scom-disperse/store/data/tokens/index.ts", ["require", "exports", "@scom/scom-disperse/store/data/tokens/mainnet/index.ts", "@scom/scom-disperse/store/data/tokens/testnet/index.ts"], function (require, exports, index_2, index_3) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.getOpenSwapToken = exports.getTokenIconPath = exports.tokenPriceAMMReference = exports.ToUSDPriceFeedAddressesMap = exports.DefaultTokens = exports.WETHByChainId = exports.ChainNativeTokenByChainId = exports.DefaultERC20Tokens = void 0;
-    const DefaultERC20Tokens = {
-        1: index_2.Tokens_Ethereuem,
-        25: index_2.Tokens_Cronos,
-        56: index_2.Tokens_BSC,
-        97: index_3.Tokens_BSC_Testnet,
-        137: index_2.Tokens_Polygon,
-        338: index_3.Tokens_Cronos_Testnet,
-        31337: index_3.Tokens_Amino,
-        80001: index_3.Tokens_Mumbai,
-        43113: index_3.Tokens_Fuji,
-        43114: index_2.Tokens_Avalanche,
-        250: index_2.Tokens_Fantom,
-        4002: index_3.Tokens_Fantom_Testnet,
-        13370: index_3.Tokens_AminoXTestnet
-    };
-    exports.DefaultERC20Tokens = DefaultERC20Tokens;
-    const ChainNativeTokenByChainId = {
-        1: { address: undefined, decimals: 18, symbol: "ETH", name: 'ETH', isNative: true },
-        25: { address: undefined, decimals: 18, symbol: "CRO", name: 'CRO', isNative: true },
-        56: { address: undefined, decimals: 18, symbol: "BNB", name: 'BNB', isNative: true },
-        97: { address: undefined, decimals: 18, symbol: "BNB", name: 'BNB', isNative: true },
-        137: { address: undefined, decimals: 18, symbol: "MATIC", name: 'MATIC', isNative: true },
-        338: { address: undefined, decimals: 18, symbol: "TCRO", name: 'TCRO', isNative: true },
-        31337: { address: undefined, decimals: 18, symbol: "ACT", name: 'ACT', isNative: true },
-        80001: { address: undefined, decimals: 18, symbol: "MATIC", name: 'MATIC', isNative: true },
-        43114: { address: undefined, decimals: 18, symbol: "AVAX", name: 'AVAX', isNative: true },
-        43113: { address: undefined, decimals: 18, symbol: "AVAX", name: 'AVAX', isNative: true },
-        250: { address: undefined, decimals: 18, symbol: "FTM", name: 'FTM', isNative: true },
-        4002: { address: undefined, decimals: 18, symbol: "FTM", name: 'FTM', isNative: true },
-        13370: { address: undefined, decimals: 18, symbol: "ACT", name: 'ACT', isNative: true }, //Amino X Testnet
-    };
-    exports.ChainNativeTokenByChainId = ChainNativeTokenByChainId;
-    const WETHByChainId = Object.keys(DefaultERC20Tokens).reduce((result, key) => {
-        let weth = DefaultERC20Tokens[Number(key)].find(v => v.isWETH);
-        if (!weth)
-            console.log(`No Default Wrapped Native Token on chain ${key}`);
-        result[Number(key)] = weth;
-        return result;
-    }, {});
-    exports.WETHByChainId = WETHByChainId;
-    const getOpenSwapToken = (chainId) => {
-        let tokens = DefaultERC20Tokens[chainId];
-        if (!tokens)
-            return null;
-        for (const token of tokens) {
-            if (token.name == "OpenSwap" && token.symbol == "OSWAP")
-                return token;
-        }
-        return null;
-    };
-    exports.getOpenSwapToken = getOpenSwapToken;
-    const DefaultTokens = Object.keys(ChainNativeTokenByChainId).reduce((result, key) => {
-        result[Number(key)] = [...DefaultERC20Tokens[Number(key)], ChainNativeTokenByChainId[Number(key)]];
-        return result;
-    }, {});
-    exports.DefaultTokens = DefaultTokens;
-    //not adjusted for cronos and its testnet
-    const ToUSDPriceFeedAddressesMap = {
-        56: {
-            '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c': '0x0567F2323251f0Aab15c8dFb1967E4e8A7D42aeE',
-            '0x55d398326f99059ff775485246999027b3197955': '0xB97Ad0E74fa7d920791E90258A6E2085088b4320',
-            '0xe9e7cea3dedca5984780bafc599bd69add087d56': '0xcBb98864Ef56E9042e7d2efef76141f15731B82f', //BUSD
-        },
-        97: {
-            '0xae13d989dac2f0debff460ac112a837c89baa7cd': '0x2514895c72f50D8bd4B4F9b1110F0D6bD2c97526',
-            '0x29386b60e0a9a1a30e1488ada47256577ca2c385': '0xEca2605f0BCF2BA5966372C99837b1F182d3D620',
-            '0xde9334c157968320f26e449331d6544b89bbd00f': '0x9331b55D9830EF609A2aBCfAc0FBCE050A52fdEa',
-            '0xb78daa2f1a2de8270a5641f052fafc4b2b3ea3b1': '0x9331b55D9830EF609A2aBCfAc0FBCE050A52fdEa', //BUSD       
-        },
-        43113: {
-            '0xd00ae08403b9bbb9124bb305c09058e32c39a48c': '0x5498BB86BC934c8D34FDA08E81D444153d0D06aD',
-            '0xb9c31ea1d475c25e58a1be1a46221db55e5a7c6e': '0x7898AcCC83587C3C55116c5230C17a6Cd9C71bad', //USDT.e  
-        },
-        43114: {
-            '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7': '0x0A77230d17318075983913bC2145DB16C7366156',
-            '0xc7198437980c041c805a1edcba50c1ce5db95118': '0xEBE676ee90Fe1112671f19b6B7459bC678B67e8a',
-            '0xa7d7079b0fead91f3e65f86e8915cb59c1a4c664': '0xF096872672F44d6EBA71458D74fe67F9a77a23B9', //USDC.e  
-        }
-    };
-    exports.ToUSDPriceFeedAddressesMap = ToUSDPriceFeedAddressesMap;
-    //not adjusted for cronos and its testnet
-    const tokenPriceAMMReference = {
-        56: {
-            "0xb32ac3c79a94ac1eb258f3c830bbdbc676483c93": "0x6AA3eC903176df556e8D8473A002b6A807399351",
-            "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c": "0x58F876857a02D6762E0101bb5C46A8c1ED44Dc16",
-            "0x0b15ddf19d47e6a86a56148fb4afffc6929bcb89": "0x71E6de81381eFE0Aa98f56b3B43eB3727D640715",
-            "0x416947e6fc78f158fd9b775fa846b72d768879c2": "0xe6A97E7B5EB2FA72A8B4BeDaaf4CdE85E015DAbf" // OGS : OGS & BUSD (IF)
-        },
-        97: {
-            "0x45eee762aaea4e5ce317471bda8782724972ee19": "0xb0094FfE387da1739FB95bAbCAF01B105FD0D887",
-            "0xae13d989dac2f0debff460ac112a837c89baa7cd": "0x4A63235712c5F56796b8120DE9195626cf7496f1",
-            "0xc2c76387eb1cd15f2f55d2463b5aad6fca062eb1": "0xd2401ED7A6444CB96EE78424a222A51788E90060",
-            "0x52423b7f0769d0365ebdd79342ce167eb9c29ae2": "0x34aE455fC2d8C808471f7A6967eee858C61cc838",
-            "0xb79aa5c1730ad78dd958f05fd87022aef3e50721": "0x902d79f7Dc980D9b21D691F5F0737ce11f352eB9", // TT: BNB & TT
-        },
-        43113: {
-            "0x78d9d80e67bc80a11efbf84b7c8a65da51a8ef3c": "0x239b4EaF1746051b1bED34dC2963f053c4649f88",
-            "0xd00ae08403B9bbb9124bB305C09058E32C39A48c": "0x0f98073122cc43596eF645Ae51FE085f355C487e" // AVAX : AVAX & USDT.e
-        },
-        43114: {
-            "0xb32ac3c79a94ac1eb258f3c830bbdbc676483c93": "0xBeaE5AaA6d76ABe711336801D590850e18cB3C6b", // OSWAP : OSWAP & AVAX      
-        }
-    };
-    exports.tokenPriceAMMReference = tokenPriceAMMReference;
-    const TokenFolderName = {
-        1: "ethereum",
-        25: "cronos",
-        42: "kovan",
-        56: "bsc",
-        97: "bsc-testnet",
-        137: "polygon",
-        338: "cronos-testnet",
-        31337: "amino",
-        80001: "mumbai",
-        43113: "fuji",
-        43114: "avalanche",
-        250: "fantom",
-        4002: "fantom-testnet",
-        13370: "aminox-testnet"
-    };
-    const getTokenIconPath = (tokenObj, chainId) => {
-        const tokenPath = 'img/tokens';
-        if (!tokenObj || tokenObj.isCustom) {
-            return `${tokenPath}/token-placeholder.svg`;
-        }
-        else if (chainId != null && chainId != undefined) {
-            let folderName = TokenFolderName[chainId];
-            let fileName = (!tokenObj.isNative ? tokenObj.address.toLowerCase() : tokenObj.symbol) + '.png';
-            return `${tokenPath}/${folderName}/${fileName}`;
-        }
-        else {
-            return `${tokenPath}/${tokenObj.symbol}.png`;
-        }
-    };
-    exports.getTokenIconPath = getTokenIconPath;
-});
-define("@scom/scom-disperse/store/data/networks.ts", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.ChainNetwork = void 0;
-    ///<amd-module name='@scom/scom-disperse/store/data/networks.ts'/> 
-    const InfuraId = "adc596bf88b648e2a8902bc9093930c5";
-    var ChainNetwork;
-    (function (ChainNetwork) {
-        ChainNetwork[ChainNetwork["BSCMainnet"] = 56] = "BSCMainnet";
-        ChainNetwork[ChainNetwork["BSCTestnet"] = 97] = "BSCTestnet";
-        ChainNetwork[ChainNetwork["EthMainnet"] = 1] = "EthMainnet";
-        ChainNetwork[ChainNetwork["Polygon"] = 137] = "Polygon";
-        ChainNetwork[ChainNetwork["KovanTestnet"] = 42] = "KovanTestnet";
-        ChainNetwork[ChainNetwork["AminoTestnet"] = 31337] = "AminoTestnet";
-        ChainNetwork[ChainNetwork["Mumbai"] = 80001] = "Mumbai";
-        ChainNetwork[ChainNetwork["Fuji"] = 43113] = "Fuji";
-        ChainNetwork[ChainNetwork["Avalanche"] = 43114] = "Avalanche";
-        ChainNetwork[ChainNetwork["Fantom"] = 250] = "Fantom";
-        ChainNetwork[ChainNetwork["FantomTestnet"] = 4002] = "FantomTestnet";
-        ChainNetwork[ChainNetwork["CronosMainnet"] = 25] = "CronosMainnet";
-        ChainNetwork[ChainNetwork["CronosTestnet"] = 338] = "CronosTestnet";
-        ChainNetwork[ChainNetwork["AminoXTestnet"] = 13370] = "AminoXTestnet";
-    })(ChainNetwork || (ChainNetwork = {}));
-    exports.ChainNetwork = ChainNetwork;
-});
-define("@scom/scom-disperse/store/data/core.ts", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.CoreContractAddressesByChainId = void 0;
-    ///<amd-module name='@scom/scom-disperse/store/data/core.ts'/> 
-    exports.CoreContractAddressesByChainId = {
-        1: {
-            "Disperse": "",
-        },
-        4: {
-            "Disperse": "",
-        },
-        42: {
-            "Disperse": "",
-        },
-        56: {
-            "Disperse": "",
-        },
-        97: {
-            "Disperse": "0x4DA441Ef3685C5f2eE05c5d2362634e682Cf7100",
-        },
-        137: {
-            "Disperse": "",
-        },
-        1287: {
-            "Disperse": "",
-        },
-        1337: {
-            "Disperse": "",
-        },
-        31337: {
-            "Disperse": "",
-        },
-        80001: {
-            "Disperse": "",
-        },
-        43114: {
-            "Disperse": "0x84DD0bde1A040989dfC5C23C9644a691505880D3",
-        },
-        43113: {
-            "Disperse": "0xf0eFF12AAB1b32385Ec700b9E561FbAAD60F3a44",
-        },
-        250: {
-            "Disperse": "",
-        },
-        4002: {
-            "Disperse": "",
-        },
-        13370: {
-            "Disperse": "",
-        }
-    };
-});
-define("@scom/scom-disperse/store/data/dummy.ts", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.dummyTxnList = exports.dummyAddressList = void 0;
-    ///<amd-module name='@scom/scom-disperse/store/data/dummy.ts'/> 
-    exports.dummyAddressList = [
-        "0xFa8e00000001234567899876543210000000Fa8e",
-        "0xFa8e11111111234567899876543211111111Fa8e",
-        "0xFa8e22222221234567899876543212222222Fa8e",
-        "0xFa8e33333331234567899876543213333333Fa8e",
-        "0xFa8e44444441234567899876543214444444Fa8e",
-        "0xFa8e55555551234567899876543215555555Fa8e",
-        "0xFa8e66666661234567899876543216666666Fa8e",
-        "0xFa8e77777771234567899876543217777777Fa8e",
-        "0xFa8e88888881234567899876543218888888Fa8e",
-        "0xFa8e99999991234567899876543219999999Fa8e",
-    ];
-    exports.dummyTxnList = [
-        "0xFa8e00000001234567899876543210000000Fa8e",
-        "0xFa8e11111111234567899876543211111111Fa8e",
-        "0xFa8e22222221234567899876543212222222Fa8e",
-        "0xFa8e33333331234567899876543213333333Fa8e",
-        "0xFa8e44444441234567899876543214444444Fa8e",
-        "0xFa8e55555551234567899876543215555555Fa8e",
-        "0xFa8e66666661234567899876543216666666Fa8e",
-        "0xFa8e77777771234567899876543217777777Fa8e",
-        "0xFa8e88888881234567899876543218888888Fa8e",
-        "0xFa8e99999991234567899876543219999999Fa8e",
-    ];
-});
-define("@scom/scom-disperse/store/data/warning.ts", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.ImportFileWarning = void 0;
-    ///<amd-module name='@scom/scom-disperse/store/data/warning.ts'/> 
-    var ImportFileWarning;
-    (function (ImportFileWarning) {
-        ImportFileWarning["Empty"] = "No data found in the imported file.";
-        ImportFileWarning["Broken"] = "Data is corrupted. No data were recovered.";
-        ImportFileWarning["Corrupted"] = "Data is corrupted. Please double check the recovered data below.";
-        ImportFileWarning["Ok"] = "Import Successful. No errors found.";
-    })(ImportFileWarning = exports.ImportFileWarning || (exports.ImportFileWarning = {}));
-});
-define("@scom/scom-disperse/store/data/index.ts", ["require", "exports", "@scom/scom-disperse/store/data/tokens/index.ts", "@scom/scom-disperse/store/data/networks.ts", "@scom/scom-disperse/store/data/core.ts", "@scom/scom-disperse/store/data/dummy.ts", "@scom/scom-disperse/store/data/warning.ts"], function (require, exports, index_4, networks_1, core_1, dummy_1, warning_1) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.ImportFileWarning = exports.dummyAddressList = exports.CoreContractAddressesByChainId = exports.ChainNetwork = exports.getOpenSwapToken = exports.getTokenIconPath = exports.tokenPriceAMMReference = exports.ToUSDPriceFeedAddressesMap = exports.DefaultTokens = exports.WETHByChainId = exports.ChainNativeTokenByChainId = exports.DefaultERC20Tokens = void 0;
-    Object.defineProperty(exports, "DefaultERC20Tokens", { enumerable: true, get: function () { return index_4.DefaultERC20Tokens; } });
-    Object.defineProperty(exports, "ChainNativeTokenByChainId", { enumerable: true, get: function () { return index_4.ChainNativeTokenByChainId; } });
-    Object.defineProperty(exports, "WETHByChainId", { enumerable: true, get: function () { return index_4.WETHByChainId; } });
-    Object.defineProperty(exports, "DefaultTokens", { enumerable: true, get: function () { return index_4.DefaultTokens; } });
-    Object.defineProperty(exports, "ToUSDPriceFeedAddressesMap", { enumerable: true, get: function () { return index_4.ToUSDPriceFeedAddressesMap; } });
-    Object.defineProperty(exports, "tokenPriceAMMReference", { enumerable: true, get: function () { return index_4.tokenPriceAMMReference; } });
-    Object.defineProperty(exports, "getTokenIconPath", { enumerable: true, get: function () { return index_4.getTokenIconPath; } });
-    Object.defineProperty(exports, "getOpenSwapToken", { enumerable: true, get: function () { return index_4.getOpenSwapToken; } });
-    Object.defineProperty(exports, "ChainNetwork", { enumerable: true, get: function () { return networks_1.ChainNetwork; } });
-    Object.defineProperty(exports, "CoreContractAddressesByChainId", { enumerable: true, get: function () { return core_1.CoreContractAddressesByChainId; } });
-    Object.defineProperty(exports, "dummyAddressList", { enumerable: true, get: function () { return dummy_1.dummyAddressList; } });
-    Object.defineProperty(exports, "ImportFileWarning", { enumerable: true, get: function () { return warning_1.ImportFileWarning; } });
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/OpenSwap.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -15716,7 +13060,7 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/index.ts
     Object.defineProperty(exports, "OSWAP_RestrictedPairCreator4", { enumerable: true, get: function () { return OSWAP_RestrictedPairCreator4_1.OSWAP_RestrictedPairCreator4; } });
     Object.defineProperty(exports, "OSWAP_HybridRouter2", { enumerable: true, get: function () { return OSWAP_HybridRouter2_1.OSWAP_HybridRouter2; } });
 });
-define("@scom/scom-disperse/contracts/oswap-openswap-contract/OpenSwap.ts", ["require", "exports", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/index.ts"], function (require, exports, index_5) {
+define("@scom/scom-disperse/contracts/oswap-openswap-contract/OpenSwap.ts", ["require", "exports", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/index.ts"], function (require, exports, index_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.OpenSwap = void 0;
@@ -15724,7 +13068,7 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/OpenSwap.ts", ["re
         constructor(wallet, address) {
             this.wallet = wallet;
             this.address = address;
-            this._oswap = new index_5.OpenSwap(wallet, address);
+            this._oswap = new index_2.OpenSwap(wallet, address);
         }
         async deploy(params) {
             params.initSupply = this.wallet.utils.toDecimals(params.initSupply);
@@ -15801,7 +13145,7 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/OpenSwap.ts", ["re
     }
     exports.OpenSwap = OpenSwap;
 });
-define("@scom/scom-disperse/contracts/oswap-openswap-contract/deploy.ts", ["require", "exports", "@ijstech/eth-contract", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/index.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_OtcLiquidityProvider.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_OtcPairCreator.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_OtcPairOracle.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/OpenSwap.ts"], function (require, exports, eth_contract_49, index_6, OSWAP_OtcLiquidityProvider_2, OSWAP_OtcPairCreator_2, OSWAP_OtcPairOracle_2, OpenSwap_2) {
+define("@scom/scom-disperse/contracts/oswap-openswap-contract/deploy.ts", ["require", "exports", "@ijstech/eth-contract", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/index.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_OtcLiquidityProvider.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_OtcPairCreator.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_OtcPairOracle.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/OpenSwap.ts"], function (require, exports, eth_contract_49, index_3, OSWAP_OtcLiquidityProvider_2, OSWAP_OtcPairCreator_2, OSWAP_OtcPairOracle_2, OpenSwap_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.deploy = exports.deployHybridRouter = exports.initHybridRouterRegistry = exports.deployRestrictedPairOracle = exports.deployRestrictedContracts = exports.deployRangeContracts = exports.deployOracleContracts = exports.deployCoreContracts = exports.toDeploymentContracts = exports.DefaultGovTokenOptions = exports.DefaultGovOptions = void 0;
@@ -15828,21 +13172,21 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/deploy.ts", ["requ
     function toDeploymentContracts(wallet, result) {
         return {
             openSwap: new OpenSwap_2.OpenSwap(wallet, result.oswap),
-            governance: new index_6.OAXDEX_Governance(wallet, result.governance),
-            administrator: new index_6.OAXDEX_Administrator(wallet, result.administrator),
-            registry: new index_6.OAXDEX_VotingRegistry(wallet, result.votingRegistry),
-            pairCreator: new index_6.OSWAP_PairCreator(wallet, result.pairCreator),
-            factory: new index_6.OSWAP_Factory(wallet, result.factory),
-            oraclePairCreator: new index_6.OSWAP_OraclePairCreator(wallet, result.oraclePairCreator),
-            router: new index_6.OSWAP_Router(wallet, result.router),
-            oracleFactory: new index_6.OSWAP_OracleFactory(wallet, result.oracleFactory),
-            oracleRouter: new index_6.OSWAP_OracleRouter(wallet, result.oracleRouter),
-            oracleLiquidityProvider: new index_6.OSWAP_OracleLiquidityProvider(wallet, result.oracleLiquidityProvider),
-            hybridRouterRegistry: new index_6.OSWAP_HybridRouterRegistry(wallet, result.hybridRouterRegistry),
-            hybridRouter: new index_6.OSWAP_HybridRouter2(wallet, result.hybridRouter),
-            executor: new index_6.OAXDEX_VotingExecutor(wallet, result.votingExecutor),
-            executor1: new index_6.OSWAP_VotingExecutor1(wallet, result.votingExecutor1),
-            executor2: new index_6.OSWAP_VotingExecutor2(wallet, result.votingExecutor2)
+            governance: new index_3.OAXDEX_Governance(wallet, result.governance),
+            administrator: new index_3.OAXDEX_Administrator(wallet, result.administrator),
+            registry: new index_3.OAXDEX_VotingRegistry(wallet, result.votingRegistry),
+            pairCreator: new index_3.OSWAP_PairCreator(wallet, result.pairCreator),
+            factory: new index_3.OSWAP_Factory(wallet, result.factory),
+            oraclePairCreator: new index_3.OSWAP_OraclePairCreator(wallet, result.oraclePairCreator),
+            router: new index_3.OSWAP_Router(wallet, result.router),
+            oracleFactory: new index_3.OSWAP_OracleFactory(wallet, result.oracleFactory),
+            oracleRouter: new index_3.OSWAP_OracleRouter(wallet, result.oracleRouter),
+            oracleLiquidityProvider: new index_3.OSWAP_OracleLiquidityProvider(wallet, result.oracleLiquidityProvider),
+            hybridRouterRegistry: new index_3.OSWAP_HybridRouterRegistry(wallet, result.hybridRouterRegistry),
+            hybridRouter: new index_3.OSWAP_HybridRouter2(wallet, result.hybridRouter),
+            executor: new index_3.OAXDEX_VotingExecutor(wallet, result.votingExecutor),
+            executor1: new index_3.OSWAP_VotingExecutor1(wallet, result.votingExecutor1),
+            executor2: new index_3.OSWAP_VotingExecutor2(wallet, result.votingExecutor2)
         };
     }
     exports.toDeploymentContracts = toDeploymentContracts;
@@ -15866,7 +13210,7 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/deploy.ts", ["requ
         if (options.tokens.weth)
             result.weth = options.tokens.weth;
         //governance
-        let governance = new index_6.OAXDEX_Governance(wallet);
+        let governance = new index_3.OAXDEX_Governance(wallet);
         result.governance = await governance.deploy({
             names: options.govOptions.profiles.name,
             maxVoteDuration: options.govOptions.profiles.maxVoteDuration,
@@ -15879,18 +13223,18 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/deploy.ts", ["requ
             votingToken: result.votingToken
         });
         //administrator
-        let administrator = new index_6.OAXDEX_Administrator(wallet);
+        let administrator = new index_3.OAXDEX_Administrator(wallet);
         result.administrator = await administrator.deploy(governance.address);
         await governance.initAdmin(result.administrator);
         //VotingRegistry	
-        let votingRegistry = new index_6.OAXDEX_VotingRegistry(wallet);
+        let votingRegistry = new index_3.OAXDEX_VotingRegistry(wallet);
         result.votingRegistry = await votingRegistry.deploy(result.governance);
         await governance.setVotingRegister(result.votingRegistry);
         //PairCreator
-        let pairCreator = new index_6.OSWAP_PairCreator(wallet);
+        let pairCreator = new index_3.OSWAP_PairCreator(wallet);
         result.pairCreator = await pairCreator.deploy();
         //Factory
-        let factory = new index_6.OSWAP_Factory(wallet);
+        let factory = new index_3.OSWAP_Factory(wallet);
         result.factory = await factory.deploy({
             governance: options.amm.governance || result.governance,
             pairCreator: result.pairCreator,
@@ -15899,19 +13243,19 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/deploy.ts", ["requ
             tradeFee: 0
         });
         //Router
-        let router = new index_6.OSWAP_Router(wallet);
+        let router = new index_3.OSWAP_Router(wallet);
         result.router = await router.deploy({
             WETH: result.weth,
             factory: result.factory
         });
         //VotingExecutor
-        let votingExecutor = new index_6.OAXDEX_VotingExecutor(wallet);
+        let votingExecutor = new index_3.OAXDEX_VotingExecutor(wallet);
         result.votingExecutor = await votingExecutor.deploy({
             admin: result.administrator,
             governance: result.governance
         });
         //VotingExecutor1
-        let votingExecutor1 = new index_6.OSWAP_VotingExecutor1(wallet);
+        let votingExecutor1 = new index_3.OSWAP_VotingExecutor1(wallet);
         result.votingExecutor1 = await votingExecutor1.deploy(factory.address);
         return result;
     }
@@ -15919,10 +13263,10 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/deploy.ts", ["requ
     async function deployOracleContracts(wallet, options, coreContractsResult) {
         let result = {};
         //OraclePairCreator
-        let oraclePairCreator = new index_6.OSWAP_OraclePairCreator(wallet);
+        let oraclePairCreator = new index_3.OSWAP_OraclePairCreator(wallet);
         result.oraclePairCreator = await oraclePairCreator.deploy();
         //OracleFactory
-        let oracleFactory = new index_6.OSWAP_OracleFactory(wallet);
+        let oracleFactory = new index_3.OSWAP_OracleFactory(wallet);
         result.oracleFactory = await oracleFactory.deploy({
             feePerDelegator: options.feePerDelegator || 0,
             governance: options.governance || coreContractsResult.governance,
@@ -15932,14 +13276,14 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/deploy.ts", ["requ
             tradeFee: options.tradeFee || 0
         });
         //OracleRouter
-        let oracleRouter = new index_6.OSWAP_OracleRouter(wallet);
+        let oracleRouter = new index_3.OSWAP_OracleRouter(wallet);
         result.oracleRouter = await oracleRouter.deploy({
             WETH: coreContractsResult.weth,
             ammFactory: coreContractsResult.factory,
             oracleFactory: result.oracleFactory
         });
         //OracleLiquidityProvider
-        let oracleLiquidityProvider = new index_6.OSWAP_OracleLiquidityProvider(wallet);
+        let oracleLiquidityProvider = new index_3.OSWAP_OracleLiquidityProvider(wallet);
         result.oracleLiquidityProvider = await oracleLiquidityProvider.deploy({
             WETH: coreContractsResult.weth,
             factory: result.oracleFactory
@@ -15949,7 +13293,7 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/deploy.ts", ["requ
             oracleRouter: result.oracleRouter
         });
         //VotingExecutor2
-        let votingExecutor2 = new index_6.OSWAP_VotingExecutor2(wallet);
+        let votingExecutor2 = new index_3.OSWAP_VotingExecutor2(wallet);
         result.votingExecutor2 = await votingExecutor2.deploy(oracleFactory.address);
         return result;
     }
@@ -15957,10 +13301,10 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/deploy.ts", ["requ
     async function deployRangeContracts(wallet, options, weth, hybridRegistry) {
         let result = {};
         //RangePairCreator
-        let rangePairCreator = new index_6.OSWAP_RangePairCreator(wallet);
+        let rangePairCreator = new index_3.OSWAP_RangePairCreator(wallet);
         result.rangePairCreator = await rangePairCreator.deploy();
         //RangeFactory
-        let rangeFactory = new index_6.OSWAP_RangeFactory(wallet);
+        let rangeFactory = new index_3.OSWAP_RangeFactory(wallet);
         result.rangeFactory = await rangeFactory.deploy({
             governance: options.governance,
             oracleFactory: options.oracleFactory,
@@ -15971,14 +13315,14 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/deploy.ts", ["requ
             protocolFeeTo: options.protocolFeeTo || eth_contract_49.nullAddress
         });
         //RangeLiquidityProvider
-        let rangeLiquidityProvider = new index_6.OSWAP_RangeLiquidityProvider(wallet);
+        let rangeLiquidityProvider = new index_3.OSWAP_RangeLiquidityProvider(wallet);
         result.rangeLiquidityProvider = await rangeLiquidityProvider.deploy({
             WETH: weth,
             factory: result.rangeFactory
         });
         await rangeFactory.setRangeLiquidityProvider(result.rangeLiquidityProvider);
         //VotingExecutor3
-        let votingExecutor3 = new index_6.OSWAP_VotingExecutor3(wallet);
+        let votingExecutor3 = new index_3.OSWAP_VotingExecutor3(wallet);
         result.votingExecutor3 = await votingExecutor3.deploy({
             governance: options.governance,
             factory: rangeFactory.address,
@@ -15991,7 +13335,7 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/deploy.ts", ["requ
         let result = {};
         //ConfigStore
         if (!options.configStore) {
-            let configStore = new index_6.OSWAP_ConfigStore(wallet);
+            let configStore = new index_3.OSWAP_ConfigStore(wallet);
             result.configStore = await configStore.deploy(options.governance);
         }
         else {
@@ -16004,7 +13348,7 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/deploy.ts", ["requ
                 restrictedPairCreator = new OSWAP_OtcPairCreator_2.OSWAP_OtcPairCreator(wallet);
             }
             else {
-                restrictedPairCreator = new index_6.OSWAP_RestrictedPairCreator1(wallet);
+                restrictedPairCreator = new index_3.OSWAP_RestrictedPairCreator1(wallet);
             }
             result.restrictedPairCreator = await restrictedPairCreator.deploy();
         }
@@ -16012,7 +13356,7 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/deploy.ts", ["requ
             result.restrictedPairCreator = options.pairCreator;
         }
         //RestrictedFactory
-        let restrictedFactory = new index_6.OSWAP_RestrictedFactory(wallet);
+        let restrictedFactory = new index_3.OSWAP_RestrictedFactory(wallet);
         result.restrictedFactory = await restrictedFactory.deploy({
             governance: options.governance,
             whitelistFactory: options.whitelistFactory,
@@ -16028,7 +13372,7 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/deploy.ts", ["requ
             restrictedLiquidityProvider = new OSWAP_OtcLiquidityProvider_2.OSWAP_OtcLiquidityProvider(wallet);
         }
         else {
-            restrictedLiquidityProvider = new index_6.OSWAP_RestrictedLiquidityProvider1(wallet);
+            restrictedLiquidityProvider = new index_3.OSWAP_RestrictedLiquidityProvider1(wallet);
         }
         result.restrictedLiquidityProvider = await restrictedLiquidityProvider.deploy({
             WETH: weth,
@@ -16036,7 +13380,7 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/deploy.ts", ["requ
         });
         await restrictedFactory.init(result.restrictedLiquidityProvider);
         //VotingExecutor4
-        let votingExecutor4 = new index_6.OSWAP_VotingExecutor4(wallet);
+        let votingExecutor4 = new index_3.OSWAP_VotingExecutor4(wallet);
         result.votingExecutor4 = await votingExecutor4.deploy({
             governance: options.governance,
             factory: restrictedFactory.address,
@@ -16051,14 +13395,14 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/deploy.ts", ["requ
             restrictedPairOracle = new OSWAP_OtcPairOracle_2.OSWAP_OtcPairOracle(wallet);
         }
         else {
-            restrictedPairOracle = new index_6.OSWAP_RestrictedPairOracle(wallet);
+            restrictedPairOracle = new index_3.OSWAP_RestrictedPairOracle(wallet);
         }
         let result = await restrictedPairOracle.deploy();
         return result;
     }
     exports.deployRestrictedPairOracle = deployRestrictedPairOracle;
     async function initHybridRouterRegistry(wallet, options) {
-        let hybridRouterRegistry = new index_6.OSWAP_HybridRouterRegistry(wallet, options.registryAddress);
+        let hybridRouterRegistry = new index_3.OSWAP_HybridRouterRegistry(wallet, options.registryAddress);
         let { name, factory, fee, feeBase, typeCode } = options;
         await hybridRouterRegistry.init({
             name,
@@ -16073,14 +13417,14 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/deploy.ts", ["requ
         let result = {};
         //HybridRouterRegistry
         if (!options.registryAddress) {
-            let hybridRouterRegistry = new index_6.OSWAP_HybridRouterRegistry(wallet);
+            let hybridRouterRegistry = new index_3.OSWAP_HybridRouterRegistry(wallet);
             result.hybridRouterRegistry = await hybridRouterRegistry.deploy(options.governance);
         }
         else {
             result.hybridRouterRegistry = options.registryAddress;
         }
         //HybridRouter
-        let hybridRouter = new index_6.OSWAP_HybridRouter2(wallet);
+        let hybridRouter = new index_3.OSWAP_HybridRouter2(wallet);
         result.hybridRouter = await hybridRouter.deploy({
             WETH: options.weth,
             registry: result.hybridRouterRegistry
@@ -16126,7 +13470,7 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/deploy.ts", ["requ
                         result = Object.assign(Object.assign({}, result), restrictedContractsResult);
                     }
                 }
-                let governance = new index_6.OAXDEX_Governance(wallet, coreContractsResult.governance);
+                let governance = new index_3.OAXDEX_Governance(wallet, coreContractsResult.governance);
                 await governance.initVotingExecutor([
                     result.votingExecutor,
                     result.votingExecutor1,
@@ -16162,389 +13506,140 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/index.ts", ["requi
     Object.defineProperty(exports, "toDeploymentContracts", { enumerable: true, get: function () { return deploy_1.toDeploymentContracts; } });
     Object.defineProperty(exports, "OpenSwap", { enumerable: true, get: function () { return OpenSwap_3.OpenSwap; } });
 });
-define("@scom/scom-disperse/wallets/scom-multicall/contracts/MultiCall.json.ts", ["require", "exports"], function (require, exports) {
+define("@scom/scom-disperse/store/data/networks.ts", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    ///<amd-module name='@scom/scom-disperse/wallets/scom-multicall/contracts/MultiCall.json.ts'/> 
-    exports.default = {
-        "abi": [
-            { "inputs": [], "name": "gasLeft", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" },
-            { "inputs": [], "name": "gaslimit", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" },
-            { "inputs": [{ "components": [{ "internalType": "address", "name": "to", "type": "address" }, { "internalType": "bytes", "name": "data", "type": "bytes" }], "internalType": "struct MultiCall.Call[]", "name": "calls", "type": "tuple[]" }], "name": "multicall", "outputs": [{ "internalType": "bytes[]", "name": "results", "type": "bytes[]" }], "stateMutability": "nonpayable", "type": "function" },
-            { "inputs": [{ "components": [{ "internalType": "address", "name": "to", "type": "address" }, { "internalType": "bytes", "name": "data", "type": "bytes" }], "internalType": "struct MultiCall.Call[]", "name": "calls", "type": "tuple[]" }], "name": "multicallWithGas", "outputs": [{ "internalType": "bytes[]", "name": "results", "type": "bytes[]" }, { "internalType": "uint256[]", "name": "gasUsed", "type": "uint256[]" }], "stateMutability": "nonpayable", "type": "function" },
-            { "inputs": [{ "components": [{ "internalType": "address", "name": "to", "type": "address" }, { "internalType": "bytes", "name": "data", "type": "bytes" }], "internalType": "struct MultiCall.Call[]", "name": "calls", "type": "tuple[]" }, { "internalType": "uint256", "name": "gasBuffer", "type": "uint256" }], "name": "multicallWithGasLimitation", "outputs": [{ "internalType": "bytes[]", "name": "results", "type": "bytes[]" }, { "internalType": "uint256", "name": "lastSuccessIndex", "type": "uint256" }], "stateMutability": "nonpayable", "type": "function" }
-        ],
-        "bytecode": "608060405234801561001057600080fd5b506108bd806100206000396000f3fe608060405234801561001057600080fd5b50600436106100675760003560e01c8063489dba1611610050578063489dba1614610092578063caa5c23f146100b3578063d699fe15146100d357610067565b80632a7228391461006c5780632ddb301b1461008a575b600080fd5b6100746100f4565b6040516100819190610827565b60405180910390f35b6100746100f8565b6100a56100a036600461067c565b610100565b6040516100819291906107bc565b6100c66100c136600461067c565b610280565b60405161008191906107a2565b6100e66100e13660046106b7565b61039a565b604051610081929190610805565b4590565b60005a905090565b606080825167ffffffffffffffff8111801561011b57600080fd5b5060405190808252806020026020018201604052801561014f57816020015b606081526020019060019003908161013a5790505b509150825167ffffffffffffffff8111801561016a57600080fd5b50604051908082528060200260200182016040528015610194578160200160208202803683370190505b50905060005b835181101561027a5760005a90508482815181106101b457fe5b60200260200101516000015173ffffffffffffffffffffffffffffffffffffffff168583815181106101e257fe5b6020026020010151602001516040516101fb9190610786565b6000604051808303816000865af19150503d8060008114610238576040519150601f19603f3d011682016040523d82523d6000602084013e61023d565b606091505b50905084838151811061024c57fe5b60200260200101819052505a810383838151811061026657fe5b60209081029190910101525060010161019a565b50915091565b6060815167ffffffffffffffff8111801561029a57600080fd5b506040519080825280602002602001820160405280156102ce57816020015b60608152602001906001900390816102b95790505b50905060005b8251811015610394578281815181106102e957fe5b60200260200101516000015173ffffffffffffffffffffffffffffffffffffffff1683828151811061031757fe5b6020026020010151602001516040516103309190610786565b6000604051808303816000865af19150503d806000811461036d576040519150601f19603f3d011682016040523d82523d6000602084013e610372565b606091505b50905082828151811061038157fe5b60209081029190910101526001016102d4565b50919050565b60606000835167ffffffffffffffff811180156103b657600080fd5b506040519080825280602002602001820160405280156103ea57816020015b60608152602001906001900390816103d55790505b50915060005b84518110156104bf5784818151811061040557fe5b60200260200101516000015173ffffffffffffffffffffffffffffffffffffffff1685828151811061043357fe5b60200260200101516020015160405161044c9190610786565b6000604051808303816000865af19150503d8060008114610489576040519150601f19603f3d011682016040523d82523d6000602084013e61048e565b606091505b50905083828151811061049d57fe5b6020026020010181905250835a10156104b75790506104e6565b6001016103f0565b505082517fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff015b9250929050565b803573ffffffffffffffffffffffffffffffffffffffff8116811461051157600080fd5b92915050565b600082601f830112610527578081fd5b813567ffffffffffffffff8082111561053e578283fd5b602061054d8182850201610830565b838152935080840185820160005b858110156105e957813588016040807fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0838d0301121561059a57600080fd5b6105a381610830565b6105af8c8885016104ed565b81529082013590878211156105c357600080fd5b6105d18c88848601016105f5565b8188015285525050918301919083019060010161055b565b50505050505092915050565b600082601f830112610605578081fd5b813567ffffffffffffffff81111561061b578182fd5b61064c60207fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0601f84011601610830565b915080825283602082850101111561066357600080fd5b8060208401602084013760009082016020015292915050565b60006020828403121561068d578081fd5b813567ffffffffffffffff8111156106a3578182fd5b6106af84828501610517565b949350505050565b600080604083850312156106c9578081fd5b823567ffffffffffffffff8111156106df578182fd5b6106eb85828601610517565b95602094909401359450505050565b60008282518085526020808601955080818302840101818601855b84811015610779577fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe080878503018a528251805180865261075b81888801898501610857565b9a86019a601f01909116939093018401925090830190600101610715565b5090979650505050505050565b60008251610798818460208701610857565b9190910192915050565b6000602082526107b560208301846106fa565b9392505050565b6000604082526107cf60408301856106fa565b828103602084810191909152845180835285820192820190845b81811015610779578451835293830193918301916001016107e9565b60006040825261081860408301856106fa565b90508260208301529392505050565b90815260200190565b60405181810167ffffffffffffffff8111828210171561084f57600080fd5b604052919050565b60005b8381101561087257818101518382015260200161085a565b83811115610881576000848401525b5050505056fea2646970667358221220ccb586539a329f28b3517e4840bb3276779c0e37173b01eb6e1862b7b5762e5f64736f6c634300060c0033"
+    exports.ChainNetwork = void 0;
+    ///<amd-module name='@scom/scom-disperse/store/data/networks.ts'/> 
+    var ChainNetwork;
+    (function (ChainNetwork) {
+        ChainNetwork[ChainNetwork["BSCMainnet"] = 56] = "BSCMainnet";
+        ChainNetwork[ChainNetwork["BSCTestnet"] = 97] = "BSCTestnet";
+        ChainNetwork[ChainNetwork["EthMainnet"] = 1] = "EthMainnet";
+        ChainNetwork[ChainNetwork["Polygon"] = 137] = "Polygon";
+        ChainNetwork[ChainNetwork["KovanTestnet"] = 42] = "KovanTestnet";
+        ChainNetwork[ChainNetwork["AminoTestnet"] = 31337] = "AminoTestnet";
+        ChainNetwork[ChainNetwork["Mumbai"] = 80001] = "Mumbai";
+        ChainNetwork[ChainNetwork["Fuji"] = 43113] = "Fuji";
+        ChainNetwork[ChainNetwork["Avalanche"] = 43114] = "Avalanche";
+        ChainNetwork[ChainNetwork["Fantom"] = 250] = "Fantom";
+        ChainNetwork[ChainNetwork["FantomTestnet"] = 4002] = "FantomTestnet";
+        ChainNetwork[ChainNetwork["CronosMainnet"] = 25] = "CronosMainnet";
+        ChainNetwork[ChainNetwork["CronosTestnet"] = 338] = "CronosTestnet";
+        ChainNetwork[ChainNetwork["AminoXTestnet"] = 13370] = "AminoXTestnet";
+    })(ChainNetwork || (ChainNetwork = {}));
+    exports.ChainNetwork = ChainNetwork;
+});
+define("@scom/scom-disperse/store/data/core.ts", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.CoreContractAddressesByChainId = void 0;
+    ///<amd-module name='@scom/scom-disperse/store/data/core.ts'/> 
+    exports.CoreContractAddressesByChainId = {
+        1: {
+            "Disperse": "",
+        },
+        4: {
+            "Disperse": "",
+        },
+        42: {
+            "Disperse": "",
+        },
+        56: {
+            "Disperse": "",
+        },
+        97: {
+            "Disperse": "0x4DA441Ef3685C5f2eE05c5d2362634e682Cf7100",
+        },
+        137: {
+            "Disperse": "",
+        },
+        1287: {
+            "Disperse": "",
+        },
+        1337: {
+            "Disperse": "",
+        },
+        31337: {
+            "Disperse": "",
+        },
+        80001: {
+            "Disperse": "",
+        },
+        43114: {
+            "Disperse": "0x84DD0bde1A040989dfC5C23C9644a691505880D3",
+        },
+        43113: {
+            "Disperse": "0xf0eFF12AAB1b32385Ec700b9E561FbAAD60F3a44",
+        },
+        250: {
+            "Disperse": "",
+        },
+        4002: {
+            "Disperse": "",
+        },
+        13370: {
+            "Disperse": "",
+        }
     };
 });
-define("@scom/scom-disperse/wallets/scom-multicall/contracts/MultiCall.ts", ["require", "exports", "@ijstech/eth-contract", "@scom/scom-disperse/wallets/scom-multicall/contracts/MultiCall.json.ts"], function (require, exports, eth_contract_50, MultiCall_json_1) {
+define("@scom/scom-disperse/store/data/dummy.ts", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.MultiCall = void 0;
-    class MultiCall extends eth_contract_50.Contract {
-        constructor(wallet, address) {
-            super(wallet, address, MultiCall_json_1.default.abi, MultiCall_json_1.default.bytecode);
-            this.assign();
-        }
-        deploy(options) {
-            return this.__deploy([], options);
-        }
-        assign() {
-            let gasLeft_call = async (options) => {
-                let result = await this.call('gasLeft', [], options);
-                return new eth_contract_50.BigNumber(result);
-            };
-            this.gasLeft = gasLeft_call;
-            let gaslimit_call = async (options) => {
-                let result = await this.call('gaslimit', [], options);
-                return new eth_contract_50.BigNumber(result);
-            };
-            this.gaslimit = gaslimit_call;
-            let multicall_send = async (calls, options) => {
-                let result = await this.send('multicall', [calls.map(e => ([e.to, this.wallet.utils.stringToBytes(e.data)]))], options);
-                return result;
-            };
-            let multicall_call = async (calls, options) => {
-                let result = await this.call('multicall', [calls.map(e => ([e.to, this.wallet.utils.stringToBytes(e.data)]))], options);
-                return result;
-            };
-            this.multicall = Object.assign(multicall_send, {
-                call: multicall_call
-            });
-            let multicallWithGas_send = async (calls, options) => {
-                let result = await this.send('multicallWithGas', [calls.map(e => ([e.to, this.wallet.utils.stringToBytes(e.data)]))], options);
-                return result;
-            };
-            let multicallWithGas_call = async (calls, options) => {
-                let result = await this.call('multicallWithGas', [calls.map(e => ([e.to, this.wallet.utils.stringToBytes(e.data)]))], options);
-                return {
-                    results: result.results,
-                    gasUsed: result.gasUsed.map(e => new eth_contract_50.BigNumber(e))
-                };
-            };
-            this.multicallWithGas = Object.assign(multicallWithGas_send, {
-                call: multicallWithGas_call
-            });
-            let multicallWithGasLimitationParams = (params) => [params.calls.map(e => ([e.to, this.wallet.utils.stringToBytes(e.data)])), this.wallet.utils.toString(params.gasBuffer)];
-            let multicallWithGasLimitation_send = async (params, options) => {
-                let result = await this.send('multicallWithGasLimitation', multicallWithGasLimitationParams(params), options);
-                return result;
-            };
-            let multicallWithGasLimitation_call = async (params, options) => {
-                let result = await this.call('multicallWithGasLimitation', multicallWithGasLimitationParams(params), options);
-                return {
-                    results: result.results,
-                    lastSuccessIndex: new eth_contract_50.BigNumber(result.lastSuccessIndex)
-                };
-            };
-            this.multicallWithGasLimitation = Object.assign(multicallWithGasLimitation_send, {
-                call: multicallWithGasLimitation_call
-            });
-        }
-    }
-    exports.MultiCall = MultiCall;
-    MultiCall._abi = MultiCall_json_1.default.abi;
+    exports.dummyTxnList = exports.dummyAddressList = void 0;
+    ///<amd-module name='@scom/scom-disperse/store/data/dummy.ts'/> 
+    exports.dummyAddressList = [
+        "0xFa8e00000001234567899876543210000000Fa8e",
+        "0xFa8e11111111234567899876543211111111Fa8e",
+        "0xFa8e22222221234567899876543212222222Fa8e",
+        "0xFa8e33333331234567899876543213333333Fa8e",
+        "0xFa8e44444441234567899876543214444444Fa8e",
+        "0xFa8e55555551234567899876543215555555Fa8e",
+        "0xFa8e66666661234567899876543216666666Fa8e",
+        "0xFa8e77777771234567899876543217777777Fa8e",
+        "0xFa8e88888881234567899876543218888888Fa8e",
+        "0xFa8e99999991234567899876543219999999Fa8e",
+    ];
+    exports.dummyTxnList = [
+        "0xFa8e00000001234567899876543210000000Fa8e",
+        "0xFa8e11111111234567899876543211111111Fa8e",
+        "0xFa8e22222221234567899876543212222222Fa8e",
+        "0xFa8e33333331234567899876543213333333Fa8e",
+        "0xFa8e44444441234567899876543214444444Fa8e",
+        "0xFa8e55555551234567899876543215555555Fa8e",
+        "0xFa8e66666661234567899876543216666666Fa8e",
+        "0xFa8e77777771234567899876543217777777Fa8e",
+        "0xFa8e88888881234567899876543218888888Fa8e",
+        "0xFa8e99999991234567899876543219999999Fa8e",
+    ];
 });
-define("@scom/scom-disperse/wallets/scom-multicall/contracts/index.ts", ["require", "exports", "@scom/scom-disperse/wallets/scom-multicall/contracts/MultiCall.ts"], function (require, exports, MultiCall_1) {
+define("@scom/scom-disperse/store/data/warning.ts", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.MultiCall = void 0;
-    Object.defineProperty(exports, "MultiCall", { enumerable: true, get: function () { return MultiCall_1.MultiCall; } });
+    exports.ImportFileWarning = void 0;
+    ///<amd-module name='@scom/scom-disperse/store/data/warning.ts'/> 
+    var ImportFileWarning;
+    (function (ImportFileWarning) {
+        ImportFileWarning["Empty"] = "No data found in the imported file.";
+        ImportFileWarning["Broken"] = "Data is corrupted. No data were recovered.";
+        ImportFileWarning["Corrupted"] = "Data is corrupted. Please double check the recovered data below.";
+        ImportFileWarning["Ok"] = "Import Successful. No errors found.";
+    })(ImportFileWarning = exports.ImportFileWarning || (exports.ImportFileWarning = {}));
 });
-define("@scom/scom-disperse/wallets/scom-multicall/utils.ts", ["require", "exports"], function (require, exports) {
+define("@scom/scom-disperse/store/data/index.ts", ["require", "exports", "@scom/scom-disperse/store/data/networks.ts", "@scom/scom-disperse/store/data/core.ts", "@scom/scom-disperse/store/data/dummy.ts", "@scom/scom-disperse/store/data/warning.ts"], function (require, exports, networks_1, core_1, dummy_1, warning_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.getMulticallInfo = exports.getMulticallInfoList = void 0;
-    function getMulticallInfoList() {
-        const list = [
-            {
-                chainId: 1,
-                contractAddress: '0x8d035edd8e09c3283463dade67cc0d49d6868063',
-                gasBuffer: '3000000'
-            },
-            {
-                chainId: 56,
-                contractAddress: '0x804708de7af615085203fa2b18eae59c5738e2a9',
-                gasBuffer: '3000000'
-            },
-            {
-                chainId: 97,
-                contractAddress: '0xFe482bde67982C73D215032184312E4707B437C1',
-                gasBuffer: '3000000'
-            },
-            {
-                chainId: 137,
-                contractAddress: '0x0196e8a9455a90d392b46df8560c867e7df40b34',
-                gasBuffer: '3000000'
-            },
-            {
-                chainId: 250,
-                contractAddress: '0xA31bB36c5164B165f9c36955EA4CcBaB42B3B28E',
-                gasBuffer: '3000000'
-            },
-            {
-                chainId: 43113,
-                contractAddress: '0x40784b92542649DDA13FF97580e8A021aC57b320',
-                gasBuffer: '3000000'
-            },
-            {
-                chainId: 43114,
-                contractAddress: '0xC4A8B7e29E3C8ec560cd4945c1cF3461a85a148d',
-                gasBuffer: '3000000'
-            },
-            {
-                chainId: 80001,
-                contractAddress: '0x7810eC500061f5469fF6e1485Ab130045B3af6b0',
-                gasBuffer: '3000000'
-            },
-            {
-                chainId: 421613,
-                contractAddress: '0xee25cCcc02550DdBF4b90eb06b0D796eBE247E1B',
-                gasBuffer: '3000000'
-            },
-            {
-                chainId: 42161,
-                contractAddress: '0x11DEE30E710B8d4a8630392781Cc3c0046365d4c',
-                gasBuffer: '3000000'
-            }
-        ];
-        return list;
-    }
-    exports.getMulticallInfoList = getMulticallInfoList;
-    function getMulticallInfo(chainId) {
-        const list = getMulticallInfoList();
-        const info = list.find((item) => item.chainId === chainId);
-        return info;
-    }
-    exports.getMulticallInfo = getMulticallInfo;
+    exports.ImportFileWarning = exports.dummyAddressList = exports.CoreContractAddressesByChainId = exports.ChainNetwork = void 0;
+    Object.defineProperty(exports, "ChainNetwork", { enumerable: true, get: function () { return networks_1.ChainNetwork; } });
+    Object.defineProperty(exports, "CoreContractAddressesByChainId", { enumerable: true, get: function () { return core_1.CoreContractAddressesByChainId; } });
+    Object.defineProperty(exports, "dummyAddressList", { enumerable: true, get: function () { return dummy_1.dummyAddressList; } });
+    Object.defineProperty(exports, "ImportFileWarning", { enumerable: true, get: function () { return warning_1.ImportFileWarning; } });
 });
-define("@scom/scom-disperse/wallets/scom-multicall/index.ts", ["require", "exports", "@scom/scom-disperse/wallets/scom-multicall/contracts/index.ts", "@scom/scom-disperse/wallets/scom-multicall/utils.ts"], function (require, exports, Contracts, utils_1) {
+define("@scom/scom-disperse/store/utils.ts", ["require", "exports", "@ijstech/eth-wallet", "@scom/scom-disperse/global/index.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/index.ts", "@scom/scom-disperse/store/data/index.ts", "@scom/scom-disperse/store/data/index.ts", "@ijstech/components", "@scom/scom-network-list", "@scom/scom-token-list"], function (require, exports, eth_wallet_3, index_4, index_5, index_6, index_7, components_2, scom_network_list_1, scom_token_list_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.getMulticallInfo = exports.getMulticallInfoList = exports.deploy = exports.DefaultDeployOptions = exports.Contracts = void 0;
-    exports.Contracts = Contracts;
-    ;
-    ;
-    var progressHandler;
-    exports.DefaultDeployOptions = {};
-    async function deploy(wallet, options, onProgress) {
-        let multicall = new Contracts.MultiCall(wallet);
-        onProgress('Deploy MultiCall');
-        let address = await multicall.deploy();
-        onProgress('MultiCall deployed ' + address);
-        return {
-            multicall: address
-        };
-    }
-    exports.deploy = deploy;
-    ;
-    exports.default = {
-        Contracts,
-        deploy,
-        DefaultDeployOptions: exports.DefaultDeployOptions
-    };
-    Object.defineProperty(exports, "getMulticallInfoList", { enumerable: true, get: function () { return utils_1.getMulticallInfoList; } });
-    Object.defineProperty(exports, "getMulticallInfo", { enumerable: true, get: function () { return utils_1.getMulticallInfo; } });
-});
-define("@scom/scom-disperse/wallets/scom-network-list/index.ts", ["require", "exports", "@ijstech/components"], function (require, exports, components_3) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    let moduleDir = components_3.application.currentModuleDir;
-    function fullPath(path) {
-        if (path.indexOf('://') > 0)
-            return path;
-        return `${moduleDir}/${path}`;
-    }
-    function getNetworkList() {
-        return [
-            {
-                chainId: 1,
-                chainName: "Ethereum",
-                rpcUrls: ['https://mainnet.infura.io/v3/{INFURA_ID}'],
-                blockExplorerUrls: ['https://etherscan.io/'],
-                nativeCurrency: {
-                    decimals: 18,
-                    name: 'ETH',
-                    symbol: 'ETH'
-                },
-                image: fullPath('img/ethereumNetwork.svg')
-            },
-            {
-                chainId: 56,
-                chainName: 'BNB Chain',
-                rpcUrls: ['https://bsc-dataseed.binance.org'],
-                blockExplorerUrls: ['https://bscscan.com'],
-                nativeCurrency: {
-                    decimals: 18,
-                    name: 'BNB',
-                    symbol: 'BNB'
-                },
-                image: fullPath('img/bscMainnet.svg')
-            },
-            {
-                chainId: 97,
-                chainName: 'BNB Chain Testnet',
-                rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545'],
-                blockExplorerUrls: ['https://testnet.bscscan.com'],
-                nativeCurrency: {
-                    decimals: 18,
-                    name: 'BNB',
-                    symbol: 'BNB'
-                },
-                image: fullPath('img/bscMainnet.svg')
-            },
-            {
-                chainId: 137,
-                chainName: "Polygon",
-                rpcUrls: ['https://polygon-rpc.com'],
-                blockExplorerUrls: ['https://polygonscan.com/'],
-                nativeCurrency: {
-                    decimals: 18,
-                    name: 'MATIC',
-                    symbol: 'MATIC'
-                },
-                image: fullPath('img/polygon.svg')
-            },
-            {
-                chainId: 1287,
-                chainName: 'Moonbeam Testnet',
-                rpcUrls: ['https://rpc.testnet.moonbeam.network'],
-                blockExplorerUrls: ['https://moonbase-blockscout.testnet.moonbeam.network'],
-                nativeCurrency: {
-                    decimals: 18,
-                    name: 'MOON',
-                    symbol: 'MOON'
-                }
-            },
-            {
-                chainId: 25,
-                chainName: "Cronos",
-                rpcUrls: ['https://evm.cronos.org'],
-                blockExplorerUrls: ['https://cronoscan.com/'],
-                nativeCurrency: {
-                    decimals: 18,
-                    name: 'CRO',
-                    symbol: 'CRO'
-                },
-                image: fullPath('img/cronosMainnet.svg')
-            },
-            {
-                chainId: 338,
-                chainName: "Cronos Testnet",
-                rpcUrls: ['https://evm-t3.cronos.org'],
-                blockExplorerUrls: ['https://testnet.cronoscan.com/'],
-                nativeCurrency: {
-                    decimals: 18,
-                    name: 'CRO',
-                    symbol: 'CRO'
-                },
-                image: fullPath('img/cronosMainnet.svg')
-            },
-            {
-                chainId: 80001,
-                chainName: "Mumbai Testnet",
-                rpcUrls: ['https://matic-mumbai.chainstacklabs.com'],
-                blockExplorerUrls: ['https://mumbai.polygonscan.com/'],
-                nativeCurrency: {
-                    decimals: 18,
-                    name: 'MATIC',
-                    symbol: 'MATIC'
-                },
-                image: fullPath('img/polygon.svg')
-            },
-            {
-                chainId: 43113,
-                chainName: "Avalanche FUJI Testnet",
-                rpcUrls: ['https://api.avax-test.network/ext/bc/C/rpc'],
-                blockExplorerUrls: ['https://testnet.snowtrace.io/'],
-                nativeCurrency: {
-                    decimals: 18,
-                    name: 'AVAX',
-                    symbol: 'AVAX'
-                },
-                image: fullPath('img/avax.svg')
-            },
-            {
-                chainId: 43114,
-                chainName: "Avalanche",
-                rpcUrls: ['https://api.avax.network/ext/bc/C/rpc'],
-                blockExplorerUrls: ['https://snowtrace.io/'],
-                nativeCurrency: {
-                    decimals: 18,
-                    name: 'AVAX',
-                    symbol: 'AVAX'
-                },
-                image: fullPath('img/avax.svg')
-            },
-            {
-                chainId: 4002,
-                chainName: "Fantom Testnet",
-                rpcUrls: ['https://rpc.testnet.fantom.network/'],
-                blockExplorerUrls: ['https://testnet.ftmscan.com/', 'https://explorer.testnet.fantom.network/'],
-                nativeCurrency: {
-                    decimals: 18,
-                    name: 'FTM',
-                    symbol: 'FTM'
-                },
-                image: fullPath('img/fantom-ftm-logo.svg')
-            },
-            {
-                chainId: 250,
-                chainName: "Fantom",
-                rpcUrls: ['https://rpc.ftm.tools/'],
-                blockExplorerUrls: ['https://ftmscan.com/', 'https://explorer.fantom.network/'],
-                nativeCurrency: {
-                    decimals: 18,
-                    name: 'FTM',
-                    symbol: 'FTM'
-                },
-                image: fullPath('img/fantom-ftm-logo.svg')
-            },
-            {
-                chainId: 13370,
-                chainName: "AminoX Testnet",
-                rpcUrls: ['https://aminoxtestnet.node.alphacarbon.network'],
-                blockExplorerUrls: ['https://aminoxtestnet.blockscout.alphacarbon.network/'],
-                nativeCurrency: {
-                    decimals: 18,
-                    name: 'TACT',
-                    symbol: 'TACT'
-                },
-                image: fullPath('img/aminoXTestnet.svg')
-            },
-            {
-                chainId: 421613,
-                chainName: "Arbitrum Goerli Testnet",
-                rpcUrls: ['https://goerli-rollup.arbitrum.io/rpc'],
-                blockExplorerUrls: ['https://goerli.arbiscan.io/tx/'],
-                nativeCurrency: {
-                    decimals: 18,
-                    name: 'ETH',
-                    symbol: 'ETH'
-                },
-                image: fullPath('img/arbitrum.svg')
-            },
-            {
-                chainId: 42161,
-                chainName: "Arbitrum One",
-                rpcUrls: ['https://arb1.arbitrum.io/rpc'],
-                blockExplorerUrls: ['https://arbiscan.io/tx/'],
-                nativeCurrency: {
-                    decimals: 18,
-                    name: 'ETH',
-                    symbol: 'ETH'
-                },
-                image: fullPath('img/arbitrum.svg')
-            }
-        ];
-    }
-    exports.default = getNetworkList;
-});
-define("@scom/scom-disperse/store/utils.ts", ["require", "exports", "@ijstech/eth-wallet", "@scom/scom-disperse/global/index.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/index.ts", "@scom/scom-disperse/store/data/index.ts", "@scom/scom-disperse/store/data/index.ts", "@ijstech/components", "@scom/scom-disperse/wallets/scom-multicall/index.ts", "@scom/scom-disperse/wallets/scom-network-list/index.ts"], function (require, exports, eth_wallet_3, index_7, index_8, index_9, index_10, components_4, index_11, index_12) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.hasUserToken = exports.setUserTokens = exports.getTokenObject = exports.projectNativeTokenSymbol = exports.projectNativeToken = exports.getWalletPluginProvider = exports.getWalletPluginMap = exports.setWalletPluginProvider = exports.state = exports.getTokenList = exports.setTransactionDeadline = exports.getTransactionDeadline = exports.setSlippageTolerance = exports.getSlippageTolerance = exports.toggleExpertMode = exports.isExpertMode = exports.getErc20 = exports.hasMetaMask = exports.getWalletProvider = exports.getDefaultChainId = exports.getChainId = exports.switchNetwork = exports.isWalletConnected = exports.setDataFromSCConfig = exports.setGovToken = exports.getWETH = exports.getChainNativeToken = exports.listsNetworkShow = exports.canDisperse = exports.getDisperseAddress = exports.getAddresses = exports.getCurrentChainId = exports.setCurrentChainId = exports.getNetworkExplorerName = exports.getNetworkInfo = exports.getSiteSupportedNetworks = exports.getMatchNetworks = exports.getInfuraId = exports.getSiteEnv = exports.setSiteEnv = exports.addUserTokens = exports.getUserTokens = exports.INFINITE = exports.nullAddress = exports.WalletPlugin = void 0;
-    __exportStar(index_10, exports);
+    exports.hasUserToken = exports.setUserTokens = exports.getTokenObject = exports.state = exports.getErc20 = exports.hasMetaMask = exports.getWalletProvider = exports.getDefaultChainId = exports.getChainId = exports.getSupportedNetworks = exports.switchNetwork = exports.isWalletConnected = exports.getEmbedderCommissionFee = exports.setAPIGatewayUrls = exports.getIPFSGatewayUrl = exports.setIPFSGatewayUrl = exports.getProxyAddress = exports.setProxyAddresses = exports.setDataFromSCConfig = exports.getWETH = exports.getChainNativeToken = exports.canDisperse = exports.getDisperseAddress = exports.getAddresses = exports.getCurrentChainId = exports.setCurrentChainId = exports.getNetworkExplorerName = exports.getNetworkInfo = exports.getInfuraId = exports.getSiteEnv = exports.setSiteEnv = exports.addUserTokens = exports.getUserTokens = exports.INFINITE = exports.nullAddress = exports.WalletPlugin = void 0;
+    __exportStar(index_7, exports);
     var WalletPlugin;
     (function (WalletPlugin) {
         WalletPlugin["MetaMask"] = "metamask";
@@ -16593,11 +13688,11 @@ define("@scom/scom-disperse/store/utils.ts", ["require", "exports", "@ijstech/et
     };
     exports.addUserTokens = addUserTokens;
     const setSiteEnv = (value) => {
-        if (Object.values(index_7.SITE_ENV).includes(value)) {
+        if (Object.values(index_4.SITE_ENV).includes(value)) {
             exports.state.siteEnv = value;
         }
         else {
-            exports.state.siteEnv = index_7.SITE_ENV.TESTNET;
+            exports.state.siteEnv = index_4.SITE_ENV.TESTNET;
         }
     };
     exports.setSiteEnv = setSiteEnv;
@@ -16612,49 +13707,10 @@ define("@scom/scom-disperse/store/utils.ts", ["require", "exports", "@ijstech/et
         return exports.state.infuraId;
     };
     exports.getInfuraId = getInfuraId;
-    function matchFilter(list, filter) {
-        let filters = Object.keys(filter);
-        return list.filter(item => filters.every(f => {
-            switch (typeof filter[f]) {
-                case 'boolean':
-                    if (filter[f] === false) {
-                        return item[f] === undefined || item[f] === null;
-                    }
-                // also case for filter[f] === true 
-                case 'string':
-                case 'number':
-                    return filter[f] === item[f];
-                case 'object': // have not implemented yet
-                default:
-                    console.log(`matchFilter do not support ${typeof filter[f]} yet!`);
-                    return false;
-            }
-        }));
-    }
-    const getMatchNetworks = (conditions) => {
-        let networkFullList = Object.values(exports.state.networkMap);
-        let out = matchFilter(networkFullList, conditions);
-        return out;
-    };
-    exports.getMatchNetworks = getMatchNetworks;
-    const getSiteSupportedNetworks = () => {
-        let networkFullList = Object.values(exports.state.networkMap);
-        let list = networkFullList.filter(network => !exports.getNetworkInfo(network.chainId).isDisabled);
-        return list;
-        // const siteEnv = getSiteEnv();
-        // if (siteEnv === SITE_ENV.TESTNET) {
-        //   return list.filter((network) => network.isTestnet);
-        // }
-        // if (siteEnv === SITE_ENV.DEV) {
-        //   return list;
-        // }
-        // return list.filter((network) => !network.isTestnet);
-    };
-    exports.getSiteSupportedNetworks = getSiteSupportedNetworks;
     const setNetworkList = (networkList, infuraId) => {
         const wallet = eth_wallet_3.Wallet.getClientInstance();
         exports.state.networkMap = {};
-        const defaultNetworkList = index_12.default();
+        const defaultNetworkList = scom_network_list_1.default();
         const defaultNetworkMap = defaultNetworkList.reduce((acc, cur) => {
             acc[cur.chainId] = cur;
             return acc;
@@ -16692,12 +13748,12 @@ define("@scom/scom-disperse/store/utils.ts", ["require", "exports", "@ijstech/et
     };
     exports.getCurrentChainId = getCurrentChainId;
     function getAddresses(chainId) {
-        return index_9.CoreContractAddressesByChainId[chainId];
+        return index_6.CoreContractAddressesByChainId[chainId];
     }
     exports.getAddresses = getAddresses;
     ;
     function getDisperseAddress(chainId) {
-        const address = index_9.CoreContractAddressesByChainId[chainId];
+        const address = index_6.CoreContractAddressesByChainId[chainId];
         return address ? address[Disperse] : null;
     }
     exports.getDisperseAddress = getDisperseAddress;
@@ -16705,32 +13761,15 @@ define("@scom/scom-disperse/store/utils.ts", ["require", "exports", "@ijstech/et
         return !!getDisperseAddress(chainId);
     }
     exports.canDisperse = canDisperse;
-    const listsNetworkShow = () => {
-        const list = exports.getSiteSupportedNetworks();
-        return list.filter(v => canDisperse(v.chainId));
-    };
-    exports.listsNetworkShow = listsNetworkShow;
     const getChainNativeToken = (chainId) => {
-        return index_9.ChainNativeTokenByChainId[chainId];
+        return scom_token_list_1.ChainNativeTokenByChainId[chainId];
     };
     exports.getChainNativeToken = getChainNativeToken;
     const getWETH = (chainId) => {
-        let wrappedToken = index_9.WETHByChainId[chainId];
+        let wrappedToken = scom_token_list_1.WETHByChainId[chainId];
         return wrappedToken;
     };
     exports.getWETH = getWETH;
-    function setGovToken(wallet) {
-        let GOV_TOKEN;
-        const Address = getAddresses(getChainId());
-        if (wallet.chainId === 43113 || wallet.chainId === 43114) {
-            GOV_TOKEN = { address: Address["GOV_TOKEN"], decimals: 18, symbol: "veOSWAP", name: 'Vote-escrowed OSWAP' };
-        }
-        else {
-            GOV_TOKEN = { address: Address["GOV_TOKEN"], decimals: 18, symbol: "OSWAP", name: 'OpenSwap' };
-        }
-        return GOV_TOKEN;
-    }
-    exports.setGovToken = setGovToken;
     const setDataFromSCConfig = (options) => {
         if (options.infuraId) {
             setInfuraId(options.infuraId);
@@ -16738,15 +13777,52 @@ define("@scom/scom-disperse/store/utils.ts", ["require", "exports", "@ijstech/et
         if (options.networks) {
             setNetworkList(options.networks, options.infuraId);
         }
-        const clientWalletConfig = {
-            defaultChainId: exports.getDefaultChainId(),
-            networks: Object.values(exports.state.networkMap),
-            infuraId: exports.state.infuraId,
-            multicalls: index_11.getMulticallInfoList()
-        };
-        eth_wallet_3.Wallet.getClientInstance().initClientWallet(clientWalletConfig);
+        if (options.proxyAddresses) {
+            exports.setProxyAddresses(options.proxyAddresses);
+        }
+        if (options.ipfsGatewayUrl) {
+            exports.setIPFSGatewayUrl(options.ipfsGatewayUrl);
+        }
+        if (options.apiGatewayUrls) {
+            exports.setAPIGatewayUrls(options.apiGatewayUrls);
+        }
+        if (options.embedderCommissionFee) {
+            setEmbedderCommissionFee(options.embedderCommissionFee);
+        }
     };
     exports.setDataFromSCConfig = setDataFromSCConfig;
+    const setProxyAddresses = (data) => {
+        exports.state.proxyAddresses = data;
+    };
+    exports.setProxyAddresses = setProxyAddresses;
+    const getProxyAddress = (chainId) => {
+        const _chainId = chainId || eth_wallet_3.Wallet.getInstance().chainId;
+        const proxyAddresses = exports.state.proxyAddresses;
+        if (proxyAddresses) {
+            return proxyAddresses[_chainId];
+        }
+        return null;
+    };
+    exports.getProxyAddress = getProxyAddress;
+    const setIPFSGatewayUrl = (url) => {
+        exports.state.ipfsGatewayUrl = url;
+    };
+    exports.setIPFSGatewayUrl = setIPFSGatewayUrl;
+    const getIPFSGatewayUrl = () => {
+        return exports.state.ipfsGatewayUrl;
+    };
+    exports.getIPFSGatewayUrl = getIPFSGatewayUrl;
+    const setAPIGatewayUrls = (urls) => {
+        exports.state.apiGatewayUrls = urls;
+    };
+    exports.setAPIGatewayUrls = setAPIGatewayUrls;
+    const setEmbedderCommissionFee = (fee) => {
+        exports.state.embedderCommissionFee = fee;
+    };
+    const getEmbedderCommissionFee = () => {
+        return exports.state.embedderCommissionFee;
+    };
+    exports.getEmbedderCommissionFee = getEmbedderCommissionFee;
     function isWalletConnected() {
         const wallet = eth_wallet_3.Wallet.getClientInstance();
         return wallet.isConnected;
@@ -16756,22 +13832,26 @@ define("@scom/scom-disperse/store/utils.ts", ["require", "exports", "@ijstech/et
         const wallet = eth_wallet_3.Wallet.getClientInstance();
         await wallet.switchNetwork(chainId);
         if (!isWalletConnected()) {
-            components_4.application.EventBus.dispatch("chainChanged" /* chainChanged */, chainId);
+            components_2.application.EventBus.dispatch("chainChanged" /* chainChanged */, chainId);
         }
     }
     exports.switchNetwork = switchNetwork;
+    const getSupportedNetworks = () => {
+        return Object.values(exports.state.networkMap);
+    };
+    exports.getSupportedNetworks = getSupportedNetworks;
     function getChainId() {
         return isWalletConnected() ? eth_wallet_3.Wallet.getClientInstance().chainId : exports.state.currentChainId || exports.getDefaultChainId();
     }
     exports.getChainId = getChainId;
     const getDefaultChainId = () => {
         switch (exports.getSiteEnv()) {
-            case index_7.SITE_ENV.TESTNET:
+            case index_4.SITE_ENV.TESTNET:
             // return ChainNetwork.Fuju;
-            case index_7.SITE_ENV.DEV:
-            case index_7.SITE_ENV.MAINNET:
+            case index_4.SITE_ENV.DEV:
+            case index_4.SITE_ENV.MAINNET:
             default:
-                return index_9.ChainNetwork.Avalanche;
+                return index_6.ChainNetwork.Avalanche;
         }
     };
     exports.getDefaultChainId = getDefaultChainId;
@@ -16780,8 +13860,9 @@ define("@scom/scom-disperse/store/utils.ts", ["require", "exports", "@ijstech/et
     }
     exports.getWalletProvider = getWalletProvider;
     const hasMetaMask = function () {
-        const provider = exports.getWalletPluginProvider(WalletPlugin.MetaMask);
-        return provider === null || provider === void 0 ? void 0 : provider.installed();
+        var _a;
+        const wallet = eth_wallet_3.Wallet.getClientInstance();
+        return ((_a = wallet === null || wallet === void 0 ? void 0 : wallet.clientSideProvider) === null || _a === void 0 ? void 0 : _a.name) === WalletPlugin.MetaMask;
     };
     exports.hasMetaMask = hasMetaMask;
     function getErc20(address) {
@@ -16789,77 +13870,20 @@ define("@scom/scom-disperse/store/utils.ts", ["require", "exports", "@ijstech/et
         return new eth_wallet_3.Erc20(wallet, address);
     }
     exports.getErc20 = getErc20;
-    const isExpertMode = () => {
-        return exports.state.isExpertMode;
-    };
-    exports.isExpertMode = isExpertMode;
-    function toggleExpertMode() {
-        exports.state.isExpertMode = !exports.state.isExpertMode;
-    }
-    exports.toggleExpertMode = toggleExpertMode;
-    const getSlippageTolerance = () => {
-        return exports.state.slippageTolerance;
-    };
-    exports.getSlippageTolerance = getSlippageTolerance;
-    const setSlippageTolerance = (value) => {
-        exports.state.slippageTolerance = value;
-    };
-    exports.setSlippageTolerance = setSlippageTolerance;
-    const getTransactionDeadline = () => {
-        return exports.state.transactionDeadline;
-    };
-    exports.getTransactionDeadline = getTransactionDeadline;
-    const setTransactionDeadline = (value) => {
-        exports.state.transactionDeadline = value;
-    };
-    exports.setTransactionDeadline = setTransactionDeadline;
-    const getTokenList = (chainId) => {
-        const tokenList = [...index_9.DefaultTokens[chainId]];
-        const userCustomTokens = exports.getUserTokens(chainId);
-        if (userCustomTokens) {
-            userCustomTokens.forEach(v => tokenList.push(Object.assign(Object.assign({}, v), { isNew: false, isCustom: true })));
-        }
-        return tokenList;
-    };
-    exports.getTokenList = getTokenList;
     exports.state = {
-        siteEnv: index_7.SITE_ENV.TESTNET,
+        siteEnv: index_4.SITE_ENV.TESTNET,
         networkMap: {},
         currentChainId: 0,
-        isExpertMode: false,
-        slippageTolerance: 0.5,
-        transactionDeadline: 30,
         infuraId: "",
         userTokens: {},
-        walletPluginMap: {}
+        proxyAddresses: {},
+        ipfsGatewayUrl: "",
+        apiGatewayUrls: {},
+        embedderCommissionFee: "0",
+        tokens: []
     };
-    const setWalletPluginProvider = (walletPlugin, wallet) => {
-        exports.state.walletPluginMap[walletPlugin] = wallet;
-    };
-    exports.setWalletPluginProvider = setWalletPluginProvider;
-    const getWalletPluginMap = () => {
-        return exports.state.walletPluginMap;
-    };
-    exports.getWalletPluginMap = getWalletPluginMap;
-    const getWalletPluginProvider = (walletPlugin) => {
-        return exports.state.walletPluginMap[walletPlugin];
-    };
-    exports.getWalletPluginProvider = getWalletPluginProvider;
-    const projectNativeToken = () => {
-        let chainId = getChainId();
-        if (chainId == null || chainId == undefined)
-            return null;
-        let stakeToken = index_9.DefaultTokens[chainId].find(v => v.symbol == 'OSWAP');
-        return stakeToken ? Object.assign(Object.assign({}, stakeToken), { address: stakeToken.address.toLowerCase() }) : null;
-    };
-    exports.projectNativeToken = projectNativeToken;
-    const projectNativeTokenSymbol = () => {
-        const token = exports.projectNativeToken();
-        return token ? token.symbol : '';
-    };
-    exports.projectNativeTokenSymbol = projectNativeTokenSymbol;
     const getTokenObject = async (address, showBalance) => {
-        const ERC20Contract = new index_8.Contracts.ERC20(eth_wallet_3.Wallet.getClientInstance(), address);
+        const ERC20Contract = new index_5.Contracts.ERC20(eth_wallet_3.Wallet.getClientInstance(), address);
         const symbol = await ERC20Contract.symbol();
         const name = await ERC20Contract.name();
         const decimals = (await ERC20Contract.decimals()).toFixed();
@@ -16891,490 +13915,30 @@ define("@scom/scom-disperse/store/utils.ts", ["require", "exports", "@ijstech/et
     };
     exports.hasUserToken = hasUserToken;
 });
-define("@scom/scom-disperse/store/token.ts", ["require", "exports", "@ijstech/eth-wallet", "@scom/scom-disperse/store/utils.ts"], function (require, exports, eth_wallet_4, utils_2) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.setTokenStore = exports.tokenStore = exports.TokenStore = void 0;
-    class TokenStore {
-        constructor(defaultTokensByChain) {
-            this._defaultTokensByChain = defaultTokensByChain;
-            const defaultChainId = utils_2.getDefaultChainId();
-            this._tokenMap = this._updateTokenMapData(defaultChainId);
-        }
-        get tokenBalances() {
-            return this._tokenBalances;
-        }
-        get tokenMap() {
-            return this._tokenMap;
-        }
-        get projectToken() {
-            return this._projectToken;
-        }
-        getTokenList(chainId) {
-            if (!chainId)
-                return [];
-            const tokenList = [...this._defaultTokensByChain[chainId]];
-            const userCustomTokens = utils_2.getUserTokens(chainId);
-            if (userCustomTokens) {
-                userCustomTokens.forEach(v => tokenList.push(Object.assign(Object.assign({}, v), { isNew: false, isCustom: true })));
-            }
-            return tokenList;
-        }
-        async getERC20Balance(wallet, token) {
-            const erc20 = new eth_wallet_4.Contracts.ERC20(wallet, token);
-            const balance = await erc20.balanceOf(wallet.address);
-            return balance;
-        }
-        getTokenBalance(token) {
-            let balance = '0';
-            if (!token || !this._tokenBalances)
-                return balance;
-            if (token.address) {
-                balance = this._tokenBalances[token.address.toLowerCase()];
-            }
-            else {
-                balance = this._tokenBalances[token.symbol];
-            }
-            return balance;
-        }
-        getProjectTokenBalance() {
-            let balance = '0';
-            if (this._projectToken && this._projectToken.address && this._tokenBalances) {
-                balance = this._tokenBalances[this._projectToken.address.toLowerCase()];
-            }
-            return balance;
-        }
-        async _updateAllTokenBalances(erc20TokenList, nativeToken) {
-            let allTokenBalancesMap = {};
-            try {
-                const wallet = eth_wallet_4.Wallet.getClientInstance();
-                const erc20 = new eth_wallet_4.Contracts.ERC20(wallet);
-                const data = wallet.encodeFunctionCall(erc20, 'balanceOf', [wallet.address]);
-                const result = await wallet.multiCall(erc20TokenList.map((v) => {
-                    return {
-                        to: v.address,
-                        data
-                    };
-                }));
-                if (result) {
-                    for (let i = 0; i < erc20TokenList.length; i++) {
-                        const token = erc20TokenList[i];
-                        if (token.address) {
-                            allTokenBalancesMap[token.address.toLowerCase()] = new eth_wallet_4.BigNumber(result.results[i]).shiftedBy(-token.decimals).toFixed();
-                        }
-                    }
-                    let balance = (await eth_wallet_4.Wallet.getClientInstance().balance).toFixed();
-                    allTokenBalancesMap[nativeToken.symbol] = balance;
-                }
-                else {
-                    let promises = [];
-                    const tokenList = [...erc20TokenList, nativeToken];
-                    promises.push(...tokenList.map(async (token, index) => {
-                        try {
-                            if (token.address) {
-                                let balance = await this.getERC20Balance(wallet, token.address);
-                                allTokenBalancesMap[token.address.toLowerCase()] = new eth_wallet_4.BigNumber(balance).shiftedBy(-token.decimals).toFixed();
-                            }
-                            else {
-                                let balance = await eth_wallet_4.Wallet.getClientInstance().balance;
-                                allTokenBalancesMap[token.symbol] = balance.toFixed();
-                            }
-                        }
-                        catch (error) { }
-                    }));
-                    await Promise.all(promises);
-                }
-            }
-            catch (error) { }
-            return allTokenBalancesMap;
-        }
-        async updateAllTokenBalances() {
-            const wallet = eth_wallet_4.Wallet.getClientInstance();
-            let allTokenBalancesMap = {};
-            const tokenList = this.getTokenList(wallet.chainId);
-            if (!wallet.chainId || !tokenList)
-                return allTokenBalancesMap;
-            const nativeToken = tokenList.find(v => !v.address);
-            const erc20TokenList = tokenList.filter(v => !!v.address);
-            allTokenBalancesMap = await this._updateAllTokenBalances(erc20TokenList, nativeToken);
-            this._tokenBalances = allTokenBalancesMap;
-            return this._tokenBalances;
-        }
-        async updateTokenBalances(erc20TokenList) {
-            const wallet = eth_wallet_4.Wallet.getClientInstance();
-            let tokenBalancesMap = {};
-            if (!wallet.chainId)
-                return tokenBalancesMap;
-            const nativeToken = utils_2.getChainNativeToken(wallet.chainId);
-            tokenBalancesMap = await this._updateAllTokenBalances(erc20TokenList, nativeToken);
-            for (let tokenAddress of Object.keys(tokenBalancesMap)) {
-                this._tokenBalances[tokenAddress] = tokenBalancesMap[tokenAddress];
-            }
-            return this._tokenBalances;
-        }
-        _updateTokenMapData(chainId) {
-            let allTokensMap = {};
-            if (this._defaultTokensByChain[chainId]) {
-                let defaultTokenList = this._defaultTokensByChain[chainId].sort((a, b) => {
-                    if (a.symbol.toLowerCase() < b.symbol.toLowerCase()) {
-                        return -1;
-                    }
-                    if (a.symbol.toLowerCase() > b.symbol.toLowerCase()) {
-                        return 1;
-                    }
-                    return 0;
-                });
-                for (let i = 0; i < defaultTokenList.length; i++) {
-                    let defaultTokenItem = defaultTokenList[i];
-                    if (defaultTokenItem.address)
-                        allTokensMap[defaultTokenItem.address.toLowerCase()] = defaultTokenItem;
-                    else
-                        allTokensMap[defaultTokenItem.symbol] = defaultTokenItem;
-                }
-                const userCustomTokens = utils_2.getUserTokens(chainId);
-                if (userCustomTokens) {
-                    userCustomTokens.forEach(v => allTokensMap[v.address] = Object.assign(Object.assign({}, v), { isCustom: true }));
-                }
-                let stakeToken = defaultTokenList.find(v => v.symbol == 'OSWAP');
-                this._projectToken = stakeToken ? Object.assign(Object.assign({}, stakeToken), { address: stakeToken.address.toLowerCase() }) : undefined;
-            }
-            return allTokensMap;
-        }
-        updateTokenMapData() {
-            let chainId = utils_2.getChainId();
-            let allTokensMap = this._updateTokenMapData(chainId);
-            this._tokenMap = allTokensMap;
-            return allTokensMap;
-        }
-    }
-    exports.TokenStore = TokenStore;
-    const setTokenStore = () => {
-        exports.tokenStore = new TokenStore(utils_2.DefaultTokens);
-    };
-    exports.setTokenStore = setTokenStore;
-});
-define("@scom/scom-disperse/wallets/scom-coin98-wallet/index.ts", ["require", "exports", "@ijstech/eth-wallet", "@ijstech/components"], function (require, exports, eth_wallet_5, components_5) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    let moduleDir = components_5.application.currentModuleDir;
-    function fullPath(path) {
-        if (path.indexOf('://') > 0)
-            return path;
-        return `${moduleDir}/${path}`;
-    }
-    class Coin98Provider extends eth_wallet_5.EthereumProvider {
-        get displayName() {
-            return 'Coin98 Wallet';
-        }
-        get image() {
-            return fullPath('img/Coin98.svg');
-        }
-        get provider() {
-            return window['ethereum'];
-        }
-        get homepage() {
-            return 'https://docs.coin98.com/products/coin98-wallet';
-        }
-        installed() {
-            let ethereum = window['ethereum'];
-            return !!ethereum && (!!ethereum.isCoin98 || !!window['isCoin98']);
-        }
-    }
-    exports.default = Coin98Provider;
-});
-define("@scom/scom-disperse/wallets/scom-trust-wallet/index.ts", ["require", "exports", "@ijstech/eth-wallet", "@ijstech/components"], function (require, exports, eth_wallet_6, components_6) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    let moduleDir = components_6.application.currentModuleDir;
-    function fullPath(path) {
-        if (path.indexOf('://') > 0)
-            return path;
-        return `${moduleDir}/${path}`;
-    }
-    class TrustWalletProvider extends eth_wallet_6.EthereumProvider {
-        get displayName() {
-            return 'Trust Wallet';
-        }
-        get image() {
-            return fullPath('img/trustwallet.svg');
-        }
-        get provider() {
-            return window['ethereum'];
-        }
-        get homepage() {
-            return 'https://link.trustwallet.com/open_url?url=' + window.location.href;
-        }
-        installed() {
-            let ethereum = window['ethereum'];
-            return !!ethereum && !!ethereum.isTrust;
-        }
-    }
-    exports.default = TrustWalletProvider;
-});
-define("@scom/scom-disperse/wallets/scom-binance-chain-wallet/index.ts", ["require", "exports", "@ijstech/eth-wallet", "@ijstech/components"], function (require, exports, eth_wallet_7, components_7) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    let moduleDir = components_7.application.currentModuleDir;
-    function fullPath(path) {
-        if (path.indexOf('://') > 0)
-            return path;
-        return `${moduleDir}/${path}`;
-    }
-    class BinanceChainWalletProvider extends eth_wallet_7.EthereumProvider {
-        get displayName() {
-            return 'Binance Chain Wallet';
-        }
-        get image() {
-            return fullPath('img/binance-chain-wallet.svg');
-        }
-        get provider() {
-            return window['BinanceChain'];
-        }
-        get homepage() {
-            return 'https://www.binance.org/en';
-        }
-        installed() {
-            return !!window['BinanceChain'];
-        }
-    }
-    exports.default = BinanceChainWalletProvider;
-});
-define("@scom/scom-disperse/wallets/scom-onto-wallet/index.ts", ["require", "exports", "@ijstech/eth-wallet", "@ijstech/components"], function (require, exports, eth_wallet_8, components_8) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    let moduleDir = components_8.application.currentModuleDir;
-    function fullPath(path) {
-        if (path.indexOf('://') > 0)
-            return path;
-        return `${moduleDir}/${path}`;
-    }
-    class ONTOWalletProvider extends eth_wallet_8.EthereumProvider {
-        get displayName() {
-            return 'ONTO Wallet';
-        }
-        get image() {
-            return fullPath('img/ONTOWallet.jpg');
-        }
-        get provider() {
-            return window['onto'];
-        }
-        get homepage() {
-            return 'https://onto.app/en/download/?mode=app';
-        }
-        installed() {
-            return !!window['onto'];
-        }
-    }
-    exports.default = ONTOWalletProvider;
-});
-define("@scom/scom-disperse/wallets/scom-bit-keep-wallet/index.ts", ["require", "exports", "@ijstech/eth-wallet", "@ijstech/components"], function (require, exports, eth_wallet_9, components_9) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    let moduleDir = components_9.application.currentModuleDir;
-    function fullPath(path) {
-        if (path.indexOf('://') > 0)
-            return path;
-        return `${moduleDir}/${path}`;
-    }
-    class BitKeepWalletProvider extends eth_wallet_9.EthereumProvider {
-        get displayName() {
-            return 'BitKeep Wallet';
-        }
-        get image() {
-            return fullPath('img/BitKeep.png');
-        }
-        get provider() {
-            return window['bitkeep']['ethereum'];
-        }
-        get homepage() {
-            return 'https://bitkeep.com/download?type=2';
-        }
-        installed() {
-            return !!window['isBitKeep'];
-        }
-    }
-    exports.default = BitKeepWalletProvider;
-});
-define("@scom/scom-disperse/wallets/scom-frontier-wallet/index.ts", ["require", "exports", "@ijstech/eth-wallet", "@ijstech/components"], function (require, exports, eth_wallet_10, components_10) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    let moduleDir = components_10.application.currentModuleDir;
-    function fullPath(path) {
-        if (path.indexOf('://') > 0)
-            return path;
-        return `${moduleDir}/${path}`;
-    }
-    class FrontierWalletProvider extends eth_wallet_10.EthereumProvider {
-        get displayName() {
-            return 'Frontier Wallet';
-        }
-        get image() {
-            return fullPath('img/frontier-wallet.svg');
-        }
-        get provider() {
-            return window['frontier']['ethereum'];
-        }
-        get homepage() {
-            return 'https://www.frontier.xyz/browser-extension';
-        }
-        installed() {
-            return !!window['frontier'];
-        }
-    }
-    exports.default = FrontierWalletProvider;
-});
-define("@scom/scom-disperse/store/wallet.ts", ["require", "exports", "@scom/scom-disperse/store/utils.ts", "@scom/scom-disperse/wallets/scom-coin98-wallet/index.ts", "@scom/scom-disperse/wallets/scom-trust-wallet/index.ts", "@scom/scom-disperse/wallets/scom-binance-chain-wallet/index.ts", "@scom/scom-disperse/wallets/scom-onto-wallet/index.ts", "@scom/scom-disperse/wallets/scom-bit-keep-wallet/index.ts", "@scom/scom-disperse/wallets/scom-frontier-wallet/index.ts", "@ijstech/eth-wallet", "@ijstech/components", "@scom/scom-disperse/store/token.ts"], function (require, exports, utils_3, index_13, index_14, index_15, index_16, index_17, index_18, eth_wallet_11, components_11, token_1) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.logoutWallet = exports.connectWallet = exports.initWalletPlugins = exports.WalletPluginConfig = void 0;
-    exports.WalletPluginConfig = {
-        [utils_3.WalletPlugin.MetaMask]: {
-            provider: (wallet, events, options) => {
-                return new eth_wallet_11.MetaMaskProvider(wallet, events, options);
-            }
-        },
-        [utils_3.WalletPlugin.Coin98]: {
-            provider: (wallet, events, options) => {
-                return new index_13.default(wallet, events, options);
-            }
-        },
-        [utils_3.WalletPlugin.TrustWallet]: {
-            provider: (wallet, events, options) => {
-                return new index_14.default(wallet, events, options);
-            }
-        },
-        [utils_3.WalletPlugin.BinanceChainWallet]: {
-            provider: (wallet, events, options) => {
-                return new index_15.default(wallet, events, options);
-            }
-        },
-        [utils_3.WalletPlugin.ONTOWallet]: {
-            provider: (wallet, events, options) => {
-                return new index_16.default(wallet, events, options);
-            }
-        },
-        [utils_3.WalletPlugin.BitKeepWallet]: {
-            provider: (wallet, events, options) => {
-                return new index_17.default(wallet, events, options);
-            }
-        },
-        [utils_3.WalletPlugin.FrontierWallet]: {
-            provider: (wallet, events, options) => {
-                return new index_18.default(wallet, events, options);
-            },
-        },
-        [utils_3.WalletPlugin.WalletConnect]: {
-            provider: (wallet, events, options) => {
-                return new eth_wallet_11.Web3ModalProvider(wallet, events, options);
-            }
-        }
-    };
-    function initWalletPlugins(eventHandlers) {
-        let wallet = eth_wallet_11.Wallet.getClientInstance();
-        const events = {
-            onAccountChanged: async (account) => {
-                var _a;
-                if (eventHandlers && eventHandlers.accountsChanged) {
-                    eventHandlers.accountsChanged(account);
-                }
-                const connected = !!account;
-                if (connected) {
-                    localStorage.setItem('walletProvider', ((_a = eth_wallet_11.Wallet.getClientInstance().clientSideProvider) === null || _a === void 0 ? void 0 : _a.name) || '');
-                    if (wallet.chainId !== utils_3.getCurrentChainId()) {
-                        utils_3.setCurrentChainId(wallet.chainId);
-                        components_11.application.EventBus.dispatch("chainChanged" /* chainChanged */, wallet.chainId);
-                    }
-                    token_1.tokenStore.updateTokenMapData();
-                    await token_1.tokenStore.updateAllTokenBalances();
-                }
-                components_11.application.EventBus.dispatch("isWalletConnected" /* IsWalletConnected */, connected);
-            },
-            onChainChanged: async (chainIdHex) => {
-                const chainId = Number(chainIdHex);
-                if (eventHandlers && eventHandlers.chainChanged) {
-                    eventHandlers.chainChanged(chainId);
-                }
-                utils_3.setCurrentChainId(chainId);
-                token_1.tokenStore.updateTokenMapData();
-                await token_1.tokenStore.updateAllTokenBalances();
-                components_11.application.EventBus.dispatch("chainChanged" /* chainChanged */, chainId);
-            }
-        };
-        let networkList = utils_3.getSiteSupportedNetworks();
-        const rpcs = {};
-        for (const network of networkList) {
-            let rpc = network.rpcUrls[0];
-            if (rpc)
-                rpcs[network.chainId] = rpc;
-        }
-        for (let pluginName in exports.WalletPluginConfig) {
-            let providerOptions;
-            if (pluginName == utils_3.WalletPlugin.WalletConnect) {
-                providerOptions = {
-                    name: pluginName,
-                    infuraId: utils_3.getInfuraId(),
-                    bridge: "https://bridge.walletconnect.org",
-                    rpc: rpcs,
-                    useDefaultProvider: true
-                };
-            }
-            else {
-                providerOptions = {
-                    name: pluginName,
-                    infuraId: utils_3.getInfuraId(),
-                    rpc: rpcs,
-                    useDefaultProvider: true
-                };
-            }
-            let provider = exports.WalletPluginConfig[pluginName].provider(wallet, events, providerOptions);
-            utils_3.setWalletPluginProvider(pluginName, provider);
-        }
-    }
-    exports.initWalletPlugins = initWalletPlugins;
-    async function connectWallet(walletPlugin) {
-        let wallet = eth_wallet_11.Wallet.getClientInstance();
-        if (!wallet.chainId) {
-            wallet.chainId = utils_3.getDefaultChainId();
-        }
-        let provider = utils_3.getWalletPluginProvider(walletPlugin);
-        if (provider === null || provider === void 0 ? void 0 : provider.installed()) {
-            await wallet.connect(provider);
-        }
-        return wallet;
-    }
-    exports.connectWallet = connectWallet;
-    async function logoutWallet() {
-        const wallet = eth_wallet_11.Wallet.getClientInstance();
-        await wallet.disconnect();
-        localStorage.setItem('walletProvider', '');
-        components_11.application.EventBus.dispatch("IsWalletDisconnected" /* IsWalletDisconnected */, false);
-    }
-    exports.logoutWallet = logoutWallet;
-});
-define("@scom/scom-disperse/store/index.ts", ["require", "exports", "@scom/scom-disperse/assets.ts", "@scom/scom-disperse/store/data/index.ts", "@scom/scom-disperse/store/token.ts", "@scom/scom-disperse/store/utils.ts", "@scom/scom-disperse/store/token.ts", "@scom/scom-disperse/store/utils.ts", "@scom/scom-disperse/store/wallet.ts"], function (require, exports, assets_1, index_19, token_2, utils_4, token_3, utils_5, wallet_1) {
+define("@scom/scom-disperse/store/index.ts", ["require", "exports", "@scom/scom-token-list", "@scom/scom-disperse/store/utils.ts", "@scom/scom-disperse/store/utils.ts"], function (require, exports, scom_token_list_2, utils_1, utils_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.tokenSymbol = exports.getTokenIcon = void 0;
     const getTokenIcon = (address) => {
         if (!address)
             return '';
-        const tokenMap = token_2.tokenStore.tokenMap;
+        const tokenMap = scom_token_list_2.tokenStore.tokenMap;
         let ChainNativeToken;
         let tokenObject;
-        if (utils_4.isWalletConnected()) {
-            ChainNativeToken = utils_4.getChainNativeToken(utils_4.getChainId());
+        if (utils_1.isWalletConnected()) {
+            ChainNativeToken = utils_1.getChainNativeToken(utils_1.getChainId());
             tokenObject = address == ChainNativeToken.symbol ? ChainNativeToken : tokenMap[address.toLowerCase()];
         }
         else {
             tokenObject = tokenMap[address.toLowerCase()];
         }
-        return assets_1.default.fullPath(index_19.getTokenIconPath(tokenObject, utils_4.getChainId()));
+        return scom_token_list_2.assets.tokenPath(tokenObject, utils_1.getChainId());
     };
     exports.getTokenIcon = getTokenIcon;
     const tokenSymbol = (address) => {
         if (!address)
             return '';
-        const tokenMap = token_2.tokenStore.tokenMap;
+        const tokenMap = scom_token_list_2.tokenStore.tokenMap;
         let tokenObject = tokenMap[address.toLowerCase()];
         if (!tokenObject) {
             tokenObject = tokenMap[address];
@@ -17382,14 +13946,25 @@ define("@scom/scom-disperse/store/index.ts", ["require", "exports", "@scom/scom-
         return tokenObject ? tokenObject.symbol : '';
     };
     exports.tokenSymbol = tokenSymbol;
-    __exportStar(token_3, exports);
-    __exportStar(utils_5, exports);
-    __exportStar(wallet_1, exports);
+    __exportStar(utils_2, exports);
 });
-define("@scom/scom-disperse/common/tokenSelection.css.ts", ["require", "exports", "@ijstech/components"], function (require, exports, components_12) {
+define("@scom/scom-disperse/assets.ts", ["require", "exports", "@ijstech/components"], function (require, exports, components_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    components_12.Styles.cssRule('.token-selection', {
+    let moduleDir = components_3.application.currentModuleDir;
+    function fullPath(path) {
+        if (path.indexOf('://') > 0)
+            return path;
+        return `${moduleDir}/${path}`;
+    }
+    exports.default = {
+        fullPath
+    };
+});
+define("@scom/scom-disperse/common/tokenSelection.css.ts", ["require", "exports", "@ijstech/components"], function (require, exports, components_4) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    components_4.Styles.cssRule('.token-selection', {
         $nest: {
             '.token-agree-input': {
                 $nest: {
@@ -17652,19 +14227,19 @@ define("@scom/scom-disperse/common/tokenSelection.css.ts", ["require", "exports"
         }
     });
 });
-define("@scom/scom-disperse/common/importToken.tsx", ["require", "exports", "@ijstech/components", "@ijstech/eth-wallet", "@scom/scom-disperse/global/index.ts", "@scom/scom-disperse/store/index.ts"], function (require, exports, components_13, eth_wallet_12, index_20, index_21) {
+define("@scom/scom-disperse/common/importToken.tsx", ["require", "exports", "@ijstech/components", "@ijstech/eth-wallet", "@scom/scom-disperse/global/index.ts", "@scom/scom-disperse/store/index.ts", "@scom/scom-token-list"], function (require, exports, components_5, eth_wallet_4, index_8, index_9, scom_token_list_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.ImportToken = void 0;
     ;
-    let ImportToken = class ImportToken extends components_13.Module {
+    let ImportToken = class ImportToken extends components_5.Module {
         constructor(parent, options) {
             super(parent, options);
             this._state = {
                 address: '',
                 name: ''
             };
-            this.$eventBus = components_13.application.EventBus;
+            this.$eventBus = components_5.application.EventBus;
         }
         ;
         set token(value) {
@@ -17687,9 +14262,9 @@ define("@scom/scom-disperse/common/importToken.tsx", ["require", "exports", "@ij
         async onImportToken(source, event) {
             event.stopPropagation();
             const tokenObj = this.token;
-            index_21.addUserTokens(tokenObj);
-            index_21.tokenStore.updateTokenMapData();
-            await index_21.tokenStore.updateAllTokenBalances();
+            index_9.addUserTokens(tokenObj);
+            scom_token_list_3.tokenStore.updateTokenMapData();
+            await scom_token_list_3.tokenStore.updateAllTokenBalances();
             this.$eventBus.dispatch("emitNewToken" /* EmitNewToken */, tokenObj);
             if (typeof this.onUpdate === 'function') {
                 this.onUpdate(tokenObj);
@@ -17700,8 +14275,8 @@ define("@scom/scom-disperse/common/importToken.tsx", ["require", "exports", "@ij
             this.importBtn.enabled = source.checked;
         }
         viewContract() {
-            const chainId = eth_wallet_12.Wallet.getClientInstance().chainId;
-            index_20.viewOnExplorerByAddress(chainId, this._state.address);
+            const chainId = eth_wallet_4.Wallet.getClientInstance().chainId;
+            index_8.viewOnExplorerByAddress(chainId, this._state.address);
         }
         async init() {
             super.init();
@@ -17732,25 +14307,25 @@ define("@scom/scom-disperse/common/importToken.tsx", ["require", "exports", "@ij
         }
     };
     __decorate([
-        components_13.observable()
+        components_5.observable()
     ], ImportToken.prototype, "_state", void 0);
     ImportToken = __decorate([
-        components_13.customElements('import-token')
+        components_5.customElements('import-token')
     ], ImportToken);
     exports.ImportToken = ImportToken;
 });
-define("@scom/scom-disperse/common/tokenSelection.tsx", ["require", "exports", "@ijstech/components", "@scom/scom-disperse/store/index.ts", "@scom/scom-disperse/global/index.ts", "@scom/scom-disperse/assets.ts", "@scom/scom-disperse/common/tokenSelection.css.ts"], function (require, exports, components_14, index_22, index_23, assets_2) {
+define("@scom/scom-disperse/common/tokenSelection.tsx", ["require", "exports", "@ijstech/components", "@scom/scom-disperse/store/index.ts", "@scom/scom-disperse/global/index.ts", "@scom/scom-disperse/assets.ts", "@scom/scom-token-list", "@scom/scom-disperse/common/tokenSelection.css.ts"], function (require, exports, components_6, index_10, index_11, assets_1, scom_token_list_4) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.TokenSelection = void 0;
     ;
-    let TokenSelection = class TokenSelection extends components_14.Module {
+    let TokenSelection = class TokenSelection extends components_6.Module {
         constructor(parent, options) {
             super(parent, options);
             this._isTokenShown = true;
             this._isSortBalanceShown = true;
             this._isBtnMaxShown = true;
-            this.defaultUrl = assets_2.default.fullPath('img/tokens/token-placeholder.svg');
+            this.defaultUrl = assets_1.default.fullPath('img/tokens/token-placeholder.svg');
             this.sortToken = (a, b, asc) => {
                 if (a.balance != b.balance) {
                     return asc ? (a.balance - b.balance) : (b.balance - a.balance);
@@ -17763,7 +14338,7 @@ define("@scom/scom-disperse/common/tokenSelection.tsx", ["require", "exports", "
                 }
                 return 0;
             };
-            this.$eventBus = components_14.application.EventBus;
+            this.$eventBus = components_6.application.EventBus;
             this.registerEvent();
         }
         get token() {
@@ -17846,7 +14421,7 @@ define("@scom/scom-disperse/common/tokenSelection.tsx", ["require", "exports", "
             if (this.targetChainId) {
                 return this.targetChainId;
             }
-            return index_22.isWalletConnected() ? this.currentChainId : index_22.getChainId();
+            return index_10.isWalletConnected() ? this.currentChainId : index_10.getChainId();
         }
         get disableSelect() {
             return this._disableSelect;
@@ -17866,38 +14441,38 @@ define("@scom/scom-disperse/common/tokenSelection.tsx", ["require", "exports", "
         }
         async initData() {
             if (!this.chainId) {
-                this.currentChainId = index_22.getChainId();
+                this.currentChainId = index_10.getChainId();
             }
-            if (index_22.isWalletConnected()) {
-                this.tokenBalancesMap = index_22.tokenStore.tokenBalances;
+            if (index_10.isWalletConnected()) {
+                this.tokenBalancesMap = scom_token_list_4.tokenStore.tokenBalances;
             }
             this.renderTokenItems();
         }
         async updateDataByChain() {
-            this.tokenBalancesMap = await index_22.tokenStore.updateAllTokenBalances();
+            this.tokenBalancesMap = await scom_token_list_4.tokenStore.updateAllTokenBalances();
             this.renderTokenItems();
             this.updateButton();
         }
         async updateDataByNewToken() {
-            this.tokenBalancesMap = index_22.tokenStore.tokenBalances;
+            this.tokenBalancesMap = scom_token_list_4.tokenStore.tokenBalances;
             this.renderTokenItems();
         }
         async onChainChange() {
             if (!this.targetChainId) {
-                this.currentChainId = index_22.getChainId();
-                index_22.tokenStore.updateTokenMapData();
+                this.currentChainId = index_10.getChainId();
+                scom_token_list_4.tokenStore.updateTokenMapData();
                 this.updateDataByChain();
             }
         }
         async onWalletConnect() {
-            this.checkHasMetaMask = index_22.hasMetaMask();
-            index_22.tokenStore.updateTokenMapData();
-            await index_22.tokenStore.updateAllTokenBalances();
+            this.checkHasMetaMask = index_10.hasMetaMask();
+            scom_token_list_4.tokenStore.updateTokenMapData();
+            await scom_token_list_4.tokenStore.updateAllTokenBalances();
             await this.initData();
             this.updateStatusButton();
         }
         async onWalletDisconnect() {
-            index_22.tokenStore.updateTokenMapData();
+            scom_token_list_4.tokenStore.updateTokenMapData();
             await this.initData();
         }
         async onPaid() {
@@ -17912,18 +14487,21 @@ define("@scom/scom-disperse/common/tokenSelection.tsx", ["require", "exports", "
             this.$eventBus.register(this, "emitNewToken" /* EmitNewToken */, this.updateDataByNewToken);
         }
         get tokenDataList() {
+            let tokenList = [];
             if (this.tokenDataListProp && this.tokenDataListProp.length) {
-                return this.tokenDataListProp;
+                tokenList = this.tokenDataListProp;
             }
-            const tokenList = index_22.getTokenList(this.chainId);
+            else {
+                tokenList = scom_token_list_4.tokenStore.getTokenList(this.chainId);
+            }
             return tokenList.map((token) => {
                 var _a;
                 const tokenObject = Object.assign({}, token);
-                const nativeToken = index_22.ChainNativeTokenByChainId[this.chainId];
-                if (token.symbol === nativeToken.symbol) {
+                const nativeToken = scom_token_list_4.ChainNativeTokenByChainId[this.chainId];
+                if ((nativeToken === null || nativeToken === void 0 ? void 0 : nativeToken.symbol) && token.symbol === nativeToken.symbol) {
                     Object.assign(tokenObject, { isNative: true });
                 }
-                if (!index_22.isWalletConnected()) {
+                if (!index_10.isWalletConnected()) {
                     Object.assign(tokenObject, {
                         balance: 0,
                     });
@@ -17988,7 +14566,7 @@ define("@scom/scom-disperse/common/tokenSelection.tsx", ["require", "exports", "
             if (this.isCommonShown && this.commonTokenDataList) {
                 this.commonTokenPanel.classList.remove('hidden');
                 this.commonTokenDataList.forEach((token) => {
-                    const logoAddress = token.address && !this.targetChainId ? index_22.getTokenIcon(token.address) : assets_2.default.fullPath(index_22.getTokenIconPath(token, this.chainId));
+                    const logoAddress = token.address && !this.targetChainId ? index_10.getTokenIcon(token.address) : scom_token_list_4.assets.tokenPath(token, this.chainId);
                     this.commonTokenList.appendChild(this.$render("i-hstack", { onClick: () => this.onSelect(token), tooltip: { content: token.name }, verticalAlignment: "center", class: "grid-item", wrap: "nowrap" },
                         this.$render("i-image", { width: 24, height: 24, url: logoAddress, fallbackUrl: this.defaultUrl }),
                         this.$render("i-label", { caption: token.symbol })));
@@ -17999,7 +14577,7 @@ define("@scom/scom-disperse/common/tokenSelection.tsx", ["require", "exports", "
             }
         }
         renderToken(token) {
-            const logoAddress = token.address && !this.targetChainId ? index_22.getTokenIcon(token.address) : assets_2.default.fullPath(index_22.getTokenIconPath(token, this.chainId));
+            const logoAddress = token.address && !this.targetChainId ? index_10.getTokenIcon(token.address) : scom_token_list_4.assets.tokenPath(token, this.chainId);
             return (this.$render("i-hstack", { width: "100%", verticalAlignment: "center", class: "token-item", onClick: () => this.onSelect(token) },
                 this.$render("i-vstack", { width: "100%" },
                     this.$render("i-hstack", { verticalAlignment: "center" },
@@ -18010,12 +14588,12 @@ define("@scom/scom-disperse/common/tokenSelection.tsx", ["require", "exports", "
                                 this.$render("i-hstack", { class: "token-name", verticalAlignment: "center" },
                                     this.$render("i-label", { caption: token.name }),
                                     token.address && !token.isNative ?
-                                        this.$render("i-icon", { name: "copy", width: "14px", height: "14px", fill: '#fff', margin: { right: 8 }, tooltip: { content: `${token.symbol} has been copied`, trigger: 'click' }, onClick: () => components_14.application.copyToClipboard(token.address || ''), class: "inline-flex pointer" })
+                                        this.$render("i-icon", { name: "copy", width: "14px", height: "14px", fill: '#fff', margin: { right: 8 }, tooltip: { content: `${token.symbol} has been copied`, trigger: 'click' }, onClick: () => components_6.application.copyToClipboard(token.address || ''), class: "inline-flex pointer" })
                                         : [],
                                     token.address && this.checkHasMetaMask ?
-                                        this.$render("i-image", { display: "flex", width: 16, height: 16, url: assets_2.default.fullPath('img/wallet/metamask.png'), tooltip: { content: 'Add to MetaMask' }, onClick: (target, event) => this.addToMetamask(event, token) })
+                                        this.$render("i-image", { display: "flex", width: 16, height: 16, url: assets_1.default.fullPath('img/wallet/metamask.png'), tooltip: { content: 'Add to MetaMask' }, onClick: (target, event) => this.addToMetamask(event, token) })
                                         : []))),
-                        this.$render("i-label", { class: "ml-auto", caption: index_23.formatNumber(token.balance, 4) })),
+                        this.$render("i-label", { class: "ml-auto", caption: index_11.formatNumber(token.balance, 4) })),
                     token.isNew ? (this.$render("i-hstack", { horizontalAlignment: "center" },
                         this.$render("i-button", { caption: "Import", class: "btn-os", border: { radius: 5 }, padding: { top: 4, bottom: 4, left: 20, right: 20 }, font: { size: '16px', color: '#fff' }, margin: { top: 10 }, height: 34, onClick: (source, event) => this.showImportTokenModal(event, token) }))) : [])));
         }
@@ -18028,13 +14606,13 @@ define("@scom/scom-disperse/common/tokenSelection.tsx", ["require", "exports", "
                 const tokenItems = this.tokenDataListFiltered.map((token) => this.renderToken(token));
                 this.tokenList.append(...tokenItems);
             }
-            else if (this.targetChainId && this.targetChainId !== index_22.getChainId()) {
+            else if (this.targetChainId && this.targetChainId !== index_10.getChainId()) {
                 this.tokenList.innerHTML = '';
                 this.tokenList.append(this.$render("i-label", { class: "text-center mt-1 mb-1", caption: "No tokens found" }));
             }
             else {
                 try {
-                    const tokenObj = await index_22.getTokenObject(this.filterValue, true);
+                    const tokenObj = await index_10.getTokenObject(this.filterValue, true);
                     if (!tokenObj)
                         throw new Error('Token is invalid');
                     this.tokenList.innerHTML = '';
@@ -18048,7 +14626,7 @@ define("@scom/scom-disperse/common/tokenSelection.tsx", ["require", "exports", "
         }
         addToMetamask(event, token) {
             event.stopPropagation();
-            const img = `${window.location.origin}${index_22.getTokenIconPath(token, this.chainId).substring(1)}`;
+            const img = `${window.location.origin}${scom_token_list_4.assets.getTokenIconPath(token, this.chainId).substring(1)}`;
             window.ethereum.request({
                 method: 'wallet_watchAsset',
                 params: {
@@ -18070,13 +14648,13 @@ define("@scom/scom-disperse/common/tokenSelection.tsx", ["require", "exports", "
             this.sortValue = undefined;
             this.iconSortUp.classList.remove('icon-sorted');
             this.iconSortDown.classList.remove('icon-sorted');
-            if (!this.tokenList.innerHTML) {
-                await this.initData();
-            }
+            // if (!this.tokenList.innerHTML) {
+            //   await this.initData();
+            // }
             this.tokenSelectionModal.visible = true;
         }
         updateStatusButton() {
-            const status = index_22.isWalletConnected();
+            const status = index_10.isWalletConnected();
             if (this.btnToken) {
                 this.btnToken.enabled = !this.disableSelect && status;
             }
@@ -18108,9 +14686,9 @@ define("@scom/scom-disperse/common/tokenSelection.tsx", ["require", "exports", "
                     if (this.isBtnMaxShown) {
                         this.btnMax.classList.remove('hidden');
                     }
-                    const logoAddress = token.address && !this.targetChainId ? index_22.getTokenIcon(token.address) : assets_2.default.fullPath(index_22.getTokenIconPath(token, this.chainId));
+                    const logoAddress = token.address && !this.targetChainId ? index_10.getTokenIcon(token.address) : scom_token_list_4.assets.tokenPath(token, this.chainId);
                     if (!image) {
-                        image = new components_14.Image(btnToken, {
+                        image = new components_6.Image(btnToken, {
                             width: 20,
                             height: 20,
                             fallbackUrl: this.defaultUrl
@@ -18125,10 +14703,10 @@ define("@scom/scom-disperse/common/tokenSelection.tsx", ["require", "exports", "
         async onSelect(token, isNew = false) {
             this.token = token;
             // The token has been not imported
-            if (!isNew && token.isNew && !index_22.hasUserToken(token.address || '', this.chainId)) {
-                index_22.setUserTokens(token, this.chainId);
-                index_22.tokenStore.updateTokenMapData();
-                await index_22.tokenStore.updateAllTokenBalances();
+            if (!isNew && token.isNew && !index_10.hasUserToken(token.address || '', this.chainId)) {
+                index_10.setUserTokens(token, this.chainId);
+                scom_token_list_4.tokenStore.updateTokenMapData();
+                await scom_token_list_4.tokenStore.updateAllTokenBalances();
                 this.$eventBus.dispatch("emitNewToken" /* EmitNewToken */, token);
                 isNew = true;
             }
@@ -18143,7 +14721,7 @@ define("@scom/scom-disperse/common/tokenSelection.tsx", ["require", "exports", "
             this.disabledMaxBtn = this.getAttribute("disabledMaxBtn", true);
             this.updateStatusButton();
             this.updateButton(this._token);
-            if (!index_22.isWalletConnected())
+            if (!index_10.isWalletConnected())
                 this.disableSelect = false;
         }
         showImportTokenModal(event, token) {
@@ -18182,21 +14760,21 @@ define("@scom/scom-disperse/common/tokenSelection.tsx", ["require", "exports", "
         }
     };
     __decorate([
-        components_14.observable()
+        components_6.observable()
     ], TokenSelection.prototype, "sortValue", void 0);
     __decorate([
-        components_14.observable()
+        components_6.observable()
     ], TokenSelection.prototype, "filterValue", void 0);
     TokenSelection = __decorate([
-        components_14.customElements('token-selection')
+        components_6.customElements('token-selection')
     ], TokenSelection);
     exports.TokenSelection = TokenSelection;
     ;
 });
-define("@scom/scom-disperse/common/result.css.ts", ["require", "exports", "@ijstech/components"], function (require, exports, components_15) {
+define("@scom/scom-disperse/common/result.css.ts", ["require", "exports", "@ijstech/components"], function (require, exports, components_7) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = components_15.Styles.style({
+    exports.default = components_7.Styles.style({
         textAlign: 'center',
         $nest: {
             'i-label > *': {
@@ -18222,12 +14800,12 @@ define("@scom/scom-disperse/common/result.css.ts", ["require", "exports", "@ijst
     });
 });
 ///<amd-module name='@scom/scom-disperse/common/result.tsx'/> 
-define("@scom/scom-disperse/common/result.tsx", ["require", "exports", "@ijstech/components", "@scom/scom-disperse/store/index.ts", "@scom/scom-disperse/global/index.ts", "@scom/scom-disperse/common/result.css.ts", "@scom/scom-disperse/assets.ts", "@ijstech/eth-wallet"], function (require, exports, components_16, index_24, index_25, result_css_1, assets_3, eth_wallet_13) {
+define("@scom/scom-disperse/common/result.tsx", ["require", "exports", "@ijstech/components", "@scom/scom-disperse/store/index.ts", "@scom/scom-disperse/global/index.ts", "@scom/scom-disperse/common/result.css.ts", "@scom/scom-disperse/assets.ts", "@ijstech/eth-wallet"], function (require, exports, components_8, index_12, index_13, result_css_1, assets_2, eth_wallet_5) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Result = void 0;
     ;
-    let Result = class Result extends components_16.Module {
+    let Result = class Result extends components_8.Module {
         constructor(parent, options) {
             super(parent, options);
         }
@@ -18266,13 +14844,13 @@ define("@scom/scom-disperse/common/result.tsx", ["require", "exports", "@ijstech
         }
         async buildLink() {
             if (this.message.txtHash) {
-                const chainId = eth_wallet_13.Wallet.getClientInstance().chainId;
-                index_25.viewOnExplorerByTxHash(chainId, this.message.txtHash);
+                const chainId = eth_wallet_5.Wallet.getClientInstance().chainId;
+                index_13.viewOnExplorerByTxHash(chainId, this.message.txtHash);
             }
         }
         async renderUI() {
             this.mainContent.clearInnerHTML();
-            const mainSection = await components_16.VStack.create({
+            const mainSection = await components_8.VStack.create({
                 horizontalAlignment: 'center'
             });
             if (this.message.status === 'warning') {
@@ -18280,17 +14858,17 @@ define("@scom/scom-disperse/common/result.tsx", ["require", "exports", "@ijstech
                 const loading = (this.$render("i-panel", { height: 100 },
                     this.$render("i-vstack", { id: "loadingElm", class: "i-loading-overlay", height: "100%", background: { color: "transparent" } },
                         this.$render("i-vstack", { class: "i-loading-spinner", horizontalAlignment: "center", verticalAlignment: "center" },
-                            this.$render("i-icon", { class: "i-loading-spinner_icon", image: { url: assets_3.default.fullPath('img/loading.svg'), width: 24, height: 24 } }),
+                            this.$render("i-icon", { class: "i-loading-spinner_icon", image: { url: assets_2.default.fullPath('img/loading.svg'), width: 24, height: 24 } }),
                             this.$render("i-label", { caption: "Loading...", font: { color: '#F29224' }, class: "i-loading-spinner_text" })))));
                 mainSection.appendChild(loading);
-                const section = new components_16.VStack();
+                const section = new components_8.VStack();
                 section.margin = { bottom: 20 };
                 const captionList = ['Waiting For Confirmation', this.message.content || '', 'Confirm this transaction in your wallet'];
                 const options = [{ font: { color: '#F6C958', size: '20px' }, marginBottom: 15 }, { marginBottom: 15 }, { font: { color: '#C2C3CB' } }];
                 for (let i = 0; i < captionList.length; i++) {
                     const caption = captionList[i];
                     const option = options[i] || {};
-                    const label = await components_16.Label.create(Object.assign({}, option));
+                    const label = await components_8.Label.create(Object.assign({}, option));
                     label.caption = caption;
                     section.appendChild(label);
                 }
@@ -18298,41 +14876,41 @@ define("@scom/scom-disperse/common/result.tsx", ["require", "exports", "@ijstech
                 mainSection.appendChild(section);
             }
             else if (this.message.status === 'success') {
-                const chainId = eth_wallet_13.Wallet.getClientInstance().chainId;
-                const networkType = index_24.getNetworkExplorerName(chainId);
-                const image = await components_16.Image.create({
+                const chainId = eth_wallet_5.Wallet.getClientInstance().chainId;
+                const networkType = index_12.getNetworkExplorerName(chainId);
+                const image = await components_8.Image.create({
                     width: '50px',
-                    url: assets_3.default.fullPath('img/success-icon.svg'),
+                    url: assets_2.default.fullPath('img/success-icon.svg'),
                     margin: { bottom: 30 },
                     display: 'inline-block'
                 });
                 mainSection.appendChild(image);
-                const label = await components_16.Label.create({
+                const label = await components_8.Label.create({
                     caption: 'Transaction Submitted',
                     margin: { bottom: 10 },
                     font: { size: '20px', color: '#F6C958' }
                 });
                 mainSection.appendChild(label);
-                const contentSection = await components_16.Panel.create();
+                const contentSection = await components_8.Panel.create();
                 contentSection.id = "contentSection";
                 mainSection.appendChild(contentSection);
-                const contentLabel = await components_16.Label.create();
+                const contentLabel = await components_8.Label.create();
                 contentLabel.caption = this.message.content || '';
                 contentLabel.style.overflowWrap = 'anywhere';
                 contentSection.appendChild(contentLabel);
                 if (this.message.txtHash) {
-                    const section = new components_16.VStack();
-                    const label1 = await components_16.Label.create({
+                    const section = new components_8.VStack();
+                    const label1 = await components_8.Label.create({
                         caption: this.message.txtHash.substring(0, 33),
                         margin: { bottom: 15 }
                     });
                     section.appendChild(label1);
-                    const label2 = await components_16.Label.create({
+                    const label2 = await components_8.Label.create({
                         caption: this.message.txtHash.substring(33, this.message.txtHash.length),
                         margin: { bottom: 15 }
                     });
                     section.appendChild(label2);
-                    const link = await components_16.Label.create({
+                    const link = await components_8.Label.create({
                         caption: `View on ${networkType}`,
                         display: 'block',
                         font: { color: '#FF9900' },
@@ -18342,7 +14920,7 @@ define("@scom/scom-disperse/common/result.tsx", ["require", "exports", "@ijstech
                     section.appendChild(link);
                     contentSection.appendChild(section);
                 }
-                const button = new components_16.Button(mainSection, {
+                const button = new components_8.Button(mainSection, {
                     width: '100%',
                     caption: 'Close',
                 });
@@ -18353,30 +14931,30 @@ define("@scom/scom-disperse/common/result.tsx", ["require", "exports", "@ijstech
                 mainSection.appendChild(button);
             }
             else {
-                const image = await components_16.Image.create({
+                const image = await components_8.Image.create({
                     width: '50px',
-                    url: assets_3.default.fullPath('img/warning-icon.png'),
+                    url: assets_2.default.fullPath('img/warning-icon.png'),
                     display: 'inline-block',
                     margin: { bottom: 30 }
                 });
                 mainSection.appendChild(image);
-                const label = await components_16.Label.create({
+                const label = await components_8.Label.create({
                     caption: 'Transaction Rejected.',
                     font: { size: '18px', color: '#F6C958' },
                     margin: { bottom: 10 }
                 });
                 mainSection.appendChild(label);
-                const section = await components_16.VStack.create();
+                const section = await components_8.VStack.create();
                 section.id = "contentSection";
                 const err = await this.onErrMsgChanged();
-                const contentLabel = await components_16.Label.create({
+                const contentLabel = await components_8.Label.create({
                     caption: err,
                     margin: { bottom: 15 },
                     visible: !!err
                 });
                 section.appendChild(contentLabel);
                 mainSection.appendChild(section);
-                const button = new components_16.Button(mainSection, {
+                const button = new components_8.Button(mainSection, {
                     width: '100%',
                     caption: 'Cancel'
                 });
@@ -18395,7 +14973,7 @@ define("@scom/scom-disperse/common/result.tsx", ["require", "exports", "@ijstech
             if (this.message.content.message && this.message.content.message.includes('Internal JSON-RPC error.')) {
                 this.message.content.message = JSON.parse(this.message.content.message.replace('Internal JSON-RPC error.\n', '')).message;
             }
-            return await index_25.parseContractError(this.message.content.message, this.message.obj);
+            return await index_13.parseContractError(this.message.content.message, this.message.obj);
         }
         render() {
             return (this.$render("i-modal", { id: "confirmModal", closeIcon: { name: 'times' }, class: "dark-modal confirm-modal", minHeight: "280px" },
@@ -18403,695 +14981,18 @@ define("@scom/scom-disperse/common/result.tsx", ["require", "exports", "@ijstech
         }
     };
     Result = __decorate([
-        components_16.customElements('disperse-result')
+        components_8.customElements('disperse-result')
     ], Result);
     exports.Result = Result;
     ;
 });
-define("@scom/scom-disperse/common/wallet.css.ts", ["require", "exports", "@ijstech/components"], function (require, exports, components_17) {
+define("@scom/scom-disperse/common/index.ts", ["require", "exports", "@scom/scom-disperse/common/tokenSelection.tsx", "@scom/scom-disperse/common/importToken.tsx", "@scom/scom-disperse/common/result.tsx"], function (require, exports, tokenSelection_1, importToken_1, result_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.walletModalStyle = void 0;
-    exports.walletModalStyle = components_17.Styles.style({
-        backgroundColor: '#000',
-        $nest: {
-            '::-webkit-scrollbar-track': {
-                background: '#FFB82F',
-            },
-            '::-webkit-scrollbar': {
-                width: '5px',
-            },
-            '::-webkit-scrollbar-thumb': {
-                background: '#FF8800',
-                borderRadius: '5px',
-            },
-            '.nav': {
-                padding: '.2rem 1rem',
-                fontWeight: '600',
-                letterSpacing: '.015em',
-                lineHeight: '19px',
-                minHeight: 80,
-                display: 'block',
-                alignItems: 'center',
-                borderBottom: `2px solid #F29224`,
-                position: 'relative'
-            },
-            '.os-menu': {
-                display: 'block',
-                $nest: {
-                    '.heading': {
-                        textTransform: 'capitalize',
-                        fontSize: '1rem',
-                        lineHeight: '1rem',
-                        fontWeight: 400,
-                        whiteSpace: 'nowrap',
-                        color: 'hsla(0, 0%, 100%, 0.55)',
-                        maxHeight: 80,
-                        width: '100%',
-                        padding: '.75rem 1rem'
-                    },
-                    '> nav > div > i-menu-item > .desktop .title .heading': {
-                        borderRadius: '5px',
-                        padding: '.625rem 1.5rem'
-                    },
-                    '.show-dropdown > .link > .title .heading': {
-                        background: '#222237',
-                        color: '#fff',
-                    },
-                    'i-menu-item.menu-active > .desktop .title > .heading': {
-                        background: '#222237',
-                        color: '#fff'
-                    },
-                    'i-menu-item .title:hover > .heading': {
-                        background: '#222237',
-                        color: '#fff'
-                    },
-                    'i-menu-item > .desktop.dropdown > .link': {
-                        textOverflow: 'ellipsis',
-                        borderBottom: 'none',
-                        display: 'block',
-                        width: '100%',
-                        padding: '0'
-                    },
-                    'i-menu-item > .desktop > button.link': {
-                        width: '100%'
-                    },
-                    'i-menu-item > .desktop.dropdown > .link .title': {
-                        paddingLeft: 0,
-                        height: '100%'
-                    },
-                    'i-menu-item > i-menu > .dropdown': {
-                        background: '#252a48',
-                        boxShadow: '0 4px 8px 0 rgb(0 0 0 / 20%)'
-                    },
-                    'i-menu-item': {
-                        transformOrigin: '0 0',
-                        width: '100%'
-                    },
-                    'i-menu-item .title .heading': {
-                        transition: 'color .3s cubic-bezier(.645,.045,.355,1),border-color .3s cubic-bezier(.645,.045,.355,1),background .3s cubic-bezier(.645,.045,.355,1),padding .15s cubic-bezier(.645,.045,.355,1)'
-                    },
-                    'i-menu > .desktop.dropdown': {
-                        width: 'auto',
-                        minWidth: 160,
-                        paddingTop: '.25rem',
-                        paddingBottom: '.25rem',
-                        transition: 'border-color .3s cubic-bezier(.645,.045,.355,1),background .3s cubic-bezier(.645,.045,.355,1),padding .15s cubic-bezier(.645,.045,.355,1)'
-                    },
-                    '> nav > div > i-menu-item i-menu i-menu-item i-menu': {
-                        position: 'absolute',
-                        left: '100%',
-                        top: 0,
-                        paddingLeft: '5px',
-                        $nest: {
-                            '.desktop.dropdown': {
-                                position: 'relative'
-                            }
-                        }
-                    }
-                }
-            },
-            '.os-mobile': {
-                backgroundColor: '#252a48',
-                position: 'absolute',
-                left: -999,
-                top: '62px',
-                transition: 'all .3s ease-out',
-                minWidth: '290px',
-                zIndex: '9999',
-                $nest: {
-                    '&.show-menu': {
-                        left: 0,
-                        transition: 'all .5s ease-in'
-                    },
-                    'i-menu-item': {
-                        color: '#F29224',
-                        whiteSpace: 'nowrap',
-                        width: '100%',
-                        $nest: {
-                            '> .desktop': {
-                                padding: '.75rem 1rem',
-                                borderLeft: `2px solid transparent`,
-                            },
-                        }
-                    },
-                    'i-menu-item.menu-active > .desktop': {
-                        borderLeft: `2px solid #F29224`,
-                        background: '#464b65'
-                    },
-                    'i-menu-item:hover > .desktop': {
-                        background: '#303552'
-                    },
-                    '.heading, .heading i-label *': {
-                        fontWeight: 'normal',
-                        fontSize: '1rem',
-                        color: '#F29224'
-                    },
-                    '> nav > div > i-menu-item .title .heading': {
-                        width: '100%',
-                        $nest: {
-                            '*': {
-                                fontWeight: 400,
-                                fontSize: 20
-                            },
-                            'i-slot': {
-                                width: '100%'
-                            }
-                        }
-                    },
-                    '> nav > div > i-menu-item.menu-active .title .heading *': {
-                        fontWeight: 700,
-                    }
-                }
-            },
-            '.btn-hamburger': {
-                backgroundColor: 'transparent',
-                border: 'none',
-                boxShadow: 'none',
-                $nest: {
-                    '&:not(.disabled):hover': {
-                        backgroundColor: 'transparent',
-                        background: 'transparent',
-                        boxShadow: 'none'
-                    }
-                }
-            },
-            'i-menu.i-menu--horizontal > .desktop > .align': {
-                alignItems: 'stretch !important',
-                gridGap: '5px !important'
-            },
-            '.dir-icon': {
-                transition: 'transform .24s'
-            },
-            '.btn': {
-                height: 'auto !important',
-                cursor: 'pointer',
-                fontWeight: 600,
-                display: 'inline-flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: '5px',
-                backgroundColor: 'transparent',
-                $nest: {
-                    '&:hover': {
-                        transition: 'all .2s ease-out'
-                    }
-                }
-            },
-            '.btn-network': {
-                padding: '6px 12px',
-                backgroundColor: '#222237',
-                border: '2px solid #FFB82F',
-                color: '#fff',
-                borderRadius: 6,
-                fontWeight: 400,
-                $nest: {
-                    '&:hover': {
-                        backgroundColor: '#222237',
-                    }
-                }
-            },
-            '.btn-connect': {
-                padding: '.375rem .5rem',
-                border: 'none',
-                transition: 'all .2s ease-out',
-                $nest: {
-                    '&:hover': {
-                        opacity: '.9',
-                        transition: 'all .2s ease-out',
-                    }
-                }
-            },
-            '.my-wallet': {
-                display: 'inline-flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                background: '#222237',
-                borderRadius: 6,
-                height: 36,
-                textAlign: 'center',
-                padding: '6px 10px',
-                position: 'relative'
-            },
-            '.address-info': {
-                display: 'flex',
-                gap: '.5rem',
-                lineHeight: '30px',
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-                marginTop: '.25rem'
-            },
-            '.os-modal': {
-                borderRadius: 20,
-                boxSizing: 'border-box',
-                fontSize: '.875rem',
-                fontWeight: 400,
-                $nest: {
-                    'i-icon': {
-                        display: 'inline-block'
-                    },
-                    '.mr-2-5': {
-                        marginRight: '2.5rem'
-                    },
-                    '&.connect-modal > div > div': {
-                        width: 440,
-                        maxWidth: '100%',
-                        height: 'auto'
-                    },
-                    '&.connect-modal .i-modal_content': {
-                        padding: '0 1.5rem'
-                    },
-                    '&.account-modal .i-modal_content': {
-                        padding: '1rem 1.5rem'
-                    },
-                    '&.account-modal > div > div': {
-                        height: 'auto',
-                        minHeight: 200,
-                        width: 440,
-                        maxWidth: '100%',
-                    },
-                    '> div > div': {
-                        backgroundColor: '#000',
-                        height: 'calc(100% - 160px)',
-                        borderRadius: 15,
-                        lineHeight: 1.5,
-                        wordWrap: 'break-word',
-                        padding: 0,
-                        minHeight: 400,
-                        width: 360
-                    },
-                    '.i-modal_content': {
-                        padding: '0 1.25rem'
-                    },
-                    '.i-modal_header': {
-                        borderRadius: '20px 20px 0 0',
-                        background: 'unset',
-                        padding: '16px 24px 0',
-                    },
-                    '.networkSection': {
-                        marginLeft: '-1.25rem',
-                        marginRight: '-1.25rem',
-                    },
-                    '.list-view': {
-                        $nest: {
-                            '.list-item:hover': {
-                                backgroundColor: '#51515c',
-                                $nest: {
-                                    '> *': {
-                                        opacity: 1
-                                    }
-                                }
-                            },
-                            '.list-item:not(:first-child)': {
-                                marginTop: '.5rem'
-                            },
-                            '.list-item': {
-                                backgroundColor: '#34343A',
-                                minHeight: '50px',
-                                position: 'relative',
-                                borderRadius: 10,
-                                cursor: 'pointer',
-                                border: 'none',
-                                transition: 'all .3s ease-in',
-                                overflow: 'unset',
-                                $nest: {
-                                    '&.disabled-network-selection': {
-                                        cursor: 'default',
-                                        $nest: {
-                                            '&:hover > *': {
-                                                backgroundColor: '#34343A',
-                                                opacity: '0.5 !important',
-                                            }
-                                        }
-                                    },
-                                    '> *': {
-                                        opacity: 0.8
-                                    }
-                                }
-                            },
-                            '.list-item.is-actived': {
-                                backgroundColor: '#51515c',
-                                $nest: {
-                                    '> *': {
-                                        opacity: 1
-                                    },
-                                    '&:after': {
-                                        content: "''",
-                                        top: '50%',
-                                        left: 9,
-                                        position: 'absolute',
-                                        background: '#20bf55',
-                                        borderRadius: '50%',
-                                        width: 10,
-                                        height: 10,
-                                        transform: 'translate3d(-50%,-50%,0)'
-                                    },
-                                    '.custom-img': {
-                                        marginLeft: '.75rem'
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    '.networks': {
-                        display: 'flex',
-                        flexDirection: 'column',
-                        color: '#f05e61',
-                        marginTop: '1.5rem',
-                        height: 'calc(100% - 160px)',
-                        overflowY: 'auto',
-                        width: '100% !important',
-                        paddingLeft: '1.25rem',
-                        paddingRight: '1.25rem',
-                        $nest: {
-                            '.list-item': {
-                                padding: '.5rem'
-                            }
-                        }
-                    },
-                    '.wallets': {
-                        marginTop: '.5rem',
-                        $nest: {
-                            '.list-item': {
-                                padding: '.5rem',
-                                position: 'relative',
-                            },
-                            '.list-item .image-container': {
-                                order: 2
-                            }
-                        }
-                    },
-                    '.small-label > *': {
-                        fontSize: '.875rem'
-                    },
-                    '.large-label > *': {
-                        fontSize: '1.25rem',
-                        lineHeight: 1.5
-                    },
-                    '.custom-link *': {
-                        color: '#fff'
-                    },
-                    '.custom-link a': {
-                        display: 'inline-flex',
-                        alignItems: 'center'
-                    }
-                }
-            },
-            '@media screen and (max-width: 768px)': {
-                $nest: {
-                    '#walletContainer': {
-                        marginLeft: 'auto',
-                    },
-                    '#networkBalanceContainer': {
-                        $nest: {
-                            'i-label': {
-                                display: 'none',
-                            },
-                            'i-image': {
-                                width: '2rem !important',
-                                height: '2rem',
-                            },
-                            '.btn-network': {
-                                background: 'transparent',
-                                border: 'none',
-                                boxShadow: 'none',
-                                padding: 0,
-                                marginRight: '0.5rem !important'
-                            },
-                            '.my-wallet': {
-                                display: 'none',
-                            },
-                        },
-                    },
-                },
-            }
-        }
-    });
-});
-define("@scom/scom-disperse/common/wallet.tsx", ["require", "exports", "@ijstech/components", "@ijstech/eth-wallet", "@scom/scom-disperse/store/index.ts", "@scom/scom-disperse/common/wallet.css.ts"], function (require, exports, components_18, eth_wallet_14, index_26, wallet_css_1) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.DisperseWallet = void 0;
-    ;
-    let DisperseWallet = class DisperseWallet extends components_18.Module {
-        constructor(parent, options) {
-            super(parent, options);
-            this.onChainChanged = async (chainId) => {
-                let wallet = eth_wallet_14.Wallet.getClientInstance();
-                const isConnected = wallet.isConnected;
-                this.updateList(isConnected);
-                if (!isConnected) {
-                    const acivedElm = this.networkGroup.querySelector('.is-actived');
-                    acivedElm && acivedElm.classList.remove('is-actived');
-                    const connectingElm = this.networkGroup.querySelector(`[data-key="${chainId}"]`);
-                    connectingElm && connectingElm.classList.add('is-actived');
-                }
-            };
-            this.openConnectModal = () => {
-                this.showModal('connectModal', 'Connect Wallet');
-            };
-            this.$eventBus = components_18.application.EventBus;
-            this.registerEvent();
-        }
-        ;
-        registerEvent() {
-            this.$eventBus.register(this, "DisperseConnectWallet" /* ConnectWallet */, this.openConnectModal);
-            this.$eventBus.register(this, "DisperseChangeNetwork" /* ChangeNetwork */, () => this.showModal('switchModal'));
-            this.$eventBus.register(this, "isWalletConnected" /* IsWalletConnected */, async (connected) => {
-                this.updateList(connected);
-            });
-            this.$eventBus.register(this, "IsWalletDisconnected" /* IsWalletDisconnected */, async (connected) => {
-                this.updateList(connected);
-            });
-            this.$eventBus.register(this, "chainChanged" /* chainChanged */, async (chainId) => {
-                this.onChainChanged(chainId);
-            });
-        }
-        async requestAccounts() {
-            try {
-                await this.wallet.web3.eth.requestAccounts();
-            }
-            catch (error) {
-                console.error(error);
-            }
-        }
-        async initData() {
-            const selectedProvider = localStorage.getItem('walletProvider');
-            const isValidProvider = Object.values(index_26.WalletPlugin).includes(selectedProvider);
-            if (isValidProvider) {
-                this.wallet = await index_26.connectWallet(selectedProvider);
-            }
-        }
-        showModal(name, title = '') {
-            const modalELm = this[name];
-            title && (modalELm.title = title);
-            if (name === 'switchModal') {
-                this.updateListNetworkUI();
-            }
-            modalELm.visible = true;
-        }
-        isLive(walletPlugin) {
-            var _a;
-            const provider = index_26.getWalletPluginProvider(walletPlugin);
-            return provider ? provider.installed() && ((_a = eth_wallet_14.Wallet.getClientInstance().clientSideProvider) === null || _a === void 0 ? void 0 : _a.name) === walletPlugin : false;
-        }
-        isNetworkLive(chainId) {
-            return eth_wallet_14.Wallet.getClientInstance().chainId === chainId;
-        }
-        async switchNetwork(chainId) {
-            if (!chainId)
-                return;
-            await index_26.switchNetwork(chainId);
-            this.switchModal.visible = false;
-        }
-        async connectToProviderFunc(walletPlugin) {
-            const provider = index_26.getWalletPluginProvider(walletPlugin);
-            if (provider === null || provider === void 0 ? void 0 : provider.installed()) {
-                await index_26.connectWallet(walletPlugin);
-            }
-            else {
-                const homepage = provider.homepage;
-                window.open(homepage, '_blank');
-            }
-            this.connectModal.visible = false;
-        }
-        ;
-        async renderWalletButton() {
-            const modalElm = await components_18.Modal.create({
-                maxWidth: '200px',
-                showBackdrop: false,
-                height: 'auto',
-                popupPlacement: 'bottomRight'
-            });
-            modalElm.classList.add("account-dropdown");
-            const vstack = await components_18.VStack.create({
-                gap: '15px'
-            });
-            const itemCaptions = ["Switch wallet"];
-            const itemFunctions = [
-                () => this.showModal('connectModal', 'Switch wallet')
-            ];
-            itemCaptions.forEach(async (caption, i) => {
-                const buttonItem = await components_18.Button.create({
-                    caption,
-                    width: '100%',
-                    height: 'auto',
-                    padding: { top: '0.5rem', bottom: '0.5rem', left: '0.75rem', right: '0.75rem' }
-                });
-                buttonItem.onClick = (source, event) => {
-                    event.stopPropagation();
-                    modalElm.visible = false;
-                    itemFunctions[i]();
-                    return true;
-                };
-                vstack.appendChild(buttonItem);
-                modalElm.item = vstack;
-            });
-            this.walletConnectButton = await components_18.Button.create({
-                caption: 'Connect Wallet',
-                margin: { left: 8 }
-            });
-            this.walletConnectButton.classList.add('btn', 'btn-os', 'btn-connect');
-            this.walletConnectButton.onClick = this.openConnectModal;
-        }
-        renderNetworks() {
-            this.networkGroup.clearInnerHTML();
-            const networksList = index_26.listsNetworkShow();
-            this.networkGroup.append(...networksList.map((network) => {
-                return (this.$render("i-hstack", { onClick: () => this.switchNetwork(network.chainId), class: this.isNetworkLive(network.chainId) ? 'is-actived list-item' : 'list-item', "data-key": network.chainId, verticalAlignment: "center", gap: 10 },
-                    this.$render("i-image", { url: network.image, width: 32, height: 32, display: "inline-block", margin: { left: 12 } }),
-                    this.$render("i-label", { caption: network.chainName })));
-            }));
-        }
-        renderWalletList() {
-            let accountsChangedEventHandler = async (account) => {
-                index_26.tokenStore.updateTokenMapData();
-            };
-            let chainChangedEventHandler = async (hexChainId) => {
-                index_26.tokenStore.updateTokenMapData();
-            };
-            index_26.initWalletPlugins({
-                'accountsChanged': accountsChangedEventHandler,
-                'chainChanged': chainChangedEventHandler
-            });
-            this.walletListElm.clearInnerHTML();
-            let wallets = [];
-            let walletsDisabled = [];
-            const walletPluginMap = index_26.getWalletPluginMap();
-            for (let pluginName in walletPluginMap) {
-                const walletPlugin = walletPluginMap[pluginName];
-                let walletEnabled = this.isWalletEnabled(walletPlugin.name);
-                let walletJSX = (this.$render("i-hstack", { onClick: () => this.connectToProviderFunc(walletPlugin.name), class: this.isLive(walletPlugin.name) ? 'is-actived list-item' : 'list-item', "data-key": walletPlugin.name, enabled: walletEnabled, verticalAlignment: "center", gap: 10 },
-                    this.$render("i-image", { url: walletPlugin.image, width: 32, height: 32, class: "inline-block custom-img" }),
-                    this.$render("i-label", { caption: walletPlugin.displayName })));
-                walletEnabled ? wallets.push(walletJSX) : walletsDisabled.push(walletJSX);
-            }
-            this.walletListElm.append(...wallets);
-            this.walletListElm.append(...walletsDisabled);
-        }
-        updateDot(parent, connected, type) {
-            var _a;
-            const acivedElm = parent.querySelector('.is-actived');
-            acivedElm && acivedElm.classList.remove('is-actived');
-            if (connected) {
-                const wallet = eth_wallet_14.Wallet.getClientInstance();
-                const connectingVal = type === 'network' ? wallet.chainId : (_a = wallet.clientSideProvider) === null || _a === void 0 ? void 0 : _a.name;
-                const connectingElm = parent.querySelector(`[data-key="${connectingVal}"]`);
-                connectingElm && connectingElm.classList.add('is-actived');
-            }
-        }
-        isWalletEnabled(walletName) {
-            // switch (getSiteEnv()) {
-            //   case SITE_ENV.TESTNET: {
-            //     switch (walletName) {
-            //       case WalletPlugin.ONTOWallet:
-            //       case WalletPlugin.Coin98:
-            //       case WalletPlugin.TrustWallet:
-            //         return false;
-            //     }
-            //     break;
-            //   }
-            //   case SITE_ENV.MAINNET: {
-            //     break;
-            //   }
-            //   case SITE_ENV.DEV: {
-            //     break;
-            //   }
-            // }
-            return true;
-        }
-        updateListNetworkUI() {
-            var _a;
-            const listElm = ((_a = this.networkGroup) === null || _a === void 0 ? void 0 : _a.querySelectorAll('.list-item')) || [];
-            const isConnected = index_26.isWalletConnected();
-            const isMetaMask = index_26.getWalletProvider() === index_26.WalletPlugin.MetaMask;
-            for (const elm of listElm) {
-                if (isMetaMask || !isConnected) {
-                    elm.classList.remove('disabled-network-selection');
-                }
-                else {
-                    elm.classList.add('disabled-network-selection');
-                }
-            }
-        }
-        updateList(connected) {
-            if (connected) {
-                this.noteNetworkLabel.caption = index_26.getWalletProvider() === index_26.WalletPlugin.MetaMask ?
-                    'OpenSwap supports the following networks, please click to connect.' :
-                    'OpenSwap supports the following networks, please switch network in the connected wallet.';
-            }
-            else {
-                this.noteNetworkLabel.caption = 'OpenSwap supports the following networks, please click to connect.';
-            }
-            this.updateDot(this.walletListElm, connected, 'wallet');
-            this.updateDot(this.networkGroup, connected, 'network');
-        }
-        connectedCallback() {
-            super.connectedCallback();
-        }
-        getElementProperty(name) {
-            let value;
-            if (this.attrs[name] && this.attrs[name].__target) {
-                value = this.getAttributeValue(this.attrs[name].__target, this.attrs[name].__path);
-            }
-            return value;
-        }
-        async init() {
-            this.classList.add(wallet_css_1.walletModalStyle);
-            super.init();
-            await this.renderWalletButton();
-            this.renderNetworks();
-            this.renderWalletList();
-            await this.initData();
-        }
-        async render() {
-            return (this.$render("i-panel", null,
-                this.$render("i-modal", { id: "switchModal", title: "Supported Network", closeIcon: { name: 'times' }, class: "os-modal" },
-                    this.$render("i-vstack", { height: "100%", class: "i-modal_content" },
-                        this.$render("i-label", { id: "noteNetworkLabel", class: "mt-1 small-label", caption: "OpenSwap supports the following networks, please click to connect." }),
-                        this.$render("i-panel", { class: "flex networkSection", height: "100%" },
-                            this.$render("i-grid-layout", { id: "networkGroup", class: "list-view networks", columnsPerRow: 1, templateRows: ['max-content'] })))),
-                this.$render("i-modal", { id: "connectModal", title: "Connect Wallet", class: "os-modal connect-modal", closeIcon: { name: 'times', fill: '#FF8800' } },
-                    this.$render("i-panel", { class: "i-modal_content" },
-                        this.$render("i-label", { class: "mt-1 small-label", caption: "Recommended wallet for Chrome" }),
-                        this.$render("i-panel", { padding: { bottom: 16 } },
-                            this.$render("i-grid-layout", { id: "walletListElm", class: "list-view wallets", columnsPerRow: 1, templateRows: ['max-content'] }))))));
-        }
-    };
-    DisperseWallet = __decorate([
-        components_18.customElements('disperse-wallet')
-    ], DisperseWallet);
-    exports.DisperseWallet = DisperseWallet;
-    ;
-});
-define("@scom/scom-disperse/common/index.ts", ["require", "exports", "@scom/scom-disperse/common/tokenSelection.tsx", "@scom/scom-disperse/common/importToken.tsx", "@scom/scom-disperse/common/result.tsx", "@scom/scom-disperse/common/wallet.tsx"], function (require, exports, tokenSelection_1, importToken_1, result_1, wallet_2) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.DisperseWallet = exports.Result = exports.ImportToken = exports.TokenSelection = void 0;
+    exports.Result = exports.ImportToken = exports.TokenSelection = void 0;
     Object.defineProperty(exports, "TokenSelection", { enumerable: true, get: function () { return tokenSelection_1.TokenSelection; } });
     Object.defineProperty(exports, "ImportToken", { enumerable: true, get: function () { return importToken_1.ImportToken; } });
     Object.defineProperty(exports, "Result", { enumerable: true, get: function () { return result_1.Result; } });
-    Object.defineProperty(exports, "DisperseWallet", { enumerable: true, get: function () { return wallet_2.DisperseWallet; } });
 });
 define("@scom/scom-disperse/contracts/scom-disperse-contract/contracts/Disperse.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -19106,11 +15007,11 @@ define("@scom/scom-disperse/contracts/scom-disperse-contract/contracts/Disperse.
         "bytecode": "608060405234801561001057600080fd5b5061072c806100206000396000f3fe6080604052600436106100345760003560e01c806351ba162c14610039578063c73a2d601461005b578063e63d38ed1461007b575b600080fd5b34801561004557600080fd5b50610059610054366004610512565b61008e565b005b34801561006757600080fd5b50610059610076366004610512565b6101b7565b610059610089366004610595565b6103c3565b60005b838110156101af578573ffffffffffffffffffffffffffffffffffffffff166323b872dd338787858181106100c8576100c8610601565b90506020020160208101906100dd9190610630565b8686868181106100ef576100ef610601565b6040517fffffffff0000000000000000000000000000000000000000000000000000000060e088901b16815273ffffffffffffffffffffffffffffffffffffffff9586166004820152949093166024850152506020909102013560448201526064016020604051808303816000875af1158015610170573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906101949190610654565b61019d57600080fd5b806101a7816106a5565b915050610091565b505050505050565b6000805b848110156101fb578383828181106101d5576101d5610601565b90506020020135826101e791906106dd565b9150806101f3816106a5565b9150506101bb565b506040517f23b872dd0000000000000000000000000000000000000000000000000000000081523360048201523060248201526044810182905273ffffffffffffffffffffffffffffffffffffffff8716906323b872dd906064016020604051808303816000875af1158015610275573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906102999190610654565b6102a257600080fd5b60005b848110156103ba578673ffffffffffffffffffffffffffffffffffffffff1663a9059cbb8787848181106102db576102db610601565b90506020020160208101906102f09190610630565b86868581811061030257610302610601565b6040517fffffffff0000000000000000000000000000000000000000000000000000000060e087901b16815273ffffffffffffffffffffffffffffffffffffffff909416600485015260200291909101356024830152506044016020604051808303816000875af115801561037b573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061039f9190610654565b6103a857600080fd5b806103b2816106a5565b9150506102a5565b50505050505050565b60005b83811015610465578484828181106103e0576103e0610601565b90506020020160208101906103f59190610630565b73ffffffffffffffffffffffffffffffffffffffff166108fc84848481811061042057610420610601565b905060200201359081150290604051600060405180830381858888f19350505050158015610452573d6000803e3d6000fd5b508061045d816106a5565b9150506103c6565b5047801561049a57604051339082156108fc029083906000818181858888f193505050501580156101af573d6000803e3d6000fd5b5050505050565b73ffffffffffffffffffffffffffffffffffffffff811681146104c357600080fd5b50565b60008083601f8401126104d857600080fd5b50813567ffffffffffffffff8111156104f057600080fd5b6020830191508360208260051b850101111561050b57600080fd5b9250929050565b60008060008060006060868803121561052a57600080fd5b8535610535816104a1565b9450602086013567ffffffffffffffff8082111561055257600080fd5b61055e89838a016104c6565b9096509450604088013591508082111561057757600080fd5b50610584888289016104c6565b969995985093965092949392505050565b600080600080604085870312156105ab57600080fd5b843567ffffffffffffffff808211156105c357600080fd5b6105cf888389016104c6565b909650945060208701359150808211156105e857600080fd5b506105f5878288016104c6565b95989497509550505050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052603260045260246000fd5b60006020828403121561064257600080fd5b813561064d816104a1565b9392505050565b60006020828403121561066657600080fd5b8151801515811461064d57600080fd5b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b60007fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff82036106d6576106d6610676565b5060010190565b808201808211156106f0576106f0610676565b9291505056fea2646970667358221220ae17f947d38770afe70d82c3a668887686a8857af4ee60d47e7b255568123bb264736f6c63430008130033"
     };
 });
-define("@scom/scom-disperse/contracts/scom-disperse-contract/contracts/Disperse.ts", ["require", "exports", "@ijstech/eth-contract", "@scom/scom-disperse/contracts/scom-disperse-contract/contracts/Disperse.json.ts"], function (require, exports, eth_contract_51, Disperse_json_1) {
+define("@scom/scom-disperse/contracts/scom-disperse-contract/contracts/Disperse.ts", ["require", "exports", "@ijstech/eth-contract", "@scom/scom-disperse/contracts/scom-disperse-contract/contracts/Disperse.json.ts"], function (require, exports, eth_contract_50, Disperse_json_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Disperse = void 0;
-    class Disperse extends eth_contract_51.Contract {
+    class Disperse extends eth_contract_50.Contract {
         constructor(wallet, address) {
             super(wallet, address, Disperse_json_1.default.abi, Disperse_json_1.default.bytecode);
             this.assign();
@@ -19181,14 +15082,14 @@ define("@scom/scom-disperse/contracts/scom-disperse-contract/contracts/index.ts"
     exports.Disperse = void 0;
     Object.defineProperty(exports, "Disperse", { enumerable: true, get: function () { return Disperse_1.Disperse; } });
 });
-define("@scom/scom-disperse/contracts/scom-disperse-contract/utils.ts", ["require", "exports", "@scom/scom-disperse/contracts/scom-disperse-contract/contracts/index.ts"], function (require, exports, index_27) {
+define("@scom/scom-disperse/contracts/scom-disperse-contract/utils.ts", ["require", "exports", "@scom/scom-disperse/contracts/scom-disperse-contract/contracts/index.ts"], function (require, exports, index_14) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.doDisperse = void 0;
     async function doDisperse(wallet, contractAddress, tokenAddress, tokenDecimals, data) {
         let recipients = data.map(d => d.address);
         let values = data.map(d => d.amount.shiftedBy(tokenDecimals || 18));
-        const disperse = new index_27.Disperse(wallet, contractAddress);
+        const disperse = new index_14.Disperse(wallet, contractAddress);
         let receipt = tokenAddress ? await disperse.disperseToken({ token: tokenAddress, recipients, values }) : await disperse.disperseEther({ recipients, values }, values.reduce((p, n) => p.plus(n)));
         return receipt;
     }
@@ -19230,33 +15131,33 @@ define("@scom/scom-disperse/contracts/scom-disperse-contract/index.ts", ["requir
         onProgress
     };
 });
-define("@scom/scom-disperse/disperse-utils/API.ts", ["require", "exports", "@scom/scom-disperse/store/index.ts", "@ijstech/eth-wallet", "@scom/scom-disperse/contracts/oswap-openswap-contract/index.ts", "@scom/scom-disperse/contracts/scom-disperse-contract/index.ts"], function (require, exports, index_28, eth_wallet_15, index_29, index_30) {
+define("@scom/scom-disperse/disperse-utils/API.ts", ["require", "exports", "@scom/scom-disperse/store/index.ts", "@ijstech/eth-wallet", "@scom/scom-disperse/contracts/oswap-openswap-contract/index.ts", "@scom/scom-disperse/contracts/scom-disperse-contract/index.ts"], function (require, exports, index_15, eth_wallet_6, index_16, index_17) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.onDisperse = exports.onApproveToken = exports.onCheckAllowance = exports.getDisperseAddress = void 0;
     const getDisperseAddress = () => {
-        return index_28.getAddresses(eth_wallet_15.Wallet.getClientInstance().chainId)["Disperse"];
+        return index_15.getAddresses(eth_wallet_6.Wallet.getClientInstance().chainId)["Disperse"];
     };
     exports.getDisperseAddress = getDisperseAddress;
     const onCheckAllowance = async (token, spender) => {
         if (!token.address)
             return null;
-        let wallet = eth_wallet_15.Wallet.getClientInstance();
-        let erc20 = new index_29.Contracts.ERC20(wallet, token.address);
+        let wallet = eth_wallet_6.Wallet.getClientInstance();
+        let erc20 = new index_16.Contracts.ERC20(wallet, token.address);
         let allowance = await erc20.allowance({
             owner: wallet.account.address,
             spender,
         });
-        return allowance;
+        return eth_wallet_6.Utils.fromDecimals(allowance, token.decimals || 18);
     };
     exports.onCheckAllowance = onCheckAllowance;
     const onApproveToken = async (token, spender) => {
         if (!token.address)
             return;
-        let erc20 = new index_29.Contracts.ERC20(eth_wallet_15.Wallet.getClientInstance(), token.address);
+        let erc20 = new index_16.Contracts.ERC20(eth_wallet_6.Wallet.getClientInstance(), token.address);
         let receipt = await erc20.approve({
             spender,
-            amount: new eth_wallet_15.BigNumber(index_28.INFINITE)
+            amount: new eth_wallet_6.BigNumber(index_15.INFINITE)
         });
         return receipt;
     };
@@ -19264,7 +15165,7 @@ define("@scom/scom-disperse/disperse-utils/API.ts", ["require", "exports", "@sco
     // TODO add disperse sdk
     const onDisperse = async (token, disperseData) => {
         let disperseAddress = getDisperseAddress();
-        return await index_30.DisperseActions.doDisperse(eth_wallet_15.Wallet.getClientInstance(), disperseAddress, token.address || null, token.decimals, disperseData);
+        return await index_17.DisperseActions.doDisperse(eth_wallet_6.Wallet.getClientInstance(), disperseAddress, token.address || null, token.decimals, disperseData);
     };
     exports.onDisperse = onDisperse;
 });
@@ -19277,11 +15178,11 @@ define("@scom/scom-disperse/disperse-utils/index.ts", ["require", "exports", "@s
     Object.defineProperty(exports, "onApproveToken", { enumerable: true, get: function () { return API_1.onApproveToken; } });
     Object.defineProperty(exports, "onDisperse", { enumerable: true, get: function () { return API_1.onDisperse; } });
 });
-define("@scom/scom-disperse/disperse.css.ts", ["require", "exports", "@ijstech/components"], function (require, exports, components_19) {
+define("@scom/scom-disperse/disperse.css.ts", ["require", "exports", "@ijstech/components"], function (require, exports, components_9) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.disperseStyle = void 0;
-    exports.disperseStyle = components_19.Styles.style({
+    exports.disperseStyle = components_9.Styles.style({
         $nest: {
             'i-hstack.disabled': {
                 opacity: '0.5',
@@ -19297,10 +15198,16 @@ define("@scom/scom-disperse/disperse.css.ts", ["require", "exports", "@ijstech/c
             '#tokenElm': {
                 cursor: 'pointer',
                 borderColor: '#9C9C9C',
-            },
-            '#tokenElm.disabled': {
-                cursor: 'default',
-                borderColor: '#F29224',
+                padding: '15px 10px !important',
+                $nest: {
+                    '&.disabled': {
+                        cursor: 'default',
+                        borderColor: '#F29224'
+                    },
+                    'i-icon svg': {
+                        fill: '#F29224'
+                    }
+                }
             },
             '.csv-button': {
                 background: '#34343A',
@@ -19375,69 +15282,63 @@ define("@scom/scom-disperse/disperse.css.ts", ["require", "exports", "@ijstech/c
                     },
                 }
             },
-            '@media screen and (max-width: 1200px)': {
+            '.ml-auto': {
+                marginLeft: 'auto',
+            },
+            '.step-elm': {
+                flexWrap: 'wrap',
+                gap: '10px',
+                padding: '15px 10px !important',
                 $nest: {
-                    '.ml-auto': {
-                        marginLeft: 'auto',
-                    },
-                    '.step-elm': {
+                    '&#thirdStepElm': {
+                        paddingInline: '0 !important'
+                    }
+                }
+            },
+            '#containerUserInfo > i-vstack': {
+                gap: '8px !important'
+            },
+            '#secondStepElm > i-hstack': {
+                flexWrap: 'wrap',
+            },
+            '#thirdStepElm > i-vstack': {
+                maxWidth: '100%',
+                width: '100% !important',
+                flexWrap: 'wrap',
+                $nest: {
+                    '&> i-hstack': {
                         flexWrap: 'wrap',
-                        gap: '10px',
-                        padding: '15px 10px !important',
+                        width: '100%',
                     },
-                    '.step-2': {
-                        width: '100% !important',
-                        marginRight: '0 !important',
-                    },
-                    '#tokenElm': {
-                        padding: '15px 10px !important',
-                    },
-                    '#containerUserInfo > i-vstack': {
-                        gap: '8px !important'
-                    },
-                    '#thirdStepElm > i-hstack': {
-                        flexWrap: 'wrap',
-                    },
-                    '#fourthStepElm > i-vstack': {
-                        maxWidth: '100%',
-                        width: '100% !important',
-                        flexWrap: 'wrap',
+                    '.custom-scroll': {
+                        overflow: 'auto',
                         $nest: {
-                            '&> i-hstack': {
-                                flexWrap: 'wrap',
-                                width: '100%',
+                            '&::-webkit-scrollbar-track': {
+                                background: '#FFB82F',
                             },
-                            '.custom-scroll': {
-                                overflow: 'auto',
-                                $nest: {
-                                    '&::-webkit-scrollbar-track': {
-                                        background: '#FFB82F',
-                                    },
-                                    '&::-webkit-scrollbar': {
-                                        height: '8px',
-                                    },
-                                    '&::-webkit-scrollbar-thumb': {
-                                        background: '#FF8800',
-                                        borderRadius: '3px',
-                                    }
-                                }
+                            '&::-webkit-scrollbar': {
+                                height: '8px',
                             },
-                            '.address-elm': {
-                                minWidth: '650px',
-                            },
-                            '.step-4': {
-                                height: 'auto !important',
-                                width: 'calc(100% - 1px) !important',
-                                padding: '20px !important',
+                            '&::-webkit-scrollbar-thumb': {
+                                background: '#FF8800',
+                                borderRadius: '3px',
                             }
                         }
+                    },
+                    '.address-elm': {
+                        minWidth: '650px',
+                    },
+                    '.step-3': {
+                        height: 'auto !important',
+                        width: '100% !important',
+                        padding: '20px !important',
                     }
                 }
             }
         },
     });
 });
-define("@scom/scom-disperse/index.css.ts", ["require", "exports", "@ijstech/components", "@scom/scom-disperse/assets.ts"], function (require, exports, components_20, assets_4) {
+define("@scom/scom-disperse/index.css.ts", ["require", "exports", "@ijstech/components", "@scom/scom-disperse/assets.ts"], function (require, exports, components_10, assets_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.disperseLayout = void 0;
@@ -19462,7 +15363,7 @@ define("@scom/scom-disperse/index.css.ts", ["require", "exports", "@ijstech/comp
         darkBg: '#181E3E 0% 0% no-repeat padding-box',
         primaryDisabled: 'transparent linear-gradient(270deg, #7B7B7B 0%, #929292 100%) 0% 0% no-repeat padding-box'
     };
-    exports.disperseLayout = components_20.Styles.style({
+    exports.disperseLayout = components_10.Styles.style({
         background: '#212128',
         marginInline: 'auto',
         $nest: {
@@ -19485,12 +15386,12 @@ define("@scom/scom-disperse/index.css.ts", ["require", "exports", "@ijstech/comp
                 background: '#1890ff'
             },
             '.template-layout': {
-                maxWidth: '1420px',
+                maxWidth: '1200px',
                 marginInline: 'auto',
             },
             '.container-layout': {
                 width: '100%',
-                padding: '20px 10px',
+                padding: '0 10px',
             },
             '.btn-os': {
                 background: colorVar.primaryButton,
@@ -19676,79 +15577,79 @@ define("@scom/scom-disperse/index.css.ts", ["require", "exports", "@ijstech/comp
             },
         }
     });
-    components_20.Styles.fontFace({
+    components_10.Styles.fontFace({
         fontFamily: "Proxima Nova",
-        src: `url("${assets_4.default.fullPath('fonts/proxima_nova/ProximaNovaBold.ttf')}") format("truetype")`,
+        src: `url("${assets_3.default.fullPath('fonts/proxima_nova/ProximaNovaBold.ttf')}") format("truetype")`,
         fontWeight: 'bold',
         fontStyle: 'normal'
     });
-    components_20.Styles.fontFace({
+    components_10.Styles.fontFace({
         fontFamily: "Proxima Nova",
-        src: `url("${assets_4.default.fullPath('fonts/proxima_nova/ProximaNovaBoldIt.ttf')}") format("truetype")`,
+        src: `url("${assets_3.default.fullPath('fonts/proxima_nova/ProximaNovaBoldIt.ttf')}") format("truetype")`,
         fontWeight: 'bold',
         fontStyle: 'italic'
     });
-    components_20.Styles.fontFace({
+    components_10.Styles.fontFace({
         fontFamily: "Proxima Nova",
-        src: `url("${assets_4.default.fullPath('fonts/proxima_nova/ProximaNovaLight.ttf')}") format("truetype")`,
+        src: `url("${assets_3.default.fullPath('fonts/proxima_nova/ProximaNovaLight.ttf')}") format("truetype")`,
         fontWeight: '300',
         fontStyle: 'normal'
     });
-    components_20.Styles.fontFace({
+    components_10.Styles.fontFace({
         fontFamily: "Proxima Nova",
-        src: `url("${assets_4.default.fullPath('fonts/proxima_nova/ProximaNovaLightIt.ttf')}") format("truetype")`,
+        src: `url("${assets_3.default.fullPath('fonts/proxima_nova/ProximaNovaLightIt.ttf')}") format("truetype")`,
         fontWeight: '300',
         fontStyle: 'italic'
     });
-    components_20.Styles.fontFace({
+    components_10.Styles.fontFace({
         fontFamily: "Proxima Nova",
-        src: `url("${assets_4.default.fullPath('fonts/proxima_nova/ProximaNovaReg.ttf')}") format("truetype")`,
+        src: `url("${assets_3.default.fullPath('fonts/proxima_nova/ProximaNovaReg.ttf')}") format("truetype")`,
         fontWeight: 'normal',
         fontStyle: 'normal'
     });
-    components_20.Styles.fontFace({
+    components_10.Styles.fontFace({
         fontFamily: "Proxima Nova",
-        src: `url("${assets_4.default.fullPath('fonts/proxima_nova/ProximaNovaRegIt.ttf')}") format("truetype")`,
+        src: `url("${assets_3.default.fullPath('fonts/proxima_nova/ProximaNovaRegIt.ttf')}") format("truetype")`,
         fontWeight: 'normal',
         fontStyle: 'italic'
     });
-    components_20.Styles.fontFace({
+    components_10.Styles.fontFace({
         fontFamily: "Proxima Nova",
-        src: `url("${assets_4.default.fullPath('fonts/proxima_nova/ProximaNovaBold.ttf')}") format("truetype")`,
+        src: `url("${assets_3.default.fullPath('fonts/proxima_nova/ProximaNovaBold.ttf')}") format("truetype")`,
         fontWeight: 'bold',
         fontStyle: 'normal'
     });
-    components_20.Styles.fontFace({
+    components_10.Styles.fontFace({
         fontFamily: "Apple SD Gothic Neo",
-        src: `url("${assets_4.default.fullPath('fonts/FontsFree-Net-Apple-SD-Gothic-Neo-Bold.ttf')}") format("truetype")`,
+        src: `url("${assets_3.default.fullPath('fonts/FontsFree-Net-Apple-SD-Gothic-Neo-Bold.ttf')}") format("truetype")`,
         fontWeight: 'bold',
         fontStyle: 'normal'
     });
-    components_20.Styles.fontFace({
+    components_10.Styles.fontFace({
         fontFamily: "Montserrat",
-        src: `url("${assets_4.default.fullPath('fonts/montserrat/Montserrat-Regular.ttf')}") format("truetype")`,
+        src: `url("${assets_3.default.fullPath('fonts/montserrat/Montserrat-Regular.ttf')}") format("truetype")`,
         fontWeight: 'nomal',
         fontStyle: 'normal'
     });
-    components_20.Styles.fontFace({
+    components_10.Styles.fontFace({
         fontFamily: "Montserrat",
-        src: `url("${assets_4.default.fullPath('fonts/montserrat/Montserrat-Bold.ttf')}") format("truetype")`,
+        src: `url("${assets_3.default.fullPath('fonts/montserrat/Montserrat-Bold.ttf')}") format("truetype")`,
         fontWeight: 'bold',
         fontStyle: 'normal'
     });
-    components_20.Styles.fontFace({
+    components_10.Styles.fontFace({
         fontFamily: "Montserrat Light",
-        src: `url("${assets_4.default.fullPath('fonts/montserrat/Montserrat-Light.ttf')}") format("truetype")`,
+        src: `url("${assets_3.default.fullPath('fonts/montserrat/Montserrat-Light.ttf')}") format("truetype")`,
         fontStyle: 'normal'
     });
-    components_20.Styles.fontFace({
+    components_10.Styles.fontFace({
         fontFamily: "Montserrat Medium",
-        src: `url("${assets_4.default.fullPath('fonts/montserrat/Montserrat-Medium.ttf')}") format("truetype")`,
+        src: `url("${assets_3.default.fullPath('fonts/montserrat/Montserrat-Medium.ttf')}") format("truetype")`,
         fontStyle: 'normal'
     });
-    components_20.Styles.fontFace({
+    components_10.Styles.fontFace({
         fontFamily: "Montserrat SemiBold",
-        src: `url("${assets_4.default.fullPath('fonts/montserrat/Montserrat-SemiBold.ttf')}") format("truetype")`,
+        src: `url("${assets_3.default.fullPath('fonts/montserrat/Montserrat-SemiBold.ttf')}") format("truetype")`,
         fontStyle: 'normal'
     });
 });
@@ -19756,76 +15657,280 @@ define("@scom/scom-disperse/disperse.type.ts", ["require", "exports"], function 
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
 });
-define("@scom/scom-disperse/scconfig.json.ts", ["require", "exports"], function (require, exports) {
+define("@scom/scom-disperse/config/index.css.ts", ["require", "exports", "@ijstech/components"], function (require, exports, components_11) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    ///<amd-module name='@scom/scom-disperse/scconfig.json.ts'/> 
-    exports.default = {
-        "name": "@scom-disperse/main",
-        "version": "0.1.0",
-        "env": "",
-        "moduleDir": "src",
-        "main": "@scom-disperse/main",
-        "modules": {
-            "@scom-disperse/main": {
-                "path": "main"
+    exports.tableStyle = exports.customStyle = void 0;
+    const Theme = components_11.Styles.Theme.ThemeVars;
+    exports.customStyle = components_11.Styles.style({
+        $nest: {
+            'input': {
+                paddingLeft: '10px'
             },
-            "@scom-disperse/assets": {
-                "path": "assets"
-            },
-            "@scom-disperse/global": {
-                "path": "global"
-            },
-            "@scom-disperse/store": {
-                "path": "store"
-            },
-            "@scom-disperse/common": {
-                "path": "common"
-            },
-            "@scom-disperse/disperse-utils": {
-                "path": "disperse-utils"
+            '.disperse-network-select': {
+                $nest: {
+                    '.os-modal .modal': {
+                        background: Theme.combobox.background
+                    },
+                    '.modal > i-panel': {
+                        borderRadius: 8
+                    },
+                    'i-label': {
+                        fontSize: '1rem !important'
+                    },
+                    '.list-item': {
+                        padding: '0.5rem 1rem !important'
+                    }
+                }
             }
-        },
-        "dependencies": {
-            "@ijstech/eth-wallet-web3modal": "*",
-            "@ijstech/eth-contract": "*",
-            "@ijstech/eth-wallet": "*",
-            "@scom/scom-network-list": "*",
-            "@scom/scom-multicall": "*"
-        },
-        "infuraId": "adc596bf88b648e2a8902bc9093930c5",
+        }
+    });
+    exports.tableStyle = components_11.Styles.style({
+        $nest: {
+            '.i-table-header>tr>th': {
+                fontSize: '0.875rem !important',
+                opacity: 0.6
+            }
+        }
+    });
+});
+define("@scom/scom-disperse/config/index.tsx", ["require", "exports", "@ijstech/components", "@ijstech/eth-wallet", "@scom/scom-disperse/store/index.ts", "@scom/scom-disperse/global/index.ts", "@scom/scom-disperse/config/index.css.ts"], function (require, exports, components_12, eth_wallet_7, index_18, index_19, index_css_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    const Theme = components_12.Styles.Theme.ThemeVars;
+    let Config = class Config extends components_12.Module {
+        constructor() {
+            super(...arguments);
+            this.commissionsTableColumns = [
+                {
+                    title: 'Network',
+                    fieldName: 'chainId',
+                    key: 'chainId',
+                    textAlign: 'left',
+                    onRenderCell: function (source, columnData, rowData) {
+                        const supportedNetworks = index_18.getSupportedNetworks();
+                        const network = supportedNetworks.find(net => net.chainId === columnData);
+                        if (!network)
+                            return this.$render("i-panel", null);
+                        const networkInfo = index_18.getNetworkInfo(network.chainId);
+                        const imgUrl = networkInfo.image || '';
+                        const hstack = new components_12.HStack(undefined, {
+                            verticalAlignment: 'center',
+                            gap: 5
+                        });
+                        const imgEl = new components_12.Icon(hstack, {
+                            image: { url: imgUrl, width: 16, height: 16 }
+                        });
+                        const lbName = new components_12.Label(hstack, {
+                            caption: networkInfo.chainName || '',
+                            font: { size: '0.875rem' }
+                        });
+                        hstack.append(imgEl, lbName);
+                        return hstack;
+                    }
+                },
+                {
+                    title: 'Wallet',
+                    fieldName: 'walletAddress',
+                    key: 'walletAddress',
+                    onRenderCell: function (source, columnData, rowData) {
+                        const replaced = columnData.slice(6, columnData.length - 9);
+                        const caption = ((columnData === null || columnData === void 0 ? void 0 : columnData.length) < 15) ? columnData : columnData.replace(replaced, '...');
+                        return new components_12.Label(undefined, {
+                            caption: caption || '',
+                            font: { size: '0.875rem' },
+                            tooltip: {
+                                content: columnData
+                            }
+                        });
+                    }
+                },
+                {
+                    title: '',
+                    fieldName: '',
+                    key: '',
+                    textAlign: 'center',
+                    onRenderCell: async (source, data, rowData) => {
+                        const icon = new components_12.Icon(undefined, {
+                            name: "edit",
+                            fill: Theme.text.primary,
+                            height: 14,
+                            width: 14
+                        });
+                        icon.onClick = async (source) => {
+                            this.networkPicker.setNetworkByChainId(rowData.chainId);
+                            this.inputWalletAddress.value = rowData.walletAddress;
+                            this.modalAddCommission.visible = true;
+                        };
+                        icon.classList.add('pointer');
+                        return icon;
+                    }
+                },
+                {
+                    title: '',
+                    fieldName: '',
+                    key: '',
+                    textAlign: 'center',
+                    onRenderCell: async (source, data, rowData) => {
+                        const icon = new components_12.Icon(undefined, {
+                            name: "times",
+                            fill: Theme.colors.primary.main,
+                            height: 14,
+                            width: 14
+                        });
+                        icon.onClick = async (source) => {
+                            const index = this.commissionInfoList.findIndex(v => v.walletAddress == rowData.walletAddress && v.chainId == rowData.chainId);
+                            if (index >= 0) {
+                                this.commissionInfoList.splice(index, 1);
+                                this.tableCommissions.data = this.commissionInfoList;
+                                this.toggleVisible();
+                                if (this._onCustomCommissionsChanged) {
+                                    await this._onCustomCommissionsChanged({
+                                        commissions: this.commissionInfoList
+                                    });
+                                }
+                            }
+                        };
+                        icon.classList.add('pointer');
+                        return icon;
+                    }
+                }
+            ];
+        }
+        async init() {
+            super.init();
+            this.commissionInfoList = [];
+            const embedderFee = index_18.getEmbedderCommissionFee();
+            this.lbCommissionShare.caption = `${index_19.formatNumber(new eth_wallet_7.BigNumber(embedderFee).times(100).toFixed(), 4)} %`;
+        }
+        get data() {
+            const config = {};
+            config.commissions = this.tableCommissions.data || [];
+            return config;
+        }
+        set data(config) {
+            this.tableCommissions.data = config.commissions || [];
+            this.toggleVisible();
+        }
+        get onCustomCommissionsChanged() {
+            return this._onCustomCommissionsChanged;
+        }
+        set onCustomCommissionsChanged(value) {
+            this._onCustomCommissionsChanged = value;
+        }
+        getSupportedChainIds() {
+            return index_18.getSupportedNetworks().map(v => ({ chainId: v.chainId }));
+        }
+        onModalAddCommissionClosed() {
+            this.networkPicker.clearNetwork();
+            this.inputWalletAddress.value = '';
+            this.lbErrMsg.caption = '';
+        }
+        onAddCommissionClicked() {
+            this.modalAddCommission.visible = true;
+        }
+        async onConfirmCommissionClicked() {
+            var _a;
+            const embedderFee = index_18.getEmbedderCommissionFee();
+            this.commissionInfoList.push({
+                chainId: (_a = this.networkPicker.selectedNetwork) === null || _a === void 0 ? void 0 : _a.chainId,
+                walletAddress: this.inputWalletAddress.value,
+                share: embedderFee
+            });
+            this.tableCommissions.data = this.commissionInfoList;
+            this.toggleVisible();
+            this.modalAddCommission.visible = false;
+            if (this._onCustomCommissionsChanged) {
+                await this._onCustomCommissionsChanged({
+                    commissions: this.commissionInfoList
+                });
+            }
+        }
+        validateModalFields() {
+            if (!this.networkPicker.selectedNetwork) {
+                this.lbErrMsg.caption = 'Please select network';
+            }
+            else if (this.commissionInfoList.find(v => v.chainId == this.networkPicker.selectedNetwork.chainId)) {
+                this.lbErrMsg.caption = 'This network already exists';
+            }
+            else if (!this.inputWalletAddress.value) {
+                this.lbErrMsg.caption = 'Please enter wallet address';
+            }
+            else if (!index_19.isWalletAddress(this.inputWalletAddress.value)) {
+                this.lbErrMsg.caption = 'Please enter valid wallet address';
+            }
+            else {
+                this.lbErrMsg.caption = '';
+            }
+            if (this.lbErrMsg.caption) {
+                this.btnConfirm.enabled = false;
+                return false;
+            }
+            else {
+                this.btnConfirm.enabled = true;
+                return true;
+            }
+        }
+        onNetworkSelected(network) {
+            this.validateModalFields();
+        }
+        onInputWalletAddressChanged() {
+            this.validateModalFields();
+        }
+        toggleVisible() {
+            var _a, _b;
+            const hasData = !!((_b = (_a = this.tableCommissions) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.length);
+            this.tableCommissions.visible = hasData;
+            this.pnlEmptyWallet.visible = !hasData;
+            this.btnAddWallet.visible = hasData;
+        }
+        render() {
+            return (this.$render("i-vstack", { gap: '0.5rem', padding: { top: '1rem', bottom: '1rem' }, class: index_css_1.customStyle },
+                this.$render("i-vstack", { gap: "5px" },
+                    this.$render("i-hstack", { horizontalAlignment: "space-between", verticalAlignment: "center", gap: "4px" },
+                        this.$render("i-hstack", { gap: "4px" },
+                            this.$render("i-label", { caption: "Commission Fee: ", opacity: 0.6, font: { size: '1rem' } }),
+                            this.$render("i-label", { id: "lbCommissionShare", font: { size: '1rem' } }),
+                            this.$render("i-icon", { name: "question-circle", fill: Theme.background.modal, width: 20, height: 20 })),
+                        this.$render("i-button", { id: "btnAddWallet", caption: "Add Wallet", border: { radius: '58px' }, padding: { top: '0.3rem', bottom: '0.3rem', left: '1rem', right: '1rem' }, background: { color: Theme.colors.primary.main }, font: { color: Theme.colors.primary.contrastText, size: '0.75rem', weight: 400 }, visible: false, onClick: this.onAddCommissionClicked.bind(this) })),
+                    this.$render("i-vstack", { id: "pnlEmptyWallet", border: { radius: '8px' }, background: { color: Theme.background.modal }, padding: { top: '1.875rem', bottom: '1.875rem', left: '1.563rem', right: '1.563rem' }, gap: "1.25rem", width: "100%", class: "text-center" },
+                        this.$render("i-label", { caption: "To receive commission fee please add your wallet address", font: { size: '1rem' } }),
+                        this.$render("i-panel", null,
+                            this.$render("i-button", { caption: "Add Wallet", border: { radius: '58px' }, padding: { top: '0.75rem', bottom: '0.75rem', left: '2.5rem', right: '2.5rem' }, background: { color: Theme.colors.primary.main }, font: { color: Theme.colors.primary.contrastText, size: '0.875rem', weight: 400 }, onClick: this.onAddCommissionClicked.bind(this) })))),
+                this.$render("i-table", { id: 'tableCommissions', visible: false, data: this.commissionInfoList, columns: this.commissionsTableColumns, class: index_css_1.tableStyle }),
+                this.$render("i-modal", { id: 'modalAddCommission', maxWidth: '600px', closeIcon: { name: 'times-circle' }, onClose: this.onModalAddCommissionClosed },
+                    this.$render("i-grid-layout", { width: '100%', verticalAlignment: 'center', gap: { row: '1rem' }, padding: { top: '1rem', bottom: '1rem', left: '2rem', right: '2rem' }, templateColumns: ['1fr', '3fr'], templateRows: ['auto', 'auto', 'auto', 'auto'], templateAreas: [
+                            ['title', 'title'],
+                            ['lbNetwork', 'network'],
+                            ["lbWalletAddress", "walletAddress"],
+                            ["lbErrMsg", "errMsg"],
+                            ['btnConfirm', 'btnConfirm']
+                        ] },
+                        this.$render("i-hstack", { width: '100%', horizontalAlignment: 'center', grid: { area: 'title' }, margin: { bottom: '1.5rem' } },
+                            this.$render("i-label", { caption: "Add Wallet", font: { size: '1.5rem' } })),
+                        this.$render("i-label", { caption: "Network", grid: { area: 'lbNetwork' }, font: { size: '1rem' } }),
+                        this.$render("i-scom-network-picker", { id: 'networkPicker', grid: { area: 'network' }, display: "block", type: 'combobox', networks: this.getSupportedChainIds(), background: { color: Theme.combobox.background }, border: { radius: 8, width: '1px', style: 'solid', color: Theme.input.background }, onCustomNetworkSelected: this.onNetworkSelected, class: "disperse-network-select" }),
+                        this.$render("i-label", { caption: "Wallet Address", grid: { area: 'lbWalletAddress' }, font: { size: '1rem' } }),
+                        this.$render("i-input", { id: 'inputWalletAddress', grid: { area: 'walletAddress' }, width: '100%', height: 45, border: { radius: 8, width: '1px', style: 'solid', color: Theme.divider }, onChanged: this.onInputWalletAddressChanged }),
+                        this.$render("i-label", { id: 'lbErrMsg', font: { color: '#ed5748' }, grid: { area: 'errMsg' } }),
+                        this.$render("i-hstack", { width: '100%', horizontalAlignment: 'center', grid: { area: 'btnConfirm' }, margin: { top: '1.25rem' } },
+                            this.$render("i-button", { id: "btnConfirm", enabled: false, caption: "Add Wallet", border: { radius: '58px' }, padding: { top: '0.75rem', bottom: '0.75rem', left: '2.5rem', right: '2.5rem' }, background: { color: Theme.colors.primary.main }, font: { color: Theme.colors.primary.contrastText, size: '0.875rem', weight: 400 }, onClick: this.onConfirmCommissionClicked.bind(this) }))))));
+        }
+    };
+    Config = __decorate([
+        components_12.customModule,
+        components_12.customElements("i-scom-disperse-config")
+    ], Config);
+    exports.default = Config;
+});
+define("@scom/scom-disperse/data.json.ts", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    ///<amd-module name='@scom/scom-disperse/data.json.ts'/> 
+    const InfuraId = "adc596bf88b648e2a8902bc9093930c5";
+    exports.default = {
+        "infuraId": InfuraId,
         "networks": [
-            {
-                "chainId": 1,
-                "explorerName": "Etherscan",
-                "explorerTxUrl": "https://etherscan.io/tx/",
-                "explorerAddressUrl": "https://etherscan.io/address/"
-            },
-            {
-                "chainId": 25,
-                "isDisabled": true
-            },
-            {
-                "chainId": 56,
-                "shortName": "BSC",
-                "isMainChain": true,
-                "isCrossChainSupported": true,
-                "explorerName": "BSCScan",
-                "explorerTxUrl": "https://bscscan.com/tx/",
-                "explorerAddressUrl": "https://bscscan.com/address/"
-            },
-            {
-                "chainId": 137,
-                "explorerName": "PolygonScan",
-                "explorerTxUrl": "https://polygonscan.com/tx/",
-                "explorerAddressUrl": "https://polygonscan.com/address/"
-            },
-            {
-                "chainId": 250,
-                "explorerName": "FTMScan",
-                "explorerTxUrl": "https://ftmscan.com/tx/",
-                "explorerAddressUrl": "https://ftmscan.com/address/"
-            },
             {
                 "chainId": 97,
                 "isMainChain": true,
@@ -19836,17 +15941,6 @@ define("@scom/scom-disperse/scconfig.json.ts", ["require", "exports"], function 
                 "isTestnet": true
             },
             {
-                "chainId": 338,
-                "isDisabled": true
-            },
-            {
-                "chainId": 80001,
-                "explorerName": "PolygonScan",
-                "explorerTxUrl": "https://mumbai.polygonscan.com/tx/",
-                "explorerAddressUrl": "https://mumbai.polygonscan.com/address/",
-                "isTestnet": true
-            },
-            {
                 "chainId": 43113,
                 "shortName": "AVAX Testnet",
                 "isCrossChainSupported": true,
@@ -19854,55 +15948,34 @@ define("@scom/scom-disperse/scconfig.json.ts", ["require", "exports"], function 
                 "explorerTxUrl": "https://testnet.snowtrace.io/tx/",
                 "explorerAddressUrl": "https://testnet.snowtrace.io/address/",
                 "isTestnet": true
-            },
-            {
-                "chainId": 43114,
-                "shortName": "AVAX",
-                "isCrossChainSupported": true,
-                "explorerName": "SnowTrace",
-                "explorerTxUrl": "https://snowtrace.io/tx/",
-                "explorerAddressUrl": "https://snowtrace.io/address/"
-            },
-            {
-                "chainId": 4002,
-                "explorerName": "FTMScan",
-                "explorerTxUrl": "https://testnet.ftmscan.com/tx/",
-                "explorerAddressUrl": "https://testnet.ftmscan.com/address/",
-                "isDisabled": true,
-                "isTestnet": true
-            },
-            {
-                "chainId": 13370,
-                "isDisabled": true,
-                "explorerName": "AminoX Explorer",
-                "explorerTxUrl": "https://aminoxtestnet.blockscout.alphacarbon.network/tx/",
-                "explorerAddressUrl": "https://aminoxtestnet.blockscout.alphacarbon.network/address/",
-                "isTestnet": true
-            },
-            {
-                "chainId": 421613,
-                "explorerName": "ArbiScan",
-                "explorerTxUrl": "https://goerli.arbiscan.io/tx/",
-                "explorerAddressUrl": "https://goerli.arbiscan.io/address/",
-                "isTestnet": true
-            },
-            {
-                "chainId": 42161,
-                "explorerName": "ArbiScan",
-                "explorerTxUrl": "https://arbiscan.io/tx/",
-                "explorerAddressUrl": "https://arbiscan.io/address/"
             }
-        ]
+        ],
+        "proxyAddresses": {
+            "97": "0x9602cB9A782babc72b1b6C96E050273F631a6870",
+            "43113": "0x7f1EAB0db83c02263539E3bFf99b638E61916B96"
+        },
+        "ipfsGatewayUrl": "https://ipfs.scom.dev/ipfs/",
+        "embedderCommissionFee": "0.01"
     };
 });
-define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@scom/scom-disperse/global/index.ts", "@scom/scom-disperse/store/index.ts", "@ijstech/eth-wallet", "@scom/scom-disperse/disperse-utils/index.ts", "@scom/scom-disperse/assets.ts", "@scom/scom-disperse/disperse.css.ts", "@scom/scom-disperse/index.css.ts", "@scom/scom-disperse/scconfig.json.ts"], function (require, exports, components_21, index_31, index_32, eth_wallet_16, index_33, assets_5, disperse_css_1, index_css_1, scconfig_json_1) {
+define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@scom/scom-disperse/global/index.ts", "@scom/scom-disperse/store/index.ts", "@ijstech/eth-wallet", "@scom/scom-disperse/disperse-utils/index.ts", "@scom/scom-disperse/assets.ts", "@scom/scom-disperse/disperse.css.ts", "@scom/scom-disperse/index.css.ts", "@scom/scom-token-list", "@scom/scom-disperse/data.json.ts"], function (require, exports, components_13, index_20, index_21, eth_wallet_8, index_22, assets_4, disperse_css_1, index_css_2, scom_token_list_5, data_json_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    const moduleDir = components_21.application.currentModuleDir;
-    let ScomDisperse = class ScomDisperse extends components_21.Module {
+    const moduleDir = components_13.application.currentModuleDir;
+    let ScomDisperse = class ScomDisperse extends components_13.Module {
         constructor(parent, options) {
             super(parent, options);
             this.resultAddresses = [];
+            this._oldData = {
+                defaultChainId: 0,
+                wallets: [],
+                networks: []
+            };
+            this._data = {
+                defaultChainId: 0,
+                wallets: [],
+                networks: []
+            };
             this.oldTag = {};
             this.tag = {};
             this.defaultEdit = true;
@@ -19912,22 +15985,26 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                 this.$eventBus.register(this, "chainChanged" /* chainChanged */, this.onChainChanged);
             };
             this.onWalletConnect = (connected) => {
+                this.setContainerData();
                 this.checkStepStatus(connected);
-                this.updateNetworkBtn(connected);
-                this.updateUserInfo(connected);
             };
             this.onChainChanged = () => {
                 this.resetData();
-                this.onWalletConnect(index_32.isWalletConnected());
+                this.onWalletConnect(index_21.isWalletConnected());
             };
-            this.connectWallet = () => {
-                this.$eventBus.dispatch("DisperseConnectWallet" /* ConnectWallet */);
-            };
-            this.changeNetwork = () => {
-                this.$eventBus.dispatch("DisperseChangeNetwork" /* ChangeNetwork */);
+            this.setContainerData = () => {
+                var _a;
+                const data = {
+                    defaultChainId: this.defaultChainId,
+                    wallets: this.wallets,
+                    networks: this.networks,
+                    showHeader: this.showHeader
+                };
+                if ((_a = this.dappContainer) === null || _a === void 0 ? void 0 : _a.setData)
+                    this.dappContainer.setData(data);
             };
             this.checkStepStatus = (connected) => {
-                this.secondStepElm.enabled = connected;
+                this.firstStepElm.enabled = connected;
                 this.tokenSelection.enabled = connected;
                 this.tokenElm.enabled = connected;
                 if (!connected) {
@@ -19937,22 +16014,22 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                 this.setThirdStatus(!!this.token);
             };
             this.setThirdStatus = (enabled) => {
-                this.thirdStepElm.enabled = enabled;
+                this.secondStepElm.enabled = enabled;
                 this.inputBatch.enabled = enabled;
                 this.btnImport.enabled = enabled;
                 this.setFourthStatus();
             };
             this.setFourthStatus = async () => {
                 var _a;
-                if (index_32.isWalletConnected() && this.hasAddress) {
+                if (index_21.isWalletConnected() && this.hasAddress) {
                     this.btnDownload.enabled = true;
-                    this.containerElm.minHeight = '1200px';
-                    this.fourthStepElm.visible = true;
+                    this.containerElm.minHeight = '1000px';
+                    this.thirdStepElm.visible = true;
                     const symbol = ((_a = this.token) === null || _a === void 0 ? void 0 : _a.symbol) || '';
                     this.addressesElm.clearInnerHTML();
                     let countInvalid = 0;
                     for (const item of this.listAddresses) {
-                        const valid = await index_31.isAddressValid(item.address);
+                        const valid = await index_20.isAddressValid(item.address);
                         if (!valid) {
                             ++countInvalid;
                         }
@@ -19962,9 +16039,9 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                             this.$render("i-label", { caption: `${item.amount.toFixed()} ${symbol}`, font: { size: '16px', color: '#A8A8A8', name: 'Montserrat Medium' }, class: "text-right" })));
                     }
                     ;
-                    this.totalElm.caption = `${index_31.formatNumber(this.total)} ${symbol}`;
-                    this.balanceElm.caption = `${index_31.formatNumber(this.balance)} ${symbol}`;
-                    this.remainingElm.caption = `${index_31.formatNumber(this.remaining)} ${symbol}`;
+                    this.totalElm.caption = `${index_20.formatNumber(this.total)} ${symbol}`;
+                    this.balanceElm.caption = `${index_20.formatNumber(this.balance)} ${symbol}`;
+                    this.remainingElm.caption = `${index_20.formatNumber(this.remaining)} ${symbol}`;
                     if (countInvalid) {
                         this.invalidElm.caption = `There ${countInvalid === 1 ? 'is' : 'are'} ${countInvalid} invalid ${countInvalid === 1 ? 'address' : 'addresses'}!`;
                         this.invalidElm.visible = true;
@@ -19978,61 +16055,18 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                     }
                 }
                 else {
-                    this.containerElm.minHeight = '800px';
-                    this.fourthStepElm.visible = false;
+                    this.containerElm.minHeight = '600px';
+                    this.thirdStepElm.visible = false;
                     this.btnDownload.enabled = false;
-                }
-            };
-            this.updateNetworkBtn = async (connected) => {
-                if (!connected) {
-                    this.btnNetwork.clearInnerHTML();
-                    this.btnNetwork.onClick = () => { };
-                    this.btnNetwork.visible = false;
-                    return;
-                }
-                const network = index_32.getNetworkInfo(eth_wallet_16.Wallet.getClientInstance().chainId);
-                const hStack = await components_21.HStack.create({
-                    verticalAlignment: 'center',
-                    padding: { top: 12, bottom: 12, left: 24, right: 24 },
-                });
-                if (network === null || network === void 0 ? void 0 : network.image) {
-                    const image = await components_21.Image.create({
-                        width: '24px',
-                        height: '24px',
-                        url: network.image,
-                        class: 'inline-block',
-                    });
-                    hStack.appendChild(image);
-                }
-                const label = await components_21.Label.create({
-                    caption: (network === null || network === void 0 ? void 0 : network.chainName) || 'Unsupported Network',
-                    font: { size: '15px' },
-                    margin: { left: 4 },
-                });
-                hStack.appendChild(label);
-                this.btnNetwork.clearInnerHTML();
-                this.btnNetwork.appendChild(hStack);
-                this.btnNetwork.onClick = this.changeNetwork;
-                this.btnNetwork.visible = true;
-            };
-            this.updateUserInfo = async (connected) => {
-                this.containerUserInfo.clearInnerHTML();
-                if (!connected) {
-                    this.containerUserInfo.appendChild(this.$render("i-button", { class: "btn-os", caption: "Connect", width: 250, maxWidth: "100%", border: { radius: 12 }, padding: { top: 12, bottom: 12 }, onClick: this.connectWallet }));
-                }
-                else {
-                    this.containerUserInfo.appendChild(this.$render("i-vstack", { gap: 16 },
-                        this.$render("i-label", { caption: "LOGGED IN AS", font: { size: '16px', name: 'Montserrat', bold: true } }),
-                        this.$render("i-label", { display: "block", caption: eth_wallet_16.Wallet.getClientInstance().address, font: { size: '16px', name: 'Montserrat Medium' }, class: "break-word" })));
                 }
             };
             this.onSelectToken = (token) => {
                 this.token = token;
                 this.tokenInfoElm.clearInnerHTML();
                 if (token) {
-                    const img = assets_5.default.fullPath(index_32.getTokenIconPath(token, eth_wallet_16.Wallet.getClientInstance().chainId));
+                    const img = scom_token_list_5.assets.tokenPath(token, eth_wallet_8.Wallet.getClientInstance().chainId);
                     this.tokenInfoElm.appendChild(this.$render("i-hstack", { gap: "16px", verticalAlignment: "center" },
-                        this.$render("i-image", { width: 40, height: 40, url: img }),
+                        this.$render("i-image", { width: 40, height: 40, minWidth: 30, url: img }),
                         this.$render("i-label", { caption: `$${token.symbol}`, font: { size: '20px', name: 'Montserrat Medium' } }),
                         this.$render("i-label", { caption: token.address || token.symbol, font: { size: '16px', name: 'Montserrat Medium' }, class: "break-word" })));
                 }
@@ -20052,10 +16086,10 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
             };
             this.onDownloadReport = (data) => {
                 const doc = new window.jsPDF();
-                const logo = assets_5.default.fullPath('./img/sc-header.png');
-                const totalAmount = this.resultAddresses.reduce((pv, cv) => pv.plus(cv.amount), new eth_wallet_16.BigNumber('0'));
-                const rows = this.resultAddresses.map(item => [item.address, index_31.formatNumber(item.amount)]);
-                rows.push(['Total', index_31.formatNumber(totalAmount)]);
+                const logo = assets_4.default.fullPath('./img/sc-header.png');
+                const totalAmount = this.resultAddresses.reduce((pv, cv) => pv.plus(cv.amount), new eth_wallet_8.BigNumber('0'));
+                const rows = this.resultAddresses.map(item => [item.address, index_20.formatNumber(item.amount)]);
+                rows.push(['Total', index_20.formatNumber(totalAmount)]);
                 // doc.addImage(logo, 'png', 15, 10, 20, 24);
                 doc.setFontSize(36);
                 doc.setFont('helvetica', 'bold');
@@ -20065,7 +16099,7 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                 doc.text(`Transaction Hash: ${data.receipt}`, 15, 42);
                 doc.text(`Timestamp: ${data.timestamp}`, 15, 50);
                 doc.text(`From Address: ${data.address}`, 15, 58);
-                doc.text(`Total Amount: ${index_31.formatNumber(totalAmount)} ${data.symbol}`, 15, 66);
+                doc.text(`Total Amount: ${index_20.formatNumber(totalAmount)} ${data.symbol}`, 15, 66);
                 const cols = ['TRANSFER TO', 'TRANSFER AMOUNT'];
                 const table = [cols, ...rows];
                 let y = 75;
@@ -20094,7 +16128,7 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                 arr.forEach((item) => {
                     content += `${item.address},${item.amount.toFixed()}\r\n`;
                 });
-                index_31.downloadCSVFile(content, 'disperse.csv');
+                index_20.downloadCSVFile(content, 'disperse.csv');
             };
             this.onImportFile = () => {
                 var _a, _b;
@@ -20105,14 +16139,14 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
             };
             this.convertCSVToText = (result) => {
                 if (!result)
-                    this.showImportCSVError(index_32.ImportFileWarning.Broken);
-                const arr = index_31.toDisperseData(result.replace(/"/g, ''));
+                    this.showImportCSVError(index_21.ImportFileWarning.Broken);
+                const arr = index_20.toDisperseData(result.replace(/"/g, ''));
                 if (arr.length > 0) {
                     let text = arr.reduce((prev, next, idx) => prev += `${idx ? '\n' : ''}${next.address}, ${next.amount.toFixed()}`, "");
                     this.inputBatch.value = text;
                 }
                 else {
-                    this.showImportCSVError(index_32.ImportFileWarning.Empty);
+                    this.showImportCSVError(index_21.ImportFileWarning.Empty);
                 }
                 this.setFourthStatus();
             };
@@ -20160,7 +16194,7 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                 this.inputBatch.value = '';
                 this.invalidElm.visible = false;
                 this.onSelectToken(null);
-                this.checkStepStatus(index_32.isWalletConnected());
+                this.checkStepStatus(index_21.isWalletConnected());
             };
             this.showMessage = (status, content) => {
                 this.disperseResult.message = {
@@ -20189,10 +16223,10 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                     this.btnDisperse.enabled = true;
                 }
                 else {
-                    const allowance = await index_33.onCheckAllowance(this.token, index_33.getDisperseAddress());
+                    const allowance = await index_22.onCheckAllowance(this.token, index_22.getDisperseAddress());
                     if (allowance === null)
                         return;
-                    const inputVal = new eth_wallet_16.BigNumber(this.total);
+                    const inputVal = new eth_wallet_8.BigNumber(this.total);
                     const isApproved = !inputVal.gt(0) || inputVal.lte(allowance);
                     this.btnApprove.enabled = !isApproved;
                     this.btnDisperse.enabled = isApproved;
@@ -20215,16 +16249,16 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                 };
                 const confirmationCallBackActions = async () => {
                     this.btnApprove.rightIcon.visible = false;
-                    this.btnApprove.enabled = false;
-                    this.btnApprove.caption = 'Approved';
-                    this.btnDisperse.enabled = this.remaining.gte(0);
+                    await this.getApprovalStatus();
+                    this.btnApprove.caption = this.btnApprove.enabled ? 'Approve' : 'Approved';
+                    this.btnDisperse.enabled = !this.btnApprove.enabled && this.remaining.gte(0);
                     this.setEnabledStatus(true);
                 };
-                index_31.registerSendTxEvents({
+                index_20.registerSendTxEvents({
                     transactionHash: callBackActions,
                     confirmation: confirmationCallBackActions
                 });
-                index_33.onApproveToken(this.token, index_33.getDisperseAddress());
+                index_22.onApproveToken(this.token, index_22.getDisperseAddress());
             };
             this.handleDisperse = async () => {
                 const token = Object.assign({}, this.token);
@@ -20233,14 +16267,14 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                 this.resultAddresses = [...this.listAddresses];
                 let receipt = '';
                 let timestamp = '';
-                const address = eth_wallet_16.Wallet.getClientInstance().address;
+                const address = eth_wallet_8.Wallet.getClientInstance().address;
                 this.showMessage('warning', 'Dispersing');
                 const callBackActions = async (err, _receipt) => {
                     if (err) {
                         this.showMessage('error', err);
                     }
                     else if (_receipt) {
-                        timestamp = index_31.formatUTCDate(components_21.moment());
+                        timestamp = index_20.formatUTCDate(components_13.moment());
                         receipt = _receipt;
                         this.btnDisperse.rightIcon.visible = true;
                         this.btnDisperse.caption = 'Dispersing';
@@ -20249,35 +16283,35 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                     }
                 };
                 const confirmationCallBackActions = async () => {
-                    await index_32.tokenStore.updateAllTokenBalances();
+                    await scom_token_list_5.tokenStore.updateAllTokenBalances();
                     this.disperseResult.closeModal();
                     this.renderResult(token, { receipt, address, timestamp });
                     this.resetData();
                 };
-                index_31.registerSendTxEvents({
+                index_20.registerSendTxEvents({
                     transactionHash: callBackActions,
                     confirmation: confirmationCallBackActions
                 });
-                index_33.onDisperse(token, this.listAddresses);
+                index_22.onDisperse(token, this.listAddresses);
             };
             this.renderResult = (token, data) => {
-                const img = assets_5.default.fullPath(index_32.getTokenIconPath(token, eth_wallet_16.Wallet.getClientInstance().chainId));
-                const chainId = eth_wallet_16.Wallet.getClientInstance().chainId;
+                const img = scom_token_list_5.assets.tokenPath(token, eth_wallet_8.Wallet.getClientInstance().chainId);
+                const chainId = eth_wallet_8.Wallet.getClientInstance().chainId;
                 this.resultElm.clearInnerHTML();
                 this.resultElm.appendChild(this.$render("i-vstack", { gap: 50, horizontalAlignment: "center" },
-                    this.$render("i-label", { caption: "\uD83C\uDF89 Disperse Successful! \uD83C\uDF89", font: { size: '48px', name: 'Montserrat', bold: true } }),
+                    this.$render("i-label", { caption: "\uD83C\uDF89 Disperse Successful! \uD83C\uDF89", class: "text-center", font: { size: '48px', name: 'Montserrat', bold: true } }),
                     this.$render("i-vstack", { gap: 16, width: 750, maxWidth: "100%", horizontalAlignment: "center" },
                         this.$render("i-label", { caption: "Token", font: { size: '24px', name: 'Montserrat Medium' } }),
                         this.$render("i-hstack", { width: "100%", verticalAlignment: "center", horizontalAlignment: "center", gap: 16, padding: { top: 20, bottom: 20, left: 60, right: 60 }, border: { radius: 15, style: 'solid', width: 4, color: '#9C9C9C' } },
-                            this.$render("i-image", { width: 40, height: 40, url: img }),
+                            this.$render("i-image", { width: 40, height: 40, minWidth: 30, url: img }),
                             this.$render("i-label", { caption: `$${token.symbol}`, font: { size: '20px', name: 'Montserrat Medium' } }),
                             this.$render("i-label", { class: "text-overflow", caption: token.address || token.symbol, font: { size: '16px', name: 'Montserrat Medium' } }))),
                     this.$render("i-vstack", { gap: 8, width: 750, maxWidth: "100%", horizontalAlignment: "center" },
                         this.$render("i-label", { caption: "Explorer", font: { size: '24px', name: 'Montserrat Medium' } }),
-                        this.$render("i-hstack", { class: "pointer", wrap: "nowrap", width: "100%", minHeight: 88, verticalAlignment: "center", horizontalAlignment: "center", gap: 16, padding: { top: 20, bottom: 20, left: 20, right: 20 }, border: { radius: 15, style: 'solid', width: 4, color: '#9C9C9C' }, onClick: () => index_31.viewOnExplorerByTxHash(chainId, data.receipt) },
+                        this.$render("i-hstack", { class: "pointer", wrap: "nowrap", width: "100%", minHeight: 88, verticalAlignment: "center", horizontalAlignment: "center", gap: 16, padding: { top: 20, bottom: 20, left: 20, right: 20 }, border: { radius: 15, style: 'solid', width: 4, color: '#9C9C9C' }, onClick: () => index_20.viewOnExplorerByTxHash(chainId, data.receipt) },
                             this.$render("i-label", { class: "text-overflow", caption: data.receipt, font: { size: '16px', name: 'Montserrat Medium' } }),
                             this.$render("i-icon", { class: "link-icon", name: "external-link-alt", width: 20, height: 20, fill: "#fff" }))),
-                    this.$render("i-hstack", { gap: 30, maxWidth: "100%", horizontalAlignment: "center", verticalAlignment: "center" },
+                    this.$render("i-hstack", { gap: 30, maxWidth: "100%", horizontalAlignment: "center", verticalAlignment: "center", wrap: "wrap" },
                         this.$render("i-button", { caption: "DOWNLOAD CSV", background: { color: "#34343A" }, width: 270, border: { radius: 12 }, padding: { top: 12, bottom: 12 }, onClick: () => this.onDownloadFile(true) }),
                         this.$render("i-button", { caption: "DOWNLOAD REPORT", background: { color: 'transparent linear-gradient(270deg, #FF9900 0%, #FC7428 100%) 0% 0% no-repeat padding-box' }, width: 270, border: { radius: 12 }, padding: { top: 12, bottom: 12 }, onClick: () => this.onDownloadReport(Object.assign({ symbol: token.symbol }, data)) }),
                         this.$render("i-button", { caption: "DISPERSE AGAIN", background: { color: 'linear-gradient(90deg, #456ED7 0%, #67BBBB 99.97%)' }, width: 270, border: { radius: 12 }, padding: { top: 12, bottom: 12 }, onClick: this.onDisperseAgain }))));
@@ -20289,45 +16323,111 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                 this.resultElm.visible = false;
                 this.resetData();
             };
-            index_32.setDataFromSCConfig(scconfig_json_1.default);
-            index_32.setTokenStore();
-            this.$eventBus = components_21.application.EventBus;
+            index_21.setDataFromSCConfig(data_json_1.default);
+            scom_token_list_5.tokenStore.updateTokenMapData();
+            this.$eventBus = components_13.application.EventBus;
             this.registerEvent();
         }
         getData() {
             return this._data;
         }
         async setData(data) {
-            this._oldData = this._data;
             this._data = data;
+            this.configDApp.data = data;
+            this._data = data;
+            await this.refreshUI();
+            if (this.mdWallet) {
+                this.mdWallet.networks = data.networks;
+                this.mdWallet.wallets = data.wallets;
+            }
         }
-        getTag() {
-            return this.tag;
+        updateTag(type, value) {
+            var _a;
+            this.tag[type] = (_a = this.tag[type]) !== null && _a !== void 0 ? _a : {};
+            for (let prop in value) {
+                if (value.hasOwnProperty(prop))
+                    this.tag[type][prop] = value[prop];
+            }
         }
         async setTag(value) {
-            this.tag = value || {};
+            const newValue = value || {};
+            if (newValue.light)
+                this.updateTag('light', newValue.light);
+            if (newValue.dark)
+                this.updateTag('dark', newValue.dark);
+            if (this.dappContainer)
+                this.dappContainer.setTag(this.tag);
+            this.updateTheme();
         }
-        getConfigSchema() {
-            return this.getThemeSchema();
+        async getTag() {
+            return this.tag;
         }
-        onConfigSave(config) {
-            this.tag = config;
+        updateStyle(name, value) {
+            value ?
+                this.style.setProperty(name, value) :
+                this.style.removeProperty(name);
         }
-        async edit() { }
-        async confirm() { }
-        async discard() { }
-        async config() { }
-        getPropertiesSchema(readOnly) {
-            return {};
-        }
-        getThemeSchema(readOnly) {
-            return {};
-        }
-        getEmbedderActions() {
-            return this._getActions(this.getPropertiesSchema(true), this.getThemeSchema(true));
+        updateTheme() {
+            var _a, _b, _c, _d, _e;
+            const themeVar = ((_a = this.dappContainer) === null || _a === void 0 ? void 0 : _a.theme) || 'light';
+            this.updateStyle('--text-primary', (_b = this.tag[themeVar]) === null || _b === void 0 ? void 0 : _b.fontColor);
+            this.updateStyle('--background-main', (_c = this.tag[themeVar]) === null || _c === void 0 ? void 0 : _c.backgroundColor);
+            this.updateStyle('--input-font_color', (_d = this.tag[themeVar]) === null || _d === void 0 ? void 0 : _d.inputFontColor);
+            this.updateStyle('--input-background', (_e = this.tag[themeVar]) === null || _e === void 0 ? void 0 : _e.inputBackgroundColor);
         }
         getActions() {
-            return this._getActions(this.getPropertiesSchema(), this.getThemeSchema());
+            const propertiesSchema = {
+                type: "object",
+                properties: {}
+            };
+            const themeSchema = {
+                type: 'object',
+                properties: {
+                    "dark": {
+                        type: 'object',
+                        properties: {
+                            backgroundColor: {
+                                type: 'string',
+                                format: 'color'
+                            },
+                            fontColor: {
+                                type: 'string',
+                                format: 'color'
+                            },
+                            inputBackgroundColor: {
+                                type: 'string',
+                                format: 'color'
+                            },
+                            inputFontColor: {
+                                type: 'string',
+                                format: 'color'
+                            }
+                        }
+                    },
+                    "light": {
+                        type: 'object',
+                        properties: {
+                            backgroundColor: {
+                                type: 'string',
+                                format: 'color'
+                            },
+                            fontColor: {
+                                type: 'string',
+                                format: 'color'
+                            },
+                            inputBackgroundColor: {
+                                type: 'string',
+                                format: 'color'
+                            },
+                            inputFontColor: {
+                                type: 'string',
+                                format: 'color'
+                            }
+                        }
+                    }
+                }
+            };
+            return this._getActions(propertiesSchema, themeSchema);
         }
         _getActions(propertiesSchema, themeSchema) {
             const actions = [
@@ -20337,16 +16437,14 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                     command: (builder, userInputData) => {
                         return {
                             execute: async () => {
-                                if (builder === null || builder === void 0 ? void 0 : builder.setData) {
-                                    builder.setData(userInputData);
-                                }
-                                this.setData(userInputData);
+                                this._oldData = Object.assign({}, this._data);
+                                this.configDApp.data = this._data;
+                                this.refreshUI();
                             },
                             undo: () => {
-                                if (builder === null || builder === void 0 ? void 0 : builder.setData) {
-                                    builder.setData(this._oldData);
-                                }
-                                this.setData(this._oldData);
+                                this._data = Object.assign({}, this._oldData);
+                                this.configDApp.data = this._data;
+                                this.refreshUI();
                             },
                             redo: () => { }
                         };
@@ -20361,7 +16459,7 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                             execute: async () => {
                                 if (!userInputData)
                                     return;
-                                this.oldTag = Object.assign({}, this.tag);
+                                this.oldTag = JSON.parse(JSON.stringify(this.tag));
                                 this.setTag(userInputData);
                                 if (builder)
                                     builder.setTag(userInputData);
@@ -20381,26 +16479,73 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
             ];
             return actions;
         }
+        getConfigurators() {
+            let self = this;
+            return [
+                {
+                    name: 'Builder Configurator',
+                    target: 'Builders',
+                    getActions: this.getActions.bind(this),
+                    getData: this.getData.bind(this),
+                    setData: this.setData.bind(this),
+                    getTag: this.getTag.bind(this),
+                    setTag: this.setTag.bind(this)
+                },
+                {
+                    name: 'Emdedder Configurator',
+                    target: 'Embedders',
+                    elementName: 'i-scom-swap-config',
+                    getLinkParams: () => {
+                        const commissions = this._data.commissions || [];
+                        return {
+                            data: window.btoa(JSON.stringify(commissions))
+                        };
+                    },
+                    setLinkParams: async (params) => {
+                        if (params.data) {
+                            const decodedString = window.atob(params.data);
+                            const commissions = JSON.parse(decodedString);
+                            let resultingData = Object.assign(Object.assign({}, self._data), { commissions });
+                            await this.setData(resultingData);
+                        }
+                    },
+                    bindOnChanged: (element, callback) => {
+                        element.onCustomCommissionsChanged = async (data) => {
+                            let resultingData = Object.assign(Object.assign({}, self._data), data);
+                            await this.setData(resultingData);
+                            await callback(data);
+                        };
+                    },
+                    getData: this.getData.bind(this),
+                    setData: this.setData.bind(this),
+                    getTag: this.getTag.bind(this),
+                    setTag: this.setTag.bind(this)
+                }
+            ];
+        }
         DummyDisperseData() {
             return [
                 {
-                    address: index_32.dummyAddressList[0],
-                    amount: new eth_wallet_16.BigNumber(100.1)
+                    address: index_21.dummyAddressList[0],
+                    amount: new eth_wallet_8.BigNumber(100.1)
                 },
                 {
-                    address: index_32.dummyAddressList[1],
-                    amount: new eth_wallet_16.BigNumber(5.8)
+                    address: index_21.dummyAddressList[1],
+                    amount: new eth_wallet_8.BigNumber(5.8)
                 },
                 {
-                    address: index_32.dummyAddressList[2],
-                    amount: new eth_wallet_16.BigNumber(333)
+                    address: index_21.dummyAddressList[2],
+                    amount: new eth_wallet_8.BigNumber(333)
                 }
             ];
+        }
+        async refreshUI() {
+            this.onLoad();
         }
         ;
         get listAddresses() {
             if (this.inputBatch.value) {
-                return index_31.toDisperseData(this.inputBatch.value);
+                return index_20.toDisperseData(this.inputBatch.value);
             }
             return [];
         }
@@ -20410,15 +16555,42 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
         }
         get balance() {
             if (this.token) {
-                return index_32.tokenStore.getTokenBalance(this.token);
+                return scom_token_list_5.tokenStore.getTokenBalance(this.token);
             }
             return '0';
         }
         get total() {
-            return this.listAddresses.reduce((pv, cv) => pv.plus(cv.amount), new eth_wallet_16.BigNumber("0"));
+            return this.listAddresses.reduce((pv, cv) => pv.plus(cv.amount), new eth_wallet_8.BigNumber("0"));
         }
         get remaining() {
-            return new eth_wallet_16.BigNumber(this.balance).minus(this.total);
+            return new eth_wallet_8.BigNumber(this.balance).minus(this.total);
+        }
+        get defaultChainId() {
+            return this._data.defaultChainId;
+        }
+        set defaultChainId(value) {
+            this._data.defaultChainId = value;
+        }
+        get wallets() {
+            var _a;
+            return (_a = this._data.wallets) !== null && _a !== void 0 ? _a : [];
+        }
+        set wallets(value) {
+            this._data.wallets = value;
+        }
+        get networks() {
+            var _a;
+            return (_a = this._data.networks) !== null && _a !== void 0 ? _a : [];
+        }
+        set networks(value) {
+            this._data.networks = value;
+        }
+        get showHeader() {
+            var _a;
+            return (_a = this._data.showHeader) !== null && _a !== void 0 ? _a : true;
+        }
+        set showHeader(value) {
+            this._data.showHeader = value;
         }
         showImportCSVError(message) {
             this.messageModal.visible = true;
@@ -20427,95 +16599,101 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
         }
         loadLib() {
             if (!window.jsPDF) {
-                components_21.RequireJS.require([`${moduleDir}/lib/jspdf.js`], () => { });
+                components_13.RequireJS.require([`${moduleDir}/lib/jspdf.js`], () => { });
             }
         }
-        init() {
+        async init() {
+            this.isReadyCallbackQueued = true;
             super.init();
             this.loadLib();
-            this.classList.add(index_css_1.disperseLayout);
-            const connected = index_32.isWalletConnected();
+            this.classList.add(index_css_2.disperseLayout);
+            const connected = index_21.isWalletConnected();
             this.checkStepStatus(connected);
-            this.updateNetworkBtn(connected);
-            this.updateUserInfo(connected);
             this.tokenSelection.isTokenShown = false;
             this.tokenSelection.isCommonShown = true;
             this.tokenSelection.onSelectToken = this.onSelectToken;
             this.tokenElm.onClick = () => this.tokenSelection.showModal();
             this.initInputFile();
+            const commissions = this.getAttribute('commissions', true, []);
+            const defaultChainId = this.getAttribute('defaultChainId', true);
+            const networks = this.getAttribute('networks', true);
+            const wallets = this.getAttribute('wallets', true);
+            const showHeader = this.getAttribute('showHeader', true);
+            await this.setData({ commissions, defaultChainId, networks, wallets, showHeader });
+            if (!index_21.isWalletConnected()) {
+                this.mdWallet.showModal();
+            }
+            this.setContainerData();
+            this.isReadyCallbackQueued = false;
+            this.executeReadyCallback();
         }
         render() {
-            return (this.$render("i-panel", { class: `template-layout ${disperse_css_1.disperseStyle}` },
-                this.$render("i-modal", { id: "messageModal", class: "bg-modal" },
-                    this.$render("i-label", { id: "messageElm" })),
-                this.$render("i-panel", { class: "container-layout" },
-                    this.$render("i-image", { url: assets_5.default.fullPath('img/disperse-banner.png') }),
-                    this.$render("i-vstack", { id: "containerElm", position: "relative", margin: { top: 50 }, minHeight: 800 },
-                        this.$render("i-hstack", { id: "firstStepElm", class: "step-elm", minHeight: 200, padding: { left: 50, right: 50 }, border: { radius: 30 }, verticalAlignment: "center", horizontalAlignment: "space-between", background: { color: '#000' } },
-                            this.$render("i-hstack", { verticalAlignment: "center", gap: 15, margin: { right: 100 } },
-                                this.$render("i-label", { caption: "STEP 1", font: { size: '20px', name: 'Montserrat SemiBold', color: '#F29224' } }),
-                                this.$render("i-label", { caption: "Connect Wallet", font: { size: '20px', name: 'Montserrat SemiBold' } })),
-                            this.$render("i-button", { visible: false, id: "btnNetwork", background: { color: '#222237' }, border: { radius: 12, width: 2, style: 'solid', color: '#FFB82F' }, margin: { right: 100 } }),
-                            this.$render("i-vstack", { id: "containerUserInfo" })),
-                        this.$render("i-hstack", { id: "secondStepElm", class: "step-elm", minHeight: 200, margin: { top: 40 }, padding: { left: 50, right: 50 }, border: { radius: 30 }, verticalAlignment: "center", horizontalAlignment: "space-between", background: { color: '#000' } },
-                            this.$render("i-hstack", { class: "step-2", verticalAlignment: "center", gap: 15, margin: { right: 100 } },
-                                this.$render("i-label", { caption: "STEP 2", font: { size: '20px', name: 'Montserrat SemiBold', color: '#F29224' } }),
-                                this.$render("i-label", { caption: "Enter Token to Disperse", font: { size: '20px', name: 'Montserrat SemiBold' } })),
-                            this.$render("i-hstack", { class: "step-2", width: "calc(100% - 470px)" },
-                                this.$render("i-hstack", { id: "tokenElm", width: "100%", wrap: "nowrap", verticalAlignment: "center", horizontalAlignment: "space-between", padding: { top: 20, bottom: 20, left: 60, right: 60 }, border: { radius: 15, style: 'solid', width: 4 } },
-                                    this.$render("i-hstack", { id: "tokenInfoElm" },
-                                        this.$render("i-label", { caption: "Please Select Token", font: { size: '16px', color: '#A8A8A8', name: 'Montserrat Medium' } })),
-                                    this.$render("i-icon", { name: "caret-down", fill: '#F29224', width: 24, height: 24 })),
-                                this.$render("token-selection", { id: "tokenSelection" }))),
-                        this.$render("i-vstack", { id: "thirdStepElm", class: "step-elm", minHeight: 300, margin: { top: 40 }, padding: { left: 50, right: 50 }, border: { radius: 30 }, verticalAlignment: "center", background: { color: '#000' } },
-                            this.$render("i-hstack", { width: "100%", verticalAlignment: "center", horizontalAlignment: "space-between", gap: 15 },
-                                this.$render("i-hstack", { verticalAlignment: "center", gap: 15, margin: { right: 15 } },
-                                    this.$render("i-label", { caption: "STEP 3", font: { size: '20px', name: 'Montserrat SemiBold', color: '#F29224' } }),
-                                    this.$render("i-label", { caption: "Enter Recipients and Amounts", font: { size: '20px', name: 'Montserrat SemiBold' }, margin: { right: 60 } }),
-                                    this.$render("i-label", { caption: "Enter one address and amount on each line. Supports any format.", font: { size: '13px', name: 'Montserrat Medium' }, maxWidth: "280px", class: "break-word" })),
-                                this.$render("i-hstack", { verticalAlignment: "center", class: "ml-auto", gap: 15 },
-                                    this.$render("i-button", { id: "btnDownload", caption: "Download CSV", enabled: false, class: "csv-button", onClick: () => this.onDownloadFile() }),
-                                    this.$render("i-button", { id: "btnImport", caption: "Import CSV", enabled: false, class: "csv-button", onClick: this.onImportFile }),
-                                    this.$render("i-label", { id: "importFileElm", visible: false }))),
-                            this.$render("i-label", { id: "importWarning", caption: "", font: { size: '13px', name: 'Montserrat Medium' } }),
-                            this.$render("i-input", { id: "inputBatch", height: "auto", enabled: false, placeholder: index_31.disperseDataToString(this.DummyDisperseData()), class: "input-batch custom-scroll", width: "100%", inputType: "textarea", rows: 4, margin: { top: 30 }, onChanged: this.onInputBatch })),
-                        this.$render("i-hstack", { id: "fourthStepElm", class: "step-elm", minHeight: 240, margin: { top: 40 } },
-                            this.$render("i-vstack", { width: "100%" },
-                                this.$render("i-hstack", { verticalAlignment: "center", horizontalAlignment: "space-between", background: { color: "#34343A" }, border: { radius: 30 } },
-                                    this.$render("i-vstack", { class: "step-4", background: { color: '#000' }, width: 800, height: "100%", padding: { top: 50, bottom: 21, left: 50, right: 50 }, gap: 15, border: { radius: 30 } },
-                                        this.$render("i-hstack", { width: "100%", verticalAlignment: "center", gap: 15 },
-                                            this.$render("i-label", { caption: "STEP 4", font: { size: '20px', name: 'Montserrat SemiBold', color: '#F29224' } }),
-                                            this.$render("i-label", { caption: "Confirm Disperse", font: { size: '20px', name: 'Montserrat SemiBold' } })),
-                                        this.$render("i-vstack", { width: "100%", verticalAlignment: "center", gap: 10, class: "custom-scroll" },
-                                            this.$render("i-label", { id: "invalidElm", font: { size: '18px', color: '#F05E61' } }),
-                                            this.$render("i-vstack", { gap: 10, class: "address-elm" },
-                                                this.$render("i-hstack", { width: "100%", verticalAlignment: "center", gap: 30 },
-                                                    this.$render("i-vstack", { width: 450 },
-                                                        this.$render("i-label", { caption: "Addresses", font: { size: '16px', name: 'Montserrat Medium' } })),
-                                                    this.$render("i-label", { caption: "Amount", font: { size: '16px', name: 'Montserrat Medium' } })),
-                                                this.$render("i-vstack", { width: "100%", height: 100, class: "overflow-auto", padding: { right: 5 } },
-                                                    this.$render("i-vstack", { id: "addressesElm", width: "100%", height: "100%", verticalAlignment: "start", gap: 4 }))))),
-                                    this.$render("i-vstack", { class: "step-4", width: 500, height: "100%", verticalAlignment: "center", gap: 20, padding: { left: 30, right: 50 } },
-                                        this.$render("i-hstack", { verticalAlignment: "center", horizontalAlignment: "space-between" },
-                                            this.$render("i-label", { caption: "Total", font: { size: '20px', name: 'Montserrat SemiBold' } }),
-                                            this.$render("i-label", { id: "totalElm", class: "text-right ml-auto", font: { size: '20px', name: 'Montserrat SemiBold', color: '#C7C7C7' } })),
-                                        this.$render("i-hstack", { verticalAlignment: "center", horizontalAlignment: "space-between" },
-                                            this.$render("i-label", { caption: "Your Balance", font: { size: '20px', name: 'Montserrat SemiBold' } }),
-                                            this.$render("i-label", { id: "balanceElm", class: "text-right ml-auto", font: { size: '20px', name: 'Montserrat SemiBold', color: '#C7C7C7' } })),
-                                        this.$render("i-hstack", { verticalAlignment: "center", horizontalAlignment: "space-between" },
-                                            this.$render("i-label", { caption: "Remaining", font: { size: '20px', name: 'Montserrat SemiBold' } }),
-                                            this.$render("i-label", { id: "remainingElm", class: "text-right ml-auto", font: { size: '20px', name: 'Montserrat SemiBold', color: '#C7C7C7' } })))),
-                                this.$render("i-hstack", { verticalAlignment: "center", horizontalAlignment: "center", margin: { top: 60 }, gap: 30 },
-                                    this.$render("i-button", { id: "btnApprove", caption: "Approve", class: "btn-os", width: 300, enabled: false, rightIcon: { spin: true, visible: false }, border: { radius: 12 }, padding: { top: 12, bottom: 12 }, onClick: this.handleApprove }),
-                                    this.$render("i-button", { id: "btnDisperse", caption: "Disperse", class: "btn-os", width: 300, enabled: false, rightIcon: { spin: true, visible: false }, border: { radius: 12 }, padding: { top: 12, bottom: 12 }, onClick: this.handleDisperse }))))),
-                    this.$render("i-panel", { id: "resultElm", visible: false, margin: { top: 75, bottom: 100 } })),
-                this.$render("disperse-result", { id: "disperseResult" }),
-                this.$render("disperse-wallet", null)));
+            return (this.$render("i-scom-dapp-container", { id: "dappContainer" },
+                this.$render("i-panel", { class: `template-layout ${disperse_css_1.disperseStyle}` },
+                    this.$render("i-modal", { id: "messageModal", class: "bg-modal" },
+                        this.$render("i-label", { id: "messageElm" })),
+                    this.$render("i-panel", { class: "container-layout" },
+                        this.$render("i-vstack", { id: "containerElm", position: "relative", minHeight: 600 },
+                            this.$render("i-hstack", { id: "firstStepElm", class: "step-elm", minHeight: 200, margin: { top: 40 }, padding: { left: 50, right: 50, top: 10, bottom: 10 }, border: { radius: 30 }, verticalAlignment: "center", horizontalAlignment: "space-between", background: { color: '#000' } },
+                                this.$render("i-hstack", { class: "step-1", verticalAlignment: "center", wrap: "wrap", gap: 15, margin: { right: 100 } },
+                                    this.$render("i-label", { caption: "STEP 1", font: { size: '20px', name: 'Montserrat SemiBold', color: '#F29224' } }),
+                                    this.$render("i-label", { caption: "Enter Token to Disperse", font: { size: '20px', name: 'Montserrat SemiBold' } })),
+                                this.$render("i-hstack", { class: "step-1" },
+                                    this.$render("i-hstack", { id: "tokenElm", width: "100%", wrap: "nowrap", verticalAlignment: "center", horizontalAlignment: "space-between", padding: { top: 20, bottom: 20, left: 60, right: 60 }, border: { radius: 15, style: 'solid', width: 4 } },
+                                        this.$render("i-hstack", { id: "tokenInfoElm" },
+                                            this.$render("i-label", { caption: "Please Select Token", font: { size: '16px', color: '#A8A8A8', name: 'Montserrat Medium' } })),
+                                        this.$render("i-icon", { name: "caret-down", fill: '#F29224', width: 24, height: 24 })),
+                                    this.$render("token-selection", { id: "tokenSelection" }))),
+                            this.$render("i-vstack", { id: "secondStepElm", class: "step-elm", minHeight: 300, margin: { top: 40 }, padding: { left: 50, right: 50, top: 10, bottom: 10 }, border: { radius: 30 }, verticalAlignment: "center", background: { color: '#000' } },
+                                this.$render("i-hstack", { width: "100%", verticalAlignment: "center", horizontalAlignment: "space-between", wrap: "wrap", gap: 15 },
+                                    this.$render("i-hstack", { verticalAlignment: "center", wrap: "wrap", gap: 15, margin: { right: 15 } },
+                                        this.$render("i-label", { caption: "STEP 2", font: { size: '20px', name: 'Montserrat SemiBold', color: '#F29224' } }),
+                                        this.$render("i-label", { caption: "Enter Recipients and Amounts", font: { size: '20px', name: 'Montserrat SemiBold' }, margin: { right: 60 } }),
+                                        this.$render("i-label", { caption: "Enter one address and amount on each line. Supports any format.", font: { size: '13px', name: 'Montserrat Medium' }, maxWidth: "280px", class: "break-word" })),
+                                    this.$render("i-hstack", { verticalAlignment: "center", wrap: "wrap", class: "ml-auto", horizontalAlignment: "end", gap: 15 },
+                                        this.$render("i-button", { id: "btnDownload", caption: "Download CSV", enabled: false, class: "csv-button", onClick: () => this.onDownloadFile() }),
+                                        this.$render("i-button", { id: "btnImport", caption: "Import CSV", enabled: false, class: "csv-button", onClick: this.onImportFile }),
+                                        this.$render("i-label", { id: "importFileElm", visible: false }))),
+                                this.$render("i-label", { id: "importWarning", caption: "", font: { size: '13px', name: 'Montserrat Medium' } }),
+                                this.$render("i-input", { id: "inputBatch", height: "auto", enabled: false, placeholder: index_20.disperseDataToString(this.DummyDisperseData()), class: "input-batch custom-scroll", width: "100%", inputType: "textarea", rows: 4, margin: { top: 30 }, onChanged: this.onInputBatch })),
+                            this.$render("i-hstack", { id: "thirdStepElm", class: "step-elm", minHeight: 240, margin: { top: 40 } },
+                                this.$render("i-vstack", { width: "100%" },
+                                    this.$render("i-hstack", { verticalAlignment: "center", horizontalAlignment: "space-between", wrap: "wrap", background: { color: "#34343A" }, border: { radius: 30 } },
+                                        this.$render("i-vstack", { class: "step-3", background: { color: '#000' }, width: 800, padding: { top: 50, bottom: 21, left: 50, right: 50 }, gap: 15, border: { radius: 30 } },
+                                            this.$render("i-hstack", { width: "100%", verticalAlignment: "center", gap: 15 },
+                                                this.$render("i-label", { caption: "STEP 3", font: { size: '20px', name: 'Montserrat SemiBold', color: '#F29224' } }),
+                                                this.$render("i-label", { caption: "Confirm Disperse", font: { size: '20px', name: 'Montserrat SemiBold' } })),
+                                            this.$render("i-vstack", { width: "100%", verticalAlignment: "center", gap: 10, class: "custom-scroll" },
+                                                this.$render("i-label", { id: "invalidElm", font: { size: '18px', color: '#F05E61' } }),
+                                                this.$render("i-vstack", { gap: 10, class: "address-elm" },
+                                                    this.$render("i-hstack", { width: "100%", verticalAlignment: "center", gap: 30 },
+                                                        this.$render("i-vstack", { width: 450 },
+                                                            this.$render("i-label", { caption: "Addresses", font: { size: '16px', name: 'Montserrat Medium' } })),
+                                                        this.$render("i-label", { caption: "Amount", font: { size: '16px', name: 'Montserrat Medium' } })),
+                                                    this.$render("i-vstack", { width: "100%", height: 100, class: "overflow-auto", padding: { right: 5 } },
+                                                        this.$render("i-vstack", { id: "addressesElm", width: "100%", height: "100%", verticalAlignment: "start", gap: 4 }))))),
+                                        this.$render("i-vstack", { class: "step-3", width: 500, maxWidth: "100%", verticalAlignment: "center", gap: 20, padding: { left: 30, right: 50 } },
+                                            this.$render("i-hstack", { verticalAlignment: "center", horizontalAlignment: "space-between", wrap: "wrap" },
+                                                this.$render("i-label", { caption: "Total", font: { size: '20px', name: 'Montserrat SemiBold' } }),
+                                                this.$render("i-label", { id: "totalElm", class: "text-right ml-auto", font: { size: '20px', name: 'Montserrat SemiBold', color: '#C7C7C7' } })),
+                                            this.$render("i-hstack", { verticalAlignment: "center", horizontalAlignment: "space-between", wrap: "wrap" },
+                                                this.$render("i-label", { caption: "Your Balance", font: { size: '20px', name: 'Montserrat SemiBold' } }),
+                                                this.$render("i-label", { id: "balanceElm", class: "text-right ml-auto", font: { size: '20px', name: 'Montserrat SemiBold', color: '#C7C7C7' } })),
+                                            this.$render("i-hstack", { verticalAlignment: "center", horizontalAlignment: "space-between", wrap: "wrap" },
+                                                this.$render("i-label", { caption: "Remaining", font: { size: '20px', name: 'Montserrat SemiBold' } }),
+                                                this.$render("i-label", { id: "remainingElm", class: "text-right ml-auto", font: { size: '20px', name: 'Montserrat SemiBold', color: '#C7C7C7' } })))),
+                                    this.$render("i-hstack", { verticalAlignment: "center", horizontalAlignment: "center", margin: { top: 60 }, gap: 30 },
+                                        this.$render("i-button", { id: "btnApprove", caption: "Approve", class: "btn-os", width: 300, maxWidth: "100%", enabled: false, rightIcon: { spin: true, visible: false }, border: { radius: 12 }, padding: { top: 12, bottom: 12 }, onClick: this.handleApprove }),
+                                        this.$render("i-button", { id: "btnDisperse", caption: "Disperse", class: "btn-os", width: 300, maxWidth: "100%", enabled: false, rightIcon: { spin: true, visible: false }, border: { radius: 12 }, padding: { top: 12, bottom: 12 }, onClick: this.handleDisperse }))))),
+                        this.$render("i-panel", { id: "resultElm", visible: false, margin: { top: 75, bottom: 100 } })),
+                    this.$render("disperse-result", { id: "disperseResult" }),
+                    this.$render("i-scom-disperse-config", { id: "configDApp", visible: false }),
+                    this.$render("i-scom-wallet-modal", { id: "mdWallet", wallets: [] }))));
         }
     };
     ScomDisperse = __decorate([
-        components_21.customModule,
-        components_21.customElements('i-scom-disperse')
+        components_13.customModule,
+        components_13.customElements('i-scom-disperse')
     ], ScomDisperse);
     exports.default = ScomDisperse;
 });

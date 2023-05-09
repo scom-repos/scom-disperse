@@ -47,12 +47,12 @@ export const disperseLayout = Styles.style({
       background: '#1890ff'
     },
     '.template-layout': {
-      maxWidth: '1420px',
+      maxWidth: '1200px',
       marginInline: 'auto',
     },
     '.container-layout': {
       width: '100%',
-      padding: '20px 10px',
+      padding: '0 10px',
     },
     '.btn-os': {
       background: colorVar.primaryButton,

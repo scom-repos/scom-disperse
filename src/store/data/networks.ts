@@ -1,5 +1,3 @@
-const InfuraId = "adc596bf88b648e2a8902bc9093930c5"
-
 enum ChainNetwork {
   BSCMainnet = 56,
   BSCTestnet = 97,
