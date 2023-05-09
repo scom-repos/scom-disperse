@@ -16,10 +16,16 @@ export const disperseStyle = Styles.style({
     '#tokenElm': {
       cursor: 'pointer',
       borderColor: '#9C9C9C',
-    },
-    '#tokenElm.disabled': {
-      cursor: 'default',
-      borderColor: '#F29224',
+      padding: '15px 10px !important',
+      $nest: {
+        '&.disabled': {
+          cursor: 'default',
+          borderColor: '#F29224'
+        },
+        'i-icon svg': {
+          fill: '#F29224'
+        }
+      }
     },
     '.csv-button': {
       background: '#34343A',
@@ -94,62 +100,56 @@ export const disperseStyle = Styles.style({
         },
       }
     },
-    '@media screen and (max-width: 1200px)': {
+    '.ml-auto': {
+      marginLeft: 'auto',
+    },
+    '.step-elm': {
+      flexWrap: 'wrap',
+      gap: '10px',
+      padding: '15px 10px !important',
       $nest: {
-        '.ml-auto': {
-          marginLeft: 'auto',
-        },
-        '.step-elm': {
+        '&#thirdStepElm': {
+          paddingInline: '0 !important'
+        }
+      }
+    },
+    '#containerUserInfo > i-vstack': {
+      gap: '8px !important'
+    },
+    '#secondStepElm > i-hstack': {
+      flexWrap: 'wrap',
+    },
+    '#thirdStepElm > i-vstack': {
+      maxWidth: '100%',
+      width: '100% !important',
+      flexWrap: 'wrap',
+      $nest: {
+        '&> i-hstack': {
           flexWrap: 'wrap',
-          gap: '10px',
-          padding: '15px 10px !important',
+          width: '100%',
         },
-        '.step-2': {
-          width: '100% !important',
-          marginRight: '0 !important',
-        },
-        '#tokenElm': {
-          padding: '15px 10px !important',
-        },
-        '#containerUserInfo > i-vstack': {
-          gap: '8px !important'
-        },
-        '#thirdStepElm > i-hstack': {
-          flexWrap: 'wrap',
-        },
-        '#fourthStepElm > i-vstack': {
-          maxWidth: '100%',
-          width: '100% !important',
-          flexWrap: 'wrap',
+        '.custom-scroll': {
+          overflow: 'auto',
           $nest: {
-            '&> i-hstack': {
-              flexWrap: 'wrap',
-              width: '100%',
+            '&::-webkit-scrollbar-track': {
+              background: '#FFB82F',
             },
-            '.custom-scroll': {
-              overflow: 'auto',
-              $nest: {
-                '&::-webkit-scrollbar-track': {
-                  background: '#FFB82F',
-                },
-                '&::-webkit-scrollbar': {
-                  height: '8px',
-                },
-                '&::-webkit-scrollbar-thumb': {
-                  background: '#FF8800',
-                  borderRadius: '3px',
-                }
-              }
+            '&::-webkit-scrollbar': {
+              height: '8px',
             },
-            '.address-elm': {
-              minWidth: '650px',
-            },
-            '.step-4': {
-              height: 'auto !important',
-              width: 'calc(100% - 1px) !important',
-              padding: '20px !important',
+            '&::-webkit-scrollbar-thumb': {
+              background: '#FF8800',
+              borderRadius: '3px',
             }
           }
+        },
+        '.address-elm': {
+          minWidth: '650px',
+        },
+        '.step-3': {
+          height: 'auto !important',
+          width: '100% !important',
+          padding: '20px !important',
         }
       }
     }

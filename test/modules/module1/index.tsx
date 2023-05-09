@@ -1,11 +1,9 @@
-import { Module, customModule, Container, VStack } from '@ijstech/components';
-import {} from '@ijstech/eth-contract';
+import { Module, customModule, Container } from '@ijstech/components';
 import ScomDisperse from '@scom/scom-disperse';
 
 @customModule
 export default class Module1 extends Module {
     private disperseElm: ScomDisperse;
-    private mainStack: VStack;
 
     constructor(parent?: Container, options?: any) {
         super(parent, options);
@@ -17,9 +15,22 @@ export default class Module1 extends Module {
 
     render() {
         return <i-panel>
-            <i-hstack id="mainStack" margin={{top: '1rem', left: '1rem'}} gap="2rem">
-                <i-scom-disperse />
-            </i-hstack>
+            <i-scom-disperse
+                defaultChainId={43113}
+                networks={[
+                    {
+                        "chainId": 43113
+                    },
+                    {
+                        "chainId": 97
+                    }
+                ]}
+                wallets={[
+                    {
+                        "name": "metamask"
+                    }
+                ]}
+            />
         </i-panel>
     }
 }

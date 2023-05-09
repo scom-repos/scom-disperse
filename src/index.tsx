@@ -1,45 +1,53 @@
 import { application, moment, Button, Container, customModule, EventBus, HStack, Image, Input, Label, Module, Panel, VStack, Modal, ControlElement, customElements, RequireJS, IDataSchema } from '@ijstech/components'
 import { TokenSelection, Result } from './common/index';
-import { EventId, ITokenObject, toDisperseData, downloadCSVFile, formatNumber, viewOnExplorerByTxHash, isAddressValid, DisperseData, disperseDataToString, registerSendTxEvents, formatUTCDate, PageBlock } from './global/index';
-import { getTokenIconPath, dummyAddressList, ImportFileWarning, isWalletConnected, tokenStore, setDataFromSCConfig, setTokenStore, getNetworkInfo } from './store/index';
+import { EventId, ITokenObject, toDisperseData, downloadCSVFile, formatNumber, viewOnExplorerByTxHash, isAddressValid, DisperseData, disperseDataToString, registerSendTxEvents, formatUTCDate, IDisperseConfigUI, INetworkConfig } from './global/index';
+import { dummyAddressList, ImportFileWarning, isWalletConnected, setDataFromSCConfig } from './store/index';
 import { BigNumber, Wallet } from '@ijstech/eth-wallet';
 import { onApproveToken, onCheckAllowance, onDisperse, getDisperseAddress } from './disperse-utils/index';
 import Assets from './assets';
 import { disperseStyle } from './disperse.css';
 import { disperseLayout } from './index.css';
 import { RenderResultData, DownloadReportData } from './disperse.type';
-import scconfig from './scconfig.json';
+import { tokenStore, assets as tokenAssets } from '@scom/scom-token-list';
+import Config from './config/index';
+import configData from './data.json';
+import ScomWalletModal, { IWalletPlugin } from '@scom/scom-wallet-modal';
+import ScomDappContainer from '@scom/scom-dapp-container';
 const moduleDir = application.currentModuleDir;
 // import { jsPDF } from 'jspdf';
 // import autoTable from 'jspdf-autotable';
 
 declare const window: any;
 
+interface ScomDisperseElement extends ControlElement {
+  defaultChainId: number;
+  networks: INetworkConfig[];
+  wallets: IWalletPlugin[];
+  showHeader?: boolean;
+}
+
 declare global {
   namespace JSX {
     interface IntrinsicElements {
-      ["i-scom-disperse"]: ControlElement;
+      ["i-scom-disperse"]: ScomDisperseElement;
     }
   }
 }
 
 @customModule
 @customElements('i-scom-disperse')
-export default class ScomDisperse extends Module implements PageBlock {
+export default class ScomDisperse extends Module {
   private $eventBus: EventBus;
   private containerElm: VStack;
   private resultElm: Panel;
   private firstStepElm: HStack;
-  private secondStepElm: HStack;
-  private thirdStepElm: VStack;
-  private fourthStepElm: HStack;
-  private btnNetwork: Button;
+  private secondStepElm: VStack;
+  private thirdStepElm: HStack;
   private btnDownload: Button;
   private btnImport: Button;
   private importFileElm: Label;
   private importWarning: Label;
   private inputBatch: Input;
-  private containerUserInfo: VStack;
   private tokenElm: HStack;
   private tokenInfoElm: Label;
   private tokenSelection: TokenSelection;
@@ -55,9 +63,20 @@ export default class ScomDisperse extends Module implements PageBlock {
   private invalidElm: Label;
   private messageModal: Modal;
   private messageElm: Label;
+  private configDApp: Config;
+  private mdWallet: ScomWalletModal;
+  private dappContainer: ScomDappContainer;
 
-  private _oldData: null;
-  private _data: null;
+  private _oldData: IDisperseConfigUI = {
+    defaultChainId: 0,
+    wallets: [],
+    networks: []
+  };
+  private _data: IDisperseConfigUI = {
+    defaultChainId: 0,
+    wallets: [],
+    networks: []
+  };
   private oldTag: any = {};
   tag: any = {};
   defaultEdit: boolean = true;
@@ -65,56 +84,113 @@ export default class ScomDisperse extends Module implements PageBlock {
   readonly onDiscard: () => Promise<void>;
   readonly onEdit: () => Promise<void>;
 
-  getData() {
+  private getData() {
     return this._data;
   }
 
-  async setData(data: any) {
-    this._oldData = this._data;
+  private async setData(data: IDisperseConfigUI) {
     this._data = data;
+    this.configDApp.data = data;
+    this._data = data;
+    await this.refreshUI();
+    if (this.mdWallet) {
+      this.mdWallet.networks = data.networks;
+      this.mdWallet.wallets = data.wallets;
+    }
   }
 
-  getTag() {
+  private updateTag(type: 'light' | 'dark', value: any) {
+    this.tag[type] = this.tag[type] ?? {};
+    for (let prop in value) {
+      if (value.hasOwnProperty(prop))
+        this.tag[type][prop] = value[prop];
+    }
+  }
+
+  private async setTag(value: any) {
+    const newValue = value || {};
+    if (newValue.light) this.updateTag('light', newValue.light);
+    if (newValue.dark) this.updateTag('dark', newValue.dark);
+    if (this.dappContainer)
+      this.dappContainer.setTag(this.tag);
+    this.updateTheme();
+  }
+
+  private async getTag() {
     return this.tag;
   }
 
-  async setTag(value: any) {
-    this.tag = value || {};
+  private updateStyle(name: string, value: any) {
+    value ?
+      this.style.setProperty(name, value) :
+      this.style.removeProperty(name);
   }
 
-  getConfigSchema() {
-    return this.getThemeSchema();
+  private updateTheme() {
+    const themeVar = this.dappContainer?.theme || 'light';
+    this.updateStyle('--text-primary', this.tag[themeVar]?.fontColor);
+    this.updateStyle('--background-main', this.tag[themeVar]?.backgroundColor);
+    this.updateStyle('--input-font_color', this.tag[themeVar]?.inputFontColor);
+    this.updateStyle('--input-background', this.tag[themeVar]?.inputBackgroundColor);
   }
 
-  onConfigSave(config: any) {
-    this.tag = config;
+  private getActions() {
+    const propertiesSchema: IDataSchema = {
+      type: "object",
+      properties: {}
+    }
+
+    const themeSchema: IDataSchema = {
+      type: 'object',
+      properties: {
+        "dark": {
+          type: 'object',
+          properties: {
+            backgroundColor: {
+              type: 'string',
+              format: 'color'
+            },
+            fontColor: {
+              type: 'string',
+              format: 'color'
+            },
+            inputBackgroundColor: {
+              type: 'string',
+              format: 'color'
+            },
+            inputFontColor: {
+              type: 'string',
+              format: 'color'
+            }
+          }
+        },
+        "light": {
+          type: 'object',
+          properties: {
+            backgroundColor: {
+              type: 'string',
+              format: 'color'
+            },
+            fontColor: {
+              type: 'string',
+              format: 'color'
+            },
+            inputBackgroundColor: {
+              type: 'string',
+              format: 'color'
+            },
+            inputFontColor: {
+              type: 'string',
+              format: 'color'
+            }
+          }
+        }
+      }
+    }
+    return this._getActions(propertiesSchema, themeSchema);
   }
 
-  async edit() { }
-
-  async confirm() { }
-
-  async discard() { }
-
-  async config() { }
-
-  private getPropertiesSchema(readOnly?: boolean) {
-    return {}
-  }
-
-  private getThemeSchema(readOnly?: boolean) {
-    return {}
-  }
-
-  getEmbedderActions() {
-    return this._getActions(this.getPropertiesSchema(true), this.getThemeSchema(true));
-  }
-
-  getActions() {
-    return this._getActions(this.getPropertiesSchema(), this.getThemeSchema());
-  }
-
-  _getActions(propertiesSchema: IDataSchema, themeSchema: IDataSchema) {
+  private _getActions(propertiesSchema: IDataSchema, themeSchema: IDataSchema) {
     const actions = [
       {
         name: 'Settings',
@@ -122,16 +198,14 @@ export default class ScomDisperse extends Module implements PageBlock {
         command: (builder: any, userInputData: any) => {
           return {
             execute: async () => {
-              if (builder?.setData) {
-                builder.setData(userInputData);
-              }
-              this.setData(userInputData);
+              this._oldData = { ...this._data };
+              this.configDApp.data = this._data;
+              this.refreshUI();
             },
             undo: () => {
-              if (builder?.setData) {
-                builder.setData(this._oldData);
-              }
-              this.setData(this._oldData);
+              this._data = { ...this._oldData };
+              this.configDApp.data = this._data;
+              this.refreshUI();
             },
             redo: () => { }
           }
@@ -145,7 +219,7 @@ export default class ScomDisperse extends Module implements PageBlock {
           return {
             execute: async () => {
               if (!userInputData) return;
-              this.oldTag = { ...this.tag };
+              this.oldTag = JSON.parse(JSON.stringify(this.tag));
               this.setTag(userInputData);
               if (builder) builder.setTag(userInputData);
             },
@@ -161,6 +235,57 @@ export default class ScomDisperse extends Module implements PageBlock {
       }
     ]
     return actions
+  }
+
+  getConfigurators() {
+    let self = this;
+    return [
+      {
+        name: 'Builder Configurator',
+        target: 'Builders',
+        getActions: this.getActions.bind(this),
+        getData: this.getData.bind(this),
+        setData: this.setData.bind(this),
+        getTag: this.getTag.bind(this),
+        setTag: this.setTag.bind(this)
+      },
+      {
+        name: 'Emdedder Configurator',
+        target: 'Embedders',
+        elementName: 'i-scom-swap-config',
+        getLinkParams: () => {
+          const commissions = this._data.commissions || [];
+          return {
+            data: window.btoa(JSON.stringify(commissions))
+          }
+        },
+        setLinkParams: async (params: any) => {
+          if (params.data) {
+            const decodedString = window.atob(params.data);
+            const commissions = JSON.parse(decodedString);
+            let resultingData = {
+              ...self._data,
+              commissions
+            };
+            await this.setData(resultingData);
+          }
+        },
+        bindOnChanged: (element: Config, callback: (data: any) => Promise<void>) => {
+          element.onCustomCommissionsChanged = async (data: any) => {
+            let resultingData = {
+              ...self._data,
+              ...data
+            };
+            await this.setData(resultingData);
+            await callback(data);
+          }
+        },
+        getData: this.getData.bind(this),
+        setData: this.setData.bind(this),
+        getTag: this.getTag.bind(this),
+        setTag: this.setTag.bind(this)
+      }
+    ]
   }
 
   private DummyDisperseData(): DisperseData[] {
@@ -180,10 +305,14 @@ export default class ScomDisperse extends Module implements PageBlock {
     ]
   }
 
+  private async refreshUI() {
+    this.onLoad();
+  }
+
   constructor(parent?: Container, options?: any) {
     super(parent, options);
-    setDataFromSCConfig(scconfig);
-    setTokenStore();
+    setDataFromSCConfig(configData);
+    tokenStore.updateTokenMapData();
     this.$eventBus = application.EventBus;
     this.registerEvent();
   };
@@ -195,9 +324,8 @@ export default class ScomDisperse extends Module implements PageBlock {
   }
 
   private onWalletConnect = (connected: boolean) => {
+    this.setContainerData();
     this.checkStepStatus(connected);
-    this.updateNetworkBtn(connected);
-    this.updateUserInfo(connected);
   }
 
   private onChainChanged = () => {
@@ -205,12 +333,14 @@ export default class ScomDisperse extends Module implements PageBlock {
     this.onWalletConnect(isWalletConnected());
   }
 
-  private connectWallet = () => {
-    this.$eventBus.dispatch(EventId.ConnectWallet);
-  }
-
-  private changeNetwork = () => {
-    this.$eventBus.dispatch(EventId.ChangeNetwork);
+  private setContainerData = () => {
+    const data: IDisperseConfigUI = {
+      defaultChainId: this.defaultChainId,
+      wallets: this.wallets,
+      networks: this.networks,
+      showHeader: this.showHeader
+    }
+    if (this.dappContainer?.setData) this.dappContainer.setData(data);
   }
 
   get listAddresses() {
@@ -239,8 +369,40 @@ export default class ScomDisperse extends Module implements PageBlock {
     return new BigNumber(this.balance).minus(this.total);
   }
 
+  get defaultChainId() {
+    return this._data.defaultChainId;
+  }
+
+  set defaultChainId(value: number) {
+    this._data.defaultChainId = value;
+  }
+
+  get wallets() {
+    return this._data.wallets ?? [];
+  }
+
+  set wallets(value: IWalletPlugin[]) {
+    this._data.wallets = value;
+  }
+
+  get networks() {
+    return this._data.networks ?? [];
+  }
+
+  set networks(value: INetworkConfig[]) {
+    this._data.networks = value;
+  }
+
+  get showHeader() {
+    return this._data.showHeader ?? true;
+  }
+
+  set showHeader(value: boolean) {
+    this._data.showHeader = value;
+  }
+
   private checkStepStatus = (connected: boolean) => {
-    this.secondStepElm.enabled = connected;
+    this.firstStepElm.enabled = connected;
     this.tokenSelection.enabled = connected;
     this.tokenElm.enabled = connected;
     if (!connected) {
@@ -251,7 +413,7 @@ export default class ScomDisperse extends Module implements PageBlock {
   }
 
   private setThirdStatus = (enabled: boolean) => {
-    this.thirdStepElm.enabled = enabled;
+    this.secondStepElm.enabled = enabled;
     this.inputBatch.enabled = enabled;
     this.btnImport.enabled = enabled;
     this.setFourthStatus();
@@ -260,8 +422,8 @@ export default class ScomDisperse extends Module implements PageBlock {
   private setFourthStatus = async () => {
     if (isWalletConnected() && this.hasAddress) {
       this.btnDownload.enabled = true;
-      this.containerElm.minHeight = '1200px';
-      this.fourthStepElm.visible = true;
+      this.containerElm.minHeight = '1000px';
+      this.thirdStepElm.visible = true;
       const symbol = this.token?.symbol || '';
       this.addressesElm.clearInnerHTML();
       let countInvalid = 0;
@@ -294,64 +456,9 @@ export default class ScomDisperse extends Module implements PageBlock {
         this.getApprovalStatus();
       }
     } else {
-      this.containerElm.minHeight = '800px';
-      this.fourthStepElm.visible = false;
+      this.containerElm.minHeight = '600px';
+      this.thirdStepElm.visible = false;
       this.btnDownload.enabled = false;
-    }
-  }
-
-  private updateNetworkBtn = async (connected: boolean) => {
-    if (!connected) {
-      this.btnNetwork.clearInnerHTML();
-      this.btnNetwork.onClick = () => { };
-      this.btnNetwork.visible = false;
-      return;
-    }
-    const network = getNetworkInfo(Wallet.getClientInstance().chainId);
-    const hStack = await HStack.create({
-      verticalAlignment: 'center',
-      padding: { top: 12, bottom: 12, left: 24, right: 24 },
-    });
-    if (network?.image) {
-      const image = await Image.create({
-        width: '24px',
-        height: '24px',
-        url: network.image,
-        class: 'inline-block',
-      });
-      hStack.appendChild(image);
-    }
-    const label = await Label.create({
-      caption: network?.chainName || 'Unsupported Network',
-      font: { size: '15px' },
-      margin: { left: 4 },
-    });
-    hStack.appendChild(label);
-    this.btnNetwork.clearInnerHTML();
-    this.btnNetwork.appendChild(hStack);
-    this.btnNetwork.onClick = this.changeNetwork;
-    this.btnNetwork.visible = true;
-  }
-
-  private updateUserInfo = async (connected: boolean) => {
-    this.containerUserInfo.clearInnerHTML();
-    if (!connected) {
-      this.containerUserInfo.appendChild(<i-button
-        class="btn-os"
-        caption="Connect"
-        width={250}
-        maxWidth="100%"
-        border={{ radius: 12 }}
-        padding={{ top: 12, bottom: 12 }}
-        onClick={this.connectWallet}
-      />);
-    } else {
-      this.containerUserInfo.appendChild(
-        <i-vstack gap={16}>
-          <i-label caption="LOGGED IN AS" font={{ size: '16px', name: 'Montserrat', bold: true }} />
-          <i-label display="block" caption={Wallet.getClientInstance().address} font={{ size: '16px', name: 'Montserrat Medium' }} class="break-word" />
-        </i-vstack>
-      );
     }
   }
 
@@ -359,9 +466,9 @@ export default class ScomDisperse extends Module implements PageBlock {
     this.token = token;
     this.tokenInfoElm.clearInnerHTML();
     if (token) {
-      const img = Assets.fullPath(getTokenIconPath(token, Wallet.getClientInstance().chainId));
+      const img = tokenAssets.tokenPath(token, Wallet.getClientInstance().chainId);
       this.tokenInfoElm.appendChild(<i-hstack gap="16px" verticalAlignment="center">
-        <i-image width={40} height={40} url={img} />
+        <i-image width={40} height={40} minWidth={30} url={img} />
         <i-label caption={`$${token.symbol}`} font={{ size: '20px', name: 'Montserrat Medium' }} />
         <i-label caption={token.address || token.symbol} font={{ size: '16px', name: 'Montserrat Medium' }} class="break-word" />
       </i-hstack>);
@@ -554,9 +661,9 @@ export default class ScomDisperse extends Module implements PageBlock {
 
     const confirmationCallBackActions = async () => {
       this.btnApprove.rightIcon.visible = false;
-      this.btnApprove.enabled = false;
-      this.btnApprove.caption = 'Approved';
-      this.btnDisperse.enabled = this.remaining.gte(0);
+      await this.getApprovalStatus();
+      this.btnApprove.caption = this.btnApprove.enabled ? 'Approve' : 'Approved';
+      this.btnDisperse.enabled = !this.btnApprove.enabled && this.remaining.gte(0);
       this.setEnabledStatus(true);
     };
 
@@ -613,16 +720,16 @@ export default class ScomDisperse extends Module implements PageBlock {
   }
 
   private renderResult = (token: ITokenObject, data: RenderResultData) => {
-    const img = Assets.fullPath(getTokenIconPath(token, Wallet.getClientInstance().chainId));
+    const img = tokenAssets.tokenPath(token, Wallet.getClientInstance().chainId);
     const chainId = Wallet.getClientInstance().chainId;
     this.resultElm.clearInnerHTML();
     this.resultElm.appendChild(
       <i-vstack gap={50} horizontalAlignment="center">
-        <i-label caption="🎉 Disperse Successful! 🎉" font={{ size: '48px', name: 'Montserrat', bold: true }} />
+        <i-label caption="🎉 Disperse Successful! 🎉" class="text-center" font={{ size: '48px', name: 'Montserrat', bold: true }} />
         <i-vstack gap={16} width={750} maxWidth="100%" horizontalAlignment="center">
           <i-label caption="Token" font={{ size: '24px', name: 'Montserrat Medium' }} />
           <i-hstack width="100%" verticalAlignment="center" horizontalAlignment="center" gap={16} padding={{ top: 20, bottom: 20, left: 60, right: 60 }} border={{ radius: 15, style: 'solid', width: 4, color: '#9C9C9C' }}>
-            <i-image width={40} height={40} url={img} />
+            <i-image width={40} height={40} minWidth={30} url={img} />
             <i-label caption={`$${token.symbol}`} font={{ size: '20px', name: 'Montserrat Medium' }} />
             <i-label class="text-overflow" caption={token.address || token.symbol} font={{ size: '16px', name: 'Montserrat Medium' }} />
           </i-hstack>
@@ -634,7 +741,7 @@ export default class ScomDisperse extends Module implements PageBlock {
             <i-icon class="link-icon" name="external-link-alt" width={20} height={20} fill="#fff" />
           </i-hstack>
         </i-vstack>
-        <i-hstack gap={30} maxWidth="100%" horizontalAlignment="center" verticalAlignment="center">
+        <i-hstack gap={30} maxWidth="100%" horizontalAlignment="center" verticalAlignment="center" wrap="wrap">
           <i-button caption="DOWNLOAD CSV" background={{ color: "#34343A" }} width={270} border={{ radius: 12 }} padding={{ top: 12, bottom: 12 }} onClick={() => this.onDownloadFile(true)} />
           <i-button caption="DOWNLOAD REPORT" background={{ color: 'transparent linear-gradient(270deg, #FF9900 0%, #FC7428 100%) 0% 0% no-repeat padding-box' }} width={270} border={{ radius: 12 }} padding={{ top: 12, bottom: 12 }} onClick={() => this.onDownloadReport({ symbol: token.symbol, ...data })} />
           <i-button caption="DISPERSE AGAIN" background={{ color: 'linear-gradient(90deg, #456ED7 0%, #67BBBB 99.97%)' }} width={270} border={{ radius: 12 }} padding={{ top: 12, bottom: 12 }} onClick={this.onDisperseAgain} />
@@ -651,145 +758,149 @@ export default class ScomDisperse extends Module implements PageBlock {
     this.resetData();
   }
 
-  init() {
+  async init() {
+    this.isReadyCallbackQueued = true;
     super.init();
     this.loadLib();
     this.classList.add(disperseLayout);
     const connected = isWalletConnected();
     this.checkStepStatus(connected);
-    this.updateNetworkBtn(connected);
-    this.updateUserInfo(connected);
     this.tokenSelection.isTokenShown = false;
     this.tokenSelection.isCommonShown = true;
     this.tokenSelection.onSelectToken = this.onSelectToken;
     this.tokenElm.onClick = () => this.tokenSelection.showModal();
     this.initInputFile();
+    const commissions = this.getAttribute('commissions', true, []);
+    const defaultChainId = this.getAttribute('defaultChainId', true);
+    const networks = this.getAttribute('networks', true);
+    const wallets = this.getAttribute('wallets', true);
+    const showHeader = this.getAttribute('showHeader', true);
+    await this.setData({ commissions, defaultChainId, networks, wallets, showHeader });
+    if (!isWalletConnected()) {
+      this.mdWallet.showModal();
+    }
+    this.setContainerData();
+    this.isReadyCallbackQueued = false;
+    this.executeReadyCallback();
   }
 
   render() {
     return (
-      <i-panel class={`template-layout ${disperseStyle}`}>
-        <i-modal id="messageModal" class="bg-modal">
-          <i-label id="messageElm" />
-        </i-modal>
-        <i-panel class="container-layout">
-          <i-image url={Assets.fullPath('img/disperse-banner.png')} />
-          <i-vstack id="containerElm" position="relative" margin={{ top: 50 }} minHeight={800}>
-            <i-hstack id="firstStepElm" class="step-elm" minHeight={200} padding={{ left: 50, right: 50 }} border={{ radius: 30 }} verticalAlignment="center" horizontalAlignment="space-between" background={{ color: '#000' }}>
-              <i-hstack verticalAlignment="center" gap={15} margin={{ right: 100 }}>
-                <i-label caption="STEP 1" font={{ size: '20px', name: 'Montserrat SemiBold', color: '#F29224' }} />
-                <i-label caption="Connect Wallet" font={{ size: '20px', name: 'Montserrat SemiBold' }} />
-              </i-hstack>
-              <i-button
-                visible={false}
-                id="btnNetwork"
-                background={{ color: '#222237' }}
-                border={{ radius: 12, width: 2, style: 'solid', color: '#FFB82F' }}
-                margin={{ right: 100 }}
-              />
-              <i-vstack id="containerUserInfo" />
-            </i-hstack>
-            <i-hstack id="secondStepElm" class="step-elm" minHeight={200} margin={{ top: 40 }} padding={{ left: 50, right: 50 }} border={{ radius: 30 }} verticalAlignment="center" horizontalAlignment="space-between" background={{ color: '#000' }}>
-              <i-hstack class="step-2" verticalAlignment="center" gap={15} margin={{ right: 100 }}>
-                <i-label caption="STEP 2" font={{ size: '20px', name: 'Montserrat SemiBold', color: '#F29224' }} />
-                <i-label caption="Enter Token to Disperse" font={{ size: '20px', name: 'Montserrat SemiBold' }} />
-              </i-hstack>
-              <i-hstack class="step-2" width="calc(100% - 470px)">
-                <i-hstack id="tokenElm" width="100%" wrap="nowrap" verticalAlignment="center" horizontalAlignment="space-between" padding={{ top: 20, bottom: 20, left: 60, right: 60 }} border={{ radius: 15, style: 'solid', width: 4 }}>
-                  <i-hstack id="tokenInfoElm">
-                    <i-label caption="Please Select Token" font={{ size: '16px', color: '#A8A8A8', name: 'Montserrat Medium' }} />
-                  </i-hstack>
-                  <i-icon name="caret-down" fill={'#F29224'} width={24} height={24} />
+      <i-scom-dapp-container id="dappContainer">
+        <i-panel class={`template-layout ${disperseStyle}`}>
+          <i-modal id="messageModal" class="bg-modal">
+            <i-label id="messageElm" />
+          </i-modal>
+          <i-panel class="container-layout">
+            <i-vstack id="containerElm" position="relative" minHeight={600}>
+              <i-hstack id="firstStepElm" class="step-elm" minHeight={200} margin={{ top: 40 }} padding={{ left: 50, right: 50, top: 10, bottom: 10 }} border={{ radius: 30 }} verticalAlignment="center" horizontalAlignment="space-between" background={{ color: '#000' }}>
+                <i-hstack class="step-1" verticalAlignment="center" wrap="wrap" gap={15} margin={{ right: 100 }}>
+                  <i-label caption="STEP 1" font={{ size: '20px', name: 'Montserrat SemiBold', color: '#F29224' }} />
+                  <i-label caption="Enter Token to Disperse" font={{ size: '20px', name: 'Montserrat SemiBold' }} />
                 </i-hstack>
-                <token-selection id="tokenSelection" />
-              </i-hstack>
-            </i-hstack>
-            <i-vstack id="thirdStepElm" class="step-elm" minHeight={300} margin={{ top: 40 }} padding={{ left: 50, right: 50 }} border={{ radius: 30 }} verticalAlignment="center" background={{ color: '#000' }}>
-              <i-hstack width="100%" verticalAlignment="center" horizontalAlignment="space-between" gap={15}>
-                <i-hstack verticalAlignment="center" gap={15} margin={{ right: 15 }}>
-                  <i-label caption="STEP 3" font={{ size: '20px', name: 'Montserrat SemiBold', color: '#F29224' }} />
-                  <i-label caption="Enter Recipients and Amounts" font={{ size: '20px', name: 'Montserrat SemiBold' }} margin={{ right: 60 }} />
-                  <i-label caption="Enter one address and amount on each line. Supports any format." font={{ size: '13px', name: 'Montserrat Medium' }} maxWidth="280px" class="break-word" />
-                </i-hstack>
-                <i-hstack verticalAlignment="center" class="ml-auto" gap={15}>
-                  <i-button id="btnDownload" caption="Download CSV" enabled={false} class="csv-button" onClick={() => this.onDownloadFile()} />
-                  <i-button id="btnImport" caption="Import CSV" enabled={false} class="csv-button" onClick={this.onImportFile} />
-                  <i-label id="importFileElm" visible={false} />
-                </i-hstack>
-              </i-hstack>
-              <i-label id="importWarning" caption="" font={{ size: '13px', name: 'Montserrat Medium' }} />
-              <i-input id="inputBatch" height="auto" enabled={false} placeholder={disperseDataToString(this.DummyDisperseData())} class="input-batch custom-scroll" width="100%" inputType="textarea" rows={4} margin={{ top: 30 }} onChanged={this.onInputBatch} />
-            </i-vstack>
-            <i-hstack id="fourthStepElm" class="step-elm" minHeight={240} margin={{ top: 40 }}>
-              <i-vstack width="100%">
-                <i-hstack verticalAlignment="center" horizontalAlignment="space-between" background={{ color: "#34343A" }} border={{ radius: 30 }}>
-                  <i-vstack class="step-4" background={{ color: '#000' }} width={800} height="100%" padding={{ top: 50, bottom: 21, left: 50, right: 50 }} gap={15} border={{ radius: 30 }}>
-                    <i-hstack width="100%" verticalAlignment="center" gap={15}>
-                      <i-label caption="STEP 4" font={{ size: '20px', name: 'Montserrat SemiBold', color: '#F29224' }} />
-                      <i-label caption="Confirm Disperse" font={{ size: '20px', name: 'Montserrat SemiBold' }} />
+                <i-hstack class="step-1">
+                  <i-hstack id="tokenElm" width="100%" wrap="nowrap" verticalAlignment="center" horizontalAlignment="space-between" padding={{ top: 20, bottom: 20, left: 60, right: 60 }} border={{ radius: 15, style: 'solid', width: 4 }}>
+                    <i-hstack id="tokenInfoElm">
+                      <i-label caption="Please Select Token" font={{ size: '16px', color: '#A8A8A8', name: 'Montserrat Medium' }} />
                     </i-hstack>
-                    <i-vstack width="100%" verticalAlignment="center" gap={10} class="custom-scroll">
-                      <i-label id="invalidElm" font={{ size: '18px', color: '#F05E61' }} />
-                      <i-vstack gap={10} class="address-elm">
-                        <i-hstack width="100%" verticalAlignment="center" gap={30}>
-                          <i-vstack width={450}>
-                            <i-label caption="Addresses" font={{ size: '16px', name: 'Montserrat Medium' }} />
+                    <i-icon name="caret-down" fill={'#F29224'} width={24} height={24} />
+                  </i-hstack>
+                  <token-selection id="tokenSelection" />
+                </i-hstack>
+              </i-hstack>
+              <i-vstack id="secondStepElm" class="step-elm" minHeight={300} margin={{ top: 40 }} padding={{ left: 50, right: 50, top: 10, bottom: 10 }} border={{ radius: 30 }} verticalAlignment="center" background={{ color: '#000' }}>
+                <i-hstack width="100%" verticalAlignment="center" horizontalAlignment="space-between" wrap="wrap" gap={15}>
+                  <i-hstack verticalAlignment="center" wrap="wrap" gap={15} margin={{ right: 15 }}>
+                    <i-label caption="STEP 2" font={{ size: '20px', name: 'Montserrat SemiBold', color: '#F29224' }} />
+                    <i-label caption="Enter Recipients and Amounts" font={{ size: '20px', name: 'Montserrat SemiBold' }} margin={{ right: 60 }} />
+                    <i-label caption="Enter one address and amount on each line. Supports any format." font={{ size: '13px', name: 'Montserrat Medium' }} maxWidth="280px" class="break-word" />
+                  </i-hstack>
+                  <i-hstack verticalAlignment="center" wrap="wrap" class="ml-auto" horizontalAlignment="end" gap={15}>
+                    <i-button id="btnDownload" caption="Download CSV" enabled={false} class="csv-button" onClick={() => this.onDownloadFile()} />
+                    <i-button id="btnImport" caption="Import CSV" enabled={false} class="csv-button" onClick={this.onImportFile} />
+                    <i-label id="importFileElm" visible={false} />
+                  </i-hstack>
+                </i-hstack>
+                <i-label id="importWarning" caption="" font={{ size: '13px', name: 'Montserrat Medium' }} />
+                <i-input id="inputBatch" height="auto" enabled={false} placeholder={disperseDataToString(this.DummyDisperseData())} class="input-batch custom-scroll" width="100%" inputType="textarea" rows={4} margin={{ top: 30 }} onChanged={this.onInputBatch} />
+              </i-vstack>
+              <i-hstack id="thirdStepElm" class="step-elm" minHeight={240} margin={{ top: 40 }}>
+                <i-vstack width="100%">
+                  <i-hstack verticalAlignment="center" horizontalAlignment="space-between" wrap="wrap" background={{ color: "#34343A" }} border={{ radius: 30 }}>
+                    <i-vstack class="step-3" background={{ color: '#000' }} width={800} padding={{ top: 50, bottom: 21, left: 50, right: 50 }} gap={15} border={{ radius: 30 }}>
+                      <i-hstack width="100%" verticalAlignment="center" gap={15}>
+                        <i-label caption="STEP 3" font={{ size: '20px', name: 'Montserrat SemiBold', color: '#F29224' }} />
+                        <i-label caption="Confirm Disperse" font={{ size: '20px', name: 'Montserrat SemiBold' }} />
+                      </i-hstack>
+                      <i-vstack width="100%" verticalAlignment="center" gap={10} class="custom-scroll">
+                        <i-label id="invalidElm" font={{ size: '18px', color: '#F05E61' }} />
+                        <i-vstack gap={10} class="address-elm">
+                          <i-hstack width="100%" verticalAlignment="center" gap={30}>
+                            <i-vstack width={450}>
+                              <i-label caption="Addresses" font={{ size: '16px', name: 'Montserrat Medium' }} />
+                            </i-vstack>
+                            <i-label caption="Amount" font={{ size: '16px', name: 'Montserrat Medium' }} />
+                          </i-hstack>
+                          <i-vstack width="100%" height={100} class="overflow-auto" padding={{ right: 5 }}>
+                            <i-vstack id="addressesElm" width="100%" height="100%" verticalAlignment="start" gap={4} />
                           </i-vstack>
-                          <i-label caption="Amount" font={{ size: '16px', name: 'Montserrat Medium' }} />
-                        </i-hstack>
-                        <i-vstack width="100%" height={100} class="overflow-auto" padding={{ right: 5 }}>
-                          <i-vstack id="addressesElm" width="100%" height="100%" verticalAlignment="start" gap={4} />
                         </i-vstack>
                       </i-vstack>
                     </i-vstack>
-                  </i-vstack>
-                  <i-vstack class="step-4" width={500} height="100%" verticalAlignment="center" gap={20} padding={{ left: 30, right: 50 }}>
-                    <i-hstack verticalAlignment="center" horizontalAlignment="space-between">
-                      <i-label caption="Total" font={{ size: '20px', name: 'Montserrat SemiBold' }} />
-                      <i-label id="totalElm" class="text-right ml-auto" font={{ size: '20px', name: 'Montserrat SemiBold', color: '#C7C7C7' }} />
-                    </i-hstack>
-                    <i-hstack verticalAlignment="center" horizontalAlignment="space-between">
-                      <i-label caption="Your Balance" font={{ size: '20px', name: 'Montserrat SemiBold' }} />
-                      <i-label id="balanceElm" class="text-right ml-auto" font={{ size: '20px', name: 'Montserrat SemiBold', color: '#C7C7C7' }} />
-                    </i-hstack>
-                    <i-hstack verticalAlignment="center" horizontalAlignment="space-between">
-                      <i-label caption="Remaining" font={{ size: '20px', name: 'Montserrat SemiBold' }} />
-                      <i-label id="remainingElm" class="text-right ml-auto" font={{ size: '20px', name: 'Montserrat SemiBold', color: '#C7C7C7' }} />
-                    </i-hstack>
-                  </i-vstack>
-                </i-hstack>
-                <i-hstack verticalAlignment="center" horizontalAlignment="center" margin={{ top: 60 }} gap={30}>
-                  <i-button
-                    id="btnApprove"
-                    caption="Approve"
-                    class="btn-os"
-                    width={300}
-                    enabled={false}
-                    rightIcon={{ spin: true, visible: false }}
-                    border={{ radius: 12 }}
-                    padding={{ top: 12, bottom: 12 }}
-                    onClick={this.handleApprove}
-                  />
-                  <i-button
-                    id="btnDisperse"
-                    caption="Disperse"
-                    class="btn-os"
-                    width={300}
-                    enabled={false}
-                    rightIcon={{ spin: true, visible: false }}
-                    border={{ radius: 12 }}
-                    padding={{ top: 12, bottom: 12 }}
-                    onClick={this.handleDisperse}
-                  />
-                </i-hstack>
-              </i-vstack>
-            </i-hstack>
-          </i-vstack>
-          <i-panel id="resultElm" visible={false} margin={{ top: 75, bottom: 100 }} />
+                    <i-vstack class="step-3" width={500} maxWidth="100%" verticalAlignment="center" gap={20} padding={{ left: 30, right: 50 }}>
+                      <i-hstack verticalAlignment="center" horizontalAlignment="space-between" wrap="wrap">
+                        <i-label caption="Total" font={{ size: '20px', name: 'Montserrat SemiBold' }} />
+                        <i-label id="totalElm" class="text-right ml-auto" font={{ size: '20px', name: 'Montserrat SemiBold', color: '#C7C7C7' }} />
+                      </i-hstack>
+                      <i-hstack verticalAlignment="center" horizontalAlignment="space-between" wrap="wrap">
+                        <i-label caption="Your Balance" font={{ size: '20px', name: 'Montserrat SemiBold' }} />
+                        <i-label id="balanceElm" class="text-right ml-auto" font={{ size: '20px', name: 'Montserrat SemiBold', color: '#C7C7C7' }} />
+                      </i-hstack>
+                      <i-hstack verticalAlignment="center" horizontalAlignment="space-between" wrap="wrap">
+                        <i-label caption="Remaining" font={{ size: '20px', name: 'Montserrat SemiBold' }} />
+                        <i-label id="remainingElm" class="text-right ml-auto" font={{ size: '20px', name: 'Montserrat SemiBold', color: '#C7C7C7' }} />
+                      </i-hstack>
+                    </i-vstack>
+                  </i-hstack>
+                  <i-hstack verticalAlignment="center" horizontalAlignment="center" margin={{ top: 60 }} gap={30}>
+                    <i-button
+                      id="btnApprove"
+                      caption="Approve"
+                      class="btn-os"
+                      width={300}
+                      maxWidth="100%"
+                      enabled={false}
+                      rightIcon={{ spin: true, visible: false }}
+                      border={{ radius: 12 }}
+                      padding={{ top: 12, bottom: 12 }}
+                      onClick={this.handleApprove}
+                    />
+                    <i-button
+                      id="btnDisperse"
+                      caption="Disperse"
+                      class="btn-os"
+                      width={300}
+                      maxWidth="100%"
+                      enabled={false}
+                      rightIcon={{ spin: true, visible: false }}
+                      border={{ radius: 12 }}
+                      padding={{ top: 12, bottom: 12 }}
+                      onClick={this.handleDisperse}
+                    />
+                  </i-hstack>
+                </i-vstack>
+              </i-hstack>
+            </i-vstack>
+            <i-panel id="resultElm" visible={false} margin={{ top: 75, bottom: 100 }} />
+          </i-panel>
+          <disperse-result id="disperseResult" />
+          <i-scom-disperse-config id="configDApp" visible={false} />
+          <i-scom-wallet-modal
+            id="mdWallet"
+            wallets={[]}
+          />
         </i-panel>
-        <disperse-result id="disperseResult" />
-        <disperse-wallet />
-      </i-panel>
+      </i-scom-dapp-container>
     )
   }
 }
