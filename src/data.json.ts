@@ -27,5 +27,21 @@ export default {
     "43113": "0x7f1EAB0db83c02263539E3bFf99b638E61916B96"
   },
   "ipfsGatewayUrl": "https://ipfs.scom.dev/ipfs/",
-  "embedderCommissionFee": "0.01"
+  "embedderCommissionFee": "0.01",
+  "defaultBuilderData": {
+    "defaultChainId": 43113,
+    "networks": [
+      {
+        "chainId": 43113
+      },
+      {
+        "chainId": 97
+      }
+    ],
+    "wallets": [
+      {
+        "name": "metamask"
+      }
+    ]
+  }
 }

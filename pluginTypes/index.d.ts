@@ -10240,13 +10240,22 @@ declare module "@scom/scom-disperse/data.json.ts" {
         };
         ipfsGatewayUrl: string;
         embedderCommissionFee: string;
+        defaultBuilderData: {
+            defaultChainId: number;
+            networks: {
+                chainId: number;
+            }[];
+            wallets: {
+                name: string;
+            }[];
+        };
     };
     export default _default_52;
 }
 /// <amd-module name="@scom/scom-disperse" />
 declare module "@scom/scom-disperse" {
     import { Container, Module, ControlElement } from '@ijstech/components';
-    import { DisperseData, INetworkConfig } from "@scom/scom-disperse/global/index.ts";
+    import { DisperseData, IDisperseConfigUI, INetworkConfig } from "@scom/scom-disperse/global/index.ts";
     import { BigNumber } from '@ijstech/eth-wallet';
     import Config from "@scom/scom-disperse/config/index.tsx";
     import { IWalletPlugin } from '@scom/scom-wallet-modal';
@@ -10293,9 +10302,7 @@ declare module "@scom/scom-disperse" {
         private configDApp;
         private mdWallet;
         private dappContainer;
-        private _oldData;
         private _data;
-        private oldTag;
         tag: any;
         defaultEdit: boolean;
         readonly onConfirm: () => Promise<void>;
@@ -10315,7 +10322,7 @@ declare module "@scom/scom-disperse" {
             target: string;
             getActions: any;
             getData: any;
-            setData: any;
+            setData: (data: IDisperseConfigUI) => Promise<void>;
             getTag: any;
             setTag: any;
             elementName?: undefined;
