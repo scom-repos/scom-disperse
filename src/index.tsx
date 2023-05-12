@@ -67,17 +67,11 @@ export default class ScomDisperse extends Module {
   private mdWallet: ScomWalletModal;
   private dappContainer: ScomDappContainer;
 
-  private _oldData: IDisperseConfigUI = {
-    defaultChainId: 0,
-    wallets: [],
-    networks: []
-  };
   private _data: IDisperseConfigUI = {
     defaultChainId: 0,
     wallets: [],
     networks: []
   };
-  private oldTag: any = {};
   tag: any = {};
   defaultEdit: boolean = true;
   readonly onConfirm: () => Promise<void>;
@@ -89,7 +83,6 @@ export default class ScomDisperse extends Module {
   }
 
   private async setData(data: IDisperseConfigUI) {
-    this._data = data;
     this.configDApp.data = data;
     this._data = data;
     await this.refreshUI();
@@ -109,10 +102,15 @@ export default class ScomDisperse extends Module {
 
   private async setTag(value: any) {
     const newValue = value || {};
-    if (newValue.light) this.updateTag('light', newValue.light);
-    if (newValue.dark) this.updateTag('dark', newValue.dark);
-    if (this.dappContainer)
-      this.dappContainer.setTag(this.tag);
+    for (let prop in newValue) {
+      if (newValue.hasOwnProperty(prop)) {
+        if (prop === 'light' || prop === 'dark')
+          this.updateTag(prop, newValue[prop]);
+        else
+          this.tag[prop] = newValue[prop];
+      }
+    }
+    if (this.dappContainer) this.dappContainer.setTag(this.tag);
     this.updateTheme();
   }
 
@@ -196,14 +194,19 @@ export default class ScomDisperse extends Module {
         name: 'Settings',
         icon: 'cog',
         command: (builder: any, userInputData: any) => {
+          let _oldData: IDisperseConfigUI = {
+            defaultChainId: 0,
+            wallets: [],
+            networks: []
+          };
           return {
             execute: async () => {
-              this._oldData = { ...this._data };
+              _oldData = { ...this._data };
               this.configDApp.data = this._data;
               this.refreshUI();
             },
             undo: () => {
-              this._data = { ...this._oldData };
+              this._data = { ..._oldData };
               this.configDApp.data = this._data;
               this.refreshUI();
             },
@@ -216,17 +219,21 @@ export default class ScomDisperse extends Module {
         name: 'Theme Settings',
         icon: 'palette',
         command: (builder: any, userInputData: any) => {
+          let oldTag = {};
           return {
             execute: async () => {
               if (!userInputData) return;
-              this.oldTag = JSON.parse(JSON.stringify(this.tag));
-              this.setTag(userInputData);
+              oldTag = JSON.parse(JSON.stringify(this.tag));
               if (builder) builder.setTag(userInputData);
+              else this.setTag(userInputData);
+              if (this.dappContainer) this.dappContainer.setTag(userInputData);
             },
             undo: () => {
               if (!userInputData) return;
-              this.setTag(this.oldTag);
-              if (builder) builder.setTag(this.oldTag);
+              this.tag = JSON.parse(JSON.stringify(oldTag));
+              if (builder) builder.setTag(this.tag);
+              else this.setTag(this.tag);
+              if (this.dappContainer) this.dappContainer.setTag(this.tag);
             },
             redo: () => { }
           }
@@ -245,7 +252,11 @@ export default class ScomDisperse extends Module {
         target: 'Builders',
         getActions: this.getActions.bind(this),
         getData: this.getData.bind(this),
-        setData: this.setData.bind(this),
+        setData: async (data: IDisperseConfigUI) => {
+          const defaultData = configData.defaultBuilderData;
+          await this.setData({...defaultData, ...data});
+          this.setContainerData();
+        },
         getTag: this.getTag.bind(this),
         setTag: this.setTag.bind(this)
       },

@@ -15955,7 +15955,23 @@ define("@scom/scom-disperse/data.json.ts", ["require", "exports"], function (req
             "43113": "0x7f1EAB0db83c02263539E3bFf99b638E61916B96"
         },
         "ipfsGatewayUrl": "https://ipfs.scom.dev/ipfs/",
-        "embedderCommissionFee": "0.01"
+        "embedderCommissionFee": "0.01",
+        "defaultBuilderData": {
+            "defaultChainId": 43113,
+            "networks": [
+                {
+                    "chainId": 43113
+                },
+                {
+                    "chainId": 97
+                }
+            ],
+            "wallets": [
+                {
+                    "name": "metamask"
+                }
+            ]
+        }
     };
 });
 define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@scom/scom-disperse/global/index.ts", "@scom/scom-disperse/store/index.ts", "@ijstech/eth-wallet", "@scom/scom-disperse/disperse-utils/index.ts", "@scom/scom-disperse/assets.ts", "@scom/scom-disperse/disperse.css.ts", "@scom/scom-disperse/index.css.ts", "@scom/scom-token-list", "@scom/scom-disperse/data.json.ts"], function (require, exports, components_13, index_20, index_21, eth_wallet_8, index_22, assets_4, disperse_css_1, index_css_2, scom_token_list_5, data_json_1) {
@@ -15966,17 +15982,11 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
         constructor(parent, options) {
             super(parent, options);
             this.resultAddresses = [];
-            this._oldData = {
-                defaultChainId: 0,
-                wallets: [],
-                networks: []
-            };
             this._data = {
                 defaultChainId: 0,
                 wallets: [],
                 networks: []
             };
-            this.oldTag = {};
             this.tag = {};
             this.defaultEdit = true;
             this.registerEvent = () => {
@@ -16332,7 +16342,6 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
             return this._data;
         }
         async setData(data) {
-            this._data = data;
             this.configDApp.data = data;
             this._data = data;
             await this.refreshUI();
@@ -16351,10 +16360,14 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
         }
         async setTag(value) {
             const newValue = value || {};
-            if (newValue.light)
-                this.updateTag('light', newValue.light);
-            if (newValue.dark)
-                this.updateTag('dark', newValue.dark);
+            for (let prop in newValue) {
+                if (newValue.hasOwnProperty(prop)) {
+                    if (prop === 'light' || prop === 'dark')
+                        this.updateTag(prop, newValue[prop]);
+                    else
+                        this.tag[prop] = newValue[prop];
+                }
+            }
             if (this.dappContainer)
                 this.dappContainer.setTag(this.tag);
             this.updateTheme();
@@ -16435,14 +16448,19 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                     name: 'Settings',
                     icon: 'cog',
                     command: (builder, userInputData) => {
+                        let _oldData = {
+                            defaultChainId: 0,
+                            wallets: [],
+                            networks: []
+                        };
                         return {
                             execute: async () => {
-                                this._oldData = Object.assign({}, this._data);
+                                _oldData = Object.assign({}, this._data);
                                 this.configDApp.data = this._data;
                                 this.refreshUI();
                             },
                             undo: () => {
-                                this._data = Object.assign({}, this._oldData);
+                                this._data = Object.assign({}, _oldData);
                                 this.configDApp.data = this._data;
                                 this.refreshUI();
                             },
@@ -16455,21 +16473,29 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                     name: 'Theme Settings',
                     icon: 'palette',
                     command: (builder, userInputData) => {
+                        let oldTag = {};
                         return {
                             execute: async () => {
                                 if (!userInputData)
                                     return;
-                                this.oldTag = JSON.parse(JSON.stringify(this.tag));
-                                this.setTag(userInputData);
+                                oldTag = JSON.parse(JSON.stringify(this.tag));
                                 if (builder)
                                     builder.setTag(userInputData);
+                                else
+                                    this.setTag(userInputData);
+                                if (this.dappContainer)
+                                    this.dappContainer.setTag(userInputData);
                             },
                             undo: () => {
                                 if (!userInputData)
                                     return;
-                                this.setTag(this.oldTag);
+                                this.tag = JSON.parse(JSON.stringify(oldTag));
                                 if (builder)
-                                    builder.setTag(this.oldTag);
+                                    builder.setTag(this.tag);
+                                else
+                                    this.setTag(this.tag);
+                                if (this.dappContainer)
+                                    this.dappContainer.setTag(this.tag);
                             },
                             redo: () => { }
                         };
@@ -16487,7 +16513,11 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                     target: 'Builders',
                     getActions: this.getActions.bind(this),
                     getData: this.getData.bind(this),
-                    setData: this.setData.bind(this),
+                    setData: async (data) => {
+                        const defaultData = data_json_1.default.defaultBuilderData;
+                        await this.setData(Object.assign(Object.assign({}, defaultData), data));
+                        this.setContainerData();
+                    },
                     getTag: this.getTag.bind(this),
                     setTag: this.setTag.bind(this)
                 },
