@@ -787,9 +787,6 @@ export default class ScomDisperse extends Module {
     const wallets = this.getAttribute('wallets', true);
     const showHeader = this.getAttribute('showHeader', true);
     await this.setData({ commissions, defaultChainId, networks, wallets, showHeader });
-    if (!isWalletConnected()) {
-      this.mdWallet.showModal();
-    }
     this.setContainerData();
     this.isReadyCallbackQueued = false;
     this.executeReadyCallback();

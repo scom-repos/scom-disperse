@@ -16650,9 +16650,6 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
             const wallets = this.getAttribute('wallets', true);
             const showHeader = this.getAttribute('showHeader', true);
             await this.setData({ commissions, defaultChainId, networks, wallets, showHeader });
-            if (!index_21.isWalletConnected()) {
-                this.mdWallet.showModal();
-            }
             this.setContainerData();
             this.isReadyCallbackQueued = false;
             this.executeReadyCallback();
