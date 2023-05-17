@@ -28,6 +28,6 @@
     "@ijstech/cli": "^0.1.28",
     "@ijstech/compiler": "^0.1.22",
     "@scom/oswap-openswap-contract": "^0.1.2",
-    "@scom/scom-disperse-contract": "file:./repos/scom-disperse-contract"
+    "@scom/scom-disperse-contract": "^0.1.0"
   }
 }
