@@ -15698,6 +15698,7 @@ define("@scom/scom-disperse/config/index.tsx", ["require", "exports", "@ijstech/
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     const Theme = components_12.Styles.Theme.ThemeVars;
+    const CommissionFeeTooltipText = "For each transaction, you'll receive a 1% commission fee based on the total amount. This fee will be transferred to a designated commission contract within the corresponding blockchain network.";
     let Config = class Config extends components_12.Module {
         constructor() {
             super(...arguments);
@@ -15799,9 +15800,12 @@ define("@scom/scom-disperse/config/index.tsx", ["require", "exports", "@ijstech/
         }
         async init() {
             super.init();
-            this.commissionInfoList = [];
             const embedderFee = index_18.getEmbedderCommissionFee();
             this.lbCommissionShare.caption = `${index_19.formatNumber(new eth_wallet_7.BigNumber(embedderFee).times(100).toFixed(), 4)} %`;
+            const commissions = this.getAttribute('commissions', true, []);
+            this.commissionInfoList = commissions;
+            this.tableCommissions.data = commissions;
+            this.toggleVisible();
         }
         get data() {
             const config = {};
@@ -15891,7 +15895,7 @@ define("@scom/scom-disperse/config/index.tsx", ["require", "exports", "@ijstech/
                         this.$render("i-hstack", { gap: "4px" },
                             this.$render("i-label", { caption: "Commission Fee: ", opacity: 0.6, font: { size: '1rem' } }),
                             this.$render("i-label", { id: "lbCommissionShare", font: { size: '1rem' } }),
-                            this.$render("i-icon", { name: "question-circle", fill: Theme.background.modal, width: 20, height: 20 })),
+                            this.$render("i-icon", { name: "question-circle", fill: Theme.background.modal, width: 20, height: 20, tooltip: { content: CommissionFeeTooltipText } })),
                         this.$render("i-button", { id: "btnAddWallet", caption: "Add Wallet", border: { radius: '58px' }, padding: { top: '0.3rem', bottom: '0.3rem', left: '1rem', right: '1rem' }, background: { color: Theme.colors.primary.main }, font: { color: Theme.colors.primary.contrastText, size: '0.75rem', weight: 400 }, visible: false, onClick: this.onAddCommissionClicked.bind(this) })),
                     this.$render("i-vstack", { id: "pnlEmptyWallet", border: { radius: '8px' }, background: { color: Theme.background.modal }, padding: { top: '1.875rem', bottom: '1.875rem', left: '1.563rem', right: '1.563rem' }, gap: "1.25rem", width: "100%", class: "text-center" },
                         this.$render("i-label", { caption: "To receive commission fee please add your wallet address", font: { size: '1rem' } }),
