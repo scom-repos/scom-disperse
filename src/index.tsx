@@ -190,31 +190,31 @@ export default class ScomDisperse extends Module {
 
   private _getActions(propertiesSchema: IDataSchema, themeSchema: IDataSchema) {
     const actions = [
-      {
-        name: 'Settings',
-        icon: 'cog',
-        command: (builder: any, userInputData: any) => {
-          let _oldData: IDisperseConfigUI = {
-            defaultChainId: 0,
-            wallets: [],
-            networks: []
-          };
-          return {
-            execute: async () => {
-              _oldData = { ...this._data };
-              this.configDApp.data = this._data;
-              this.refreshUI();
-            },
-            undo: () => {
-              this._data = { ..._oldData };
-              this.configDApp.data = this._data;
-              this.refreshUI();
-            },
-            redo: () => { }
-          }
-        },
-        userInputDataSchema: propertiesSchema
-      },
+      // {
+      //   name: 'Settings',
+      //   icon: 'cog',
+      //   command: (builder: any, userInputData: any) => {
+      //     let _oldData: IDisperseConfigUI = {
+      //       defaultChainId: 0,
+      //       wallets: [],
+      //       networks: []
+      //     };
+      //     return {
+      //       execute: async () => {
+      //         _oldData = { ...this._data };
+      //         this.configDApp.data = this._data;
+      //         this.refreshUI();
+      //       },
+      //       undo: () => {
+      //         this._data = { ..._oldData };
+      //         this.configDApp.data = this._data;
+      //         this.refreshUI();
+      //       },
+      //       redo: () => { }
+      //     }
+      //   },
+      //   userInputDataSchema: propertiesSchema
+      // },
       {
         name: 'Theme Settings',
         icon: 'palette',

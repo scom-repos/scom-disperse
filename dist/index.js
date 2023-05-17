@@ -16448,31 +16448,31 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
         }
         _getActions(propertiesSchema, themeSchema) {
             const actions = [
-                {
-                    name: 'Settings',
-                    icon: 'cog',
-                    command: (builder, userInputData) => {
-                        let _oldData = {
-                            defaultChainId: 0,
-                            wallets: [],
-                            networks: []
-                        };
-                        return {
-                            execute: async () => {
-                                _oldData = Object.assign({}, this._data);
-                                this.configDApp.data = this._data;
-                                this.refreshUI();
-                            },
-                            undo: () => {
-                                this._data = Object.assign({}, _oldData);
-                                this.configDApp.data = this._data;
-                                this.refreshUI();
-                            },
-                            redo: () => { }
-                        };
-                    },
-                    userInputDataSchema: propertiesSchema
-                },
+                // {
+                //   name: 'Settings',
+                //   icon: 'cog',
+                //   command: (builder: any, userInputData: any) => {
+                //     let _oldData: IDisperseConfigUI = {
+                //       defaultChainId: 0,
+                //       wallets: [],
+                //       networks: []
+                //     };
+                //     return {
+                //       execute: async () => {
+                //         _oldData = { ...this._data };
+                //         this.configDApp.data = this._data;
+                //         this.refreshUI();
+                //       },
+                //       undo: () => {
+                //         this._data = { ..._oldData };
+                //         this.configDApp.data = this._data;
+                //         this.refreshUI();
+                //       },
+                //       redo: () => { }
+                //     }
+                //   },
+                //   userInputDataSchema: propertiesSchema
+                // },
                 {
                     name: 'Theme Settings',
                     icon: 'palette',
