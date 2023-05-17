@@ -10169,14 +10169,17 @@ declare module "@scom/scom-disperse/config/index.css.ts" {
 /// <amd-module name="@scom/scom-disperse/config/index.tsx" />
 declare module "@scom/scom-disperse/config/index.tsx" {
     import { Module, ControlElement } from '@ijstech/components';
-    import { IExtendedNetwork, IEmbedData } from "@scom/scom-disperse/global/index.ts";
+    import { IExtendedNetwork, ICommissionInfo, IEmbedData } from "@scom/scom-disperse/global/index.ts";
     export interface ISupportedNetworks {
         chainId: number;
+    }
+    interface ScomDisperseConfigElement extends ControlElement {
+        commissions?: ICommissionInfo;
     }
     global {
         namespace JSX {
             interface IntrinsicElements {
-                ['i-scom-disperse-config']: ControlElement;
+                ['i-scom-disperse-config']: ScomDisperseConfigElement;
             }
         }
     }
