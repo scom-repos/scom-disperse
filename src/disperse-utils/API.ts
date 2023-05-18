@@ -1,12 +1,9 @@
-import { getAddresses, INFINITE } from "../store/index";
-import { DisperseData, ITokenObject } from "../global/index"
+import { getChainId, getDisperseAddress, getProxyAddress, INFINITE } from "../store/index";
+import { DisperseData, ICommissionInfo, ITokenObject } from "../global/index"
 import { Wallet, BigNumber, Utils } from "@ijstech/eth-wallet";
 import { Contracts as OpenSwapContracts } from "../contracts/oswap-openswap-contract/index";
-import { DisperseActions } from "../contracts/scom-disperse-contract/index";
-
-const getDisperseAddress = () => {
-  return getAddresses(Wallet.getClientInstance().chainId)["Disperse"];
-}
+import { Contracts as ProxyContracts } from "../contracts/scom-commission-proxy-contract/index";
+import { Contracts } from "../contracts/scom-disperse-contract/index";
 
 const onCheckAllowance = async (token: ITokenObject, spender: string) => {
   if (!token.address) return null;
@@ -29,21 +26,85 @@ const onApproveToken = async (token: ITokenObject, spender: string) => {
   return receipt;
 }
 
-// TODO add disperse sdk
-const onDisperse = async (token: ITokenObject, disperseData: DisperseData[]) => {
-  let disperseAddress = getDisperseAddress();
-  return await DisperseActions.doDisperse(
-    Wallet.getClientInstance() as any,
-    disperseAddress,
-    token.address || null,
-    token.decimals,
-    disperseData
-  );
+export const getCurrentCommissions = (commissions: ICommissionInfo[]) => {
+  return (commissions || []).filter(v => v.chainId == getChainId());
+}
+
+export const getCommissionAmount = (commissions: ICommissionInfo[], amount: BigNumber) => {
+  const _commissions = (commissions || []).filter(v => v.chainId == getChainId()).map(v => {
+    return {
+      to: v.walletAddress,
+      amount: amount.times(v.share)
+    }
+  });
+  const commissionsAmount = _commissions.length ? _commissions.map(v => v.amount).reduce((a, b) => a.plus(b)) : new BigNumber(0);
+  return commissionsAmount;
+}
+
+interface IDisperseData {
+  token: ITokenObject,
+  data: DisperseData[],
+  commissions?: ICommissionInfo[]
+}
+
+const onDisperse = async (disperseData: IDisperseData) => {
+  const { token, data, commissions } = disperseData;
+  const wallet = Wallet.getClientInstance();
+  const disperseAddress = getDisperseAddress();
+  const disperseContract = new Contracts.Disperse(wallet, disperseAddress);
+  const amount = Utils.toDecimals(data.reduce((pv, cv) => pv.plus(cv.amount), new BigNumber('0'))).dp(0);
+  const _commissions = (commissions || []).filter(v => v.chainId == getChainId()).map(v => {
+    return {
+      to: v.walletAddress,
+      amount: amount.times(v.share).dp(0)
+    }
+  });
+  const commissionsAmount = _commissions.length ? _commissions.map(v => v.amount).reduce((a, b) => a.plus(b)).dp(0) : new BigNumber(0);
+  const tokenDecimals = token.decimals || 18;
+  const recipients: string[] = data.map(d => d.address);
+  const values: BigNumber[] = data.map(d => d.amount.shiftedBy(tokenDecimals));
+  let receipt: any;
+  try {
+    if (_commissions.length) {
+      const proxyAddress = getProxyAddress();
+      const proxy = new ProxyContracts.Proxy(wallet, proxyAddress);
+      const tokensIn = {
+        token: token.address || Utils.nullAddress,
+        amount: amount.plus(commissionsAmount),
+        directTransfer: false,
+        commissions: _commissions
+      }
+      let txData: string;
+      if (token?.address) {
+        txData = await disperseContract.disperseToken.txData({ token: token.address, recipients, values });
+      } else {
+        txData = await disperseContract.disperseEther.txData({ recipients, values });
+      }
+      receipt = await proxy.proxyCall({
+        target: disperseAddress,
+        tokensIn: [
+          tokensIn
+        ],
+        data: txData,
+        to: wallet.address,
+        tokensOut: []
+      })
+    } else {
+      if (token?.address) {
+        receipt = await disperseContract.disperseToken({ token: token.address, recipients, values });
+      } else {
+        receipt = await disperseContract.disperseEther({ recipients, values });
+      }
+    }
+  } catch (err) {
+    console.error(err);
+  }
+  return receipt;
 }
 
 export {
   getDisperseAddress,
   onCheckAllowance,
   onApproveToken,
-  onDisperse,
+  onDisperse
 }

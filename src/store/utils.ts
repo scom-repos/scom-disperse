@@ -134,8 +134,8 @@ export function getAddresses(chainId: number) {
   return CoreContractAddressesByChainId[chainId];
 };
 
-export function getDisperseAddress(chainId: number) {
-  const address = CoreContractAddressesByChainId[chainId];
+export function getDisperseAddress(chainId?: number) {
+  const address = CoreContractAddressesByChainId[chainId || getChainId()];
   return address ? address[Disperse] : null;
 }
 

@@ -1,9 +1,9 @@
-import { application, moment, Button, Container, customModule, EventBus, HStack, Image, Input, Label, Module, Panel, VStack, Modal, ControlElement, customElements, RequireJS, IDataSchema } from '@ijstech/components'
+import { application, moment, Button, Container, customModule, EventBus, HStack, Image, Input, Label, Module, Panel, VStack, Modal, ControlElement, customElements, RequireJS, IDataSchema, Icon } from '@ijstech/components'
 import { TokenSelection, Result } from './common/index';
-import { EventId, ITokenObject, toDisperseData, downloadCSVFile, formatNumber, viewOnExplorerByTxHash, isAddressValid, DisperseData, disperseDataToString, registerSendTxEvents, formatUTCDate, IDisperseConfigUI, INetworkConfig } from './global/index';
-import { dummyAddressList, ImportFileWarning, isWalletConnected, setDataFromSCConfig } from './store/index';
+import { EventId, ITokenObject, toDisperseData, downloadCSVFile, formatNumber, viewOnExplorerByTxHash, isAddressValid, DisperseData, disperseDataToString, registerSendTxEvents, formatUTCDate, IDisperseConfigUI, INetworkConfig, ICommissionInfo } from './global/index';
+import { dummyAddressList, getDisperseAddress, getEmbedderCommissionFee, getProxyAddress, ImportFileWarning, isWalletConnected, setDataFromSCConfig } from './store/index';
 import { BigNumber, Wallet } from '@ijstech/eth-wallet';
-import { onApproveToken, onCheckAllowance, onDisperse, getDisperseAddress } from './disperse-utils/index';
+import { onApproveToken, onCheckAllowance, onDisperse } from './disperse-utils/index';
 import Assets from './assets';
 import { disperseStyle } from './disperse.css';
 import { disperseLayout } from './index.css';
@@ -13,6 +13,7 @@ import Config from './config/index';
 import configData from './data.json';
 import ScomWalletModal, { IWalletPlugin } from '@scom/scom-wallet-modal';
 import ScomDappContainer from '@scom/scom-dapp-container';
+import { getCommissionAmount, getCurrentCommissions } from './disperse-utils/API';
 const moduleDir = application.currentModuleDir;
 // import { jsPDF } from 'jspdf';
 // import autoTable from 'jspdf-autotable';
@@ -66,7 +67,9 @@ export default class ScomDisperse extends Module {
   private configDApp: Config;
   private mdWallet: ScomWalletModal;
   private dappContainer: ScomDappContainer;
+  private iconTotal: Icon;
 
+  private contractAddress: string;
   private _data: IDisperseConfigUI = {
     defaultChainId: 0,
     wallets: [],
@@ -189,7 +192,53 @@ export default class ScomDisperse extends Module {
   }
 
   private _getActions(propertiesSchema: IDataSchema, themeSchema: IDataSchema) {
+    const self = this;
     const actions = [
+      {
+        name: 'Commissions',
+        icon: 'dollar-sign',
+        command: (builder: any, userInputData: any) => {
+          let _oldData: IDisperseConfigUI = {
+            defaultChainId: 0,
+            wallets: [],
+            networks: []
+          }
+          return {
+            execute: async () => {
+              _oldData = { ...this._data };
+              if (userInputData.commissions) this._data.commissions = userInputData.commissions;
+              this.configDApp.data = this._data;
+              this.refreshUI();
+              if (builder?.setData) builder.setData(this._data);
+            },
+            undo: () => {
+              this._data = { ..._oldData };
+              this.configDApp.data = this._data;
+              this.refreshUI();
+              if (builder?.setData) builder.setData(this._data);
+            },
+            redo: () => { }
+          }
+        },
+        customUI: {
+          render: (data?: any, onConfirm?: (result: boolean, data: any) => void) => {
+            const vstack = new VStack();
+            const config = new Config(null, {
+              commissions: self._data.commissions
+            });
+            const button = new Button(null, {
+              caption: 'Confirm',
+            });
+            vstack.append(config);
+            vstack.append(button);
+            button.onClick = async () => {
+              const commissions = config.data.commissions;
+              if (onConfirm) onConfirm(true, { commissions });
+            }
+            return vstack;
+          }
+        }
+      },
       // {
       //   name: 'Settings',
       //   icon: 'cog',
@@ -254,7 +303,7 @@ export default class ScomDisperse extends Module {
         getData: this.getData.bind(this),
         setData: async (data: IDisperseConfigUI) => {
           const defaultData = configData.defaultBuilderData;
-          await this.setData({...defaultData, ...data});
+          await this.setData({ ...defaultData, ...data });
           this.setContainerData();
         },
         getTag: this.getTag.bind(this),
@@ -263,7 +312,7 @@ export default class ScomDisperse extends Module {
       {
         name: 'Emdedder Configurator',
         target: 'Embedders',
-        elementName: 'i-scom-swap-config',
+        elementName: 'i-scom-disperse-config',
         getLinkParams: () => {
           const commissions = this._data.commissions || [];
           return {
@@ -373,7 +422,9 @@ export default class ScomDisperse extends Module {
   }
 
   get total() {
-    return this.listAddresses.reduce((pv, cv) => pv.plus(cv.amount), new BigNumber("0"));
+    const _total = this.listAddresses.reduce((pv, cv) => pv.plus(cv.amount), new BigNumber('0'));
+    const commissionsAmount = getCommissionAmount(this.commissions, _total);
+    return _total.plus(commissionsAmount);
   }
 
   get remaining() {
@@ -412,6 +463,14 @@ export default class ScomDisperse extends Module {
     this._data.showHeader = value;
   }
 
+  get commissions() {
+    return this._data.commissions ?? [];
+  }
+
+  set commissions(value: ICommissionInfo[]) {
+    this._data.commissions = value;
+  }
+
   private checkStepStatus = (connected: boolean) => {
     this.firstStepElm.enabled = connected;
     this.tokenSelection.enabled = connected;
@@ -421,6 +480,8 @@ export default class ScomDisperse extends Module {
       this.onSelectToken(null);
     }
     this.setThirdStatus(!!this.token);
+    this.updateCommissionsTooltip();
+    this.updateContractAddress();
   }
 
   private setThirdStatus = (enabled: boolean) => {
@@ -634,6 +695,24 @@ export default class ScomDisperse extends Module {
     this.inputBatch.enabled = enabled;
   }
 
+  private updateCommissionsTooltip = () => {
+    const commissionFee = new BigNumber(getEmbedderCommissionFee());
+    if (commissionFee.gt(0) && getCurrentCommissions(this.commissions).length) {
+      this.iconTotal.visible = true;
+      this.iconTotal.tooltip.content = `A commission fee of ${commissionFee.times(100)}% will be applied to the total amount you input.`;
+    } else {
+      this.iconTotal.visible = false;
+    }
+  }
+
+  private updateContractAddress = () => {
+    if (getCurrentCommissions(this.commissions).length) {
+      this.contractAddress = getProxyAddress();
+    } else {
+      this.contractAddress = getDisperseAddress();
+    }
+  }
+
   private getApprovalStatus = async () => {
     if (!this.token) return;
     if (this.remaining.lt(0)) {
@@ -646,10 +725,13 @@ export default class ScomDisperse extends Module {
       this.btnApprove.enabled = false;
       this.btnDisperse.enabled = true;
     } else {
-      const allowance = await onCheckAllowance(this.token, getDisperseAddress());
+      const allowance = await onCheckAllowance(this.token, this.contractAddress);
       if (allowance === null) return;
       const inputVal = new BigNumber(this.total);
       const isApproved = !inputVal.gt(0) || inputVal.lte(allowance);
+      if (!isApproved) {
+        this.btnApprove.caption = 'Approve';
+      }
       this.btnApprove.enabled = !isApproved;
       this.btnDisperse.enabled = isApproved;
     }
@@ -683,7 +765,7 @@ export default class ScomDisperse extends Module {
       confirmation: confirmationCallBackActions
     });
 
-    onApproveToken(this.token, getDisperseAddress());
+    onApproveToken(this.token, this.contractAddress);
   }
 
   private handleDisperse = async () => {
@@ -721,7 +803,7 @@ export default class ScomDisperse extends Module {
       confirmation: confirmationCallBackActions
     });
 
-    onDisperse(token, this.listAddresses);
+    onDisperse({ token, data: this.listAddresses, commissions: this.commissions });
   }
 
   private loadLib() {
@@ -856,15 +938,18 @@ export default class ScomDisperse extends Module {
                       </i-vstack>
                     </i-vstack>
                     <i-vstack class="step-3" width={500} maxWidth="100%" verticalAlignment="center" gap={20} padding={{ left: 30, right: 50 }}>
-                      <i-hstack verticalAlignment="center" horizontalAlignment="space-between" wrap="wrap">
-                        <i-label caption="Total" font={{ size: '20px', name: 'Montserrat SemiBold' }} />
+                      <i-hstack gap={10} verticalAlignment="center" horizontalAlignment="space-between" wrap="wrap">
+                        <i-hstack gap={4} verticalAlignment="center">
+                          <i-label caption="Total" font={{ size: '20px', name: 'Montserrat SemiBold' }} />
+                          <i-icon id="iconTotal" name="question-circle" fill="#fff" width={20} height={20} visible={false} />
+                        </i-hstack>
                         <i-label id="totalElm" class="text-right ml-auto" font={{ size: '20px', name: 'Montserrat SemiBold', color: '#C7C7C7' }} />
                       </i-hstack>
-                      <i-hstack verticalAlignment="center" horizontalAlignment="space-between" wrap="wrap">
+                      <i-hstack gap={10} verticalAlignment="center" horizontalAlignment="space-between" wrap="wrap">
                         <i-label caption="Your Balance" font={{ size: '20px', name: 'Montserrat SemiBold' }} />
                         <i-label id="balanceElm" class="text-right ml-auto" font={{ size: '20px', name: 'Montserrat SemiBold', color: '#C7C7C7' }} />
                       </i-hstack>
-                      <i-hstack verticalAlignment="center" horizontalAlignment="space-between" wrap="wrap">
+                      <i-hstack gap={10} verticalAlignment="center" horizontalAlignment="space-between" wrap="wrap">
                         <i-label caption="Remaining" font={{ size: '20px', name: 'Montserrat SemiBold' }} />
                         <i-label id="remainingElm" class="text-right ml-auto" font={{ size: '20px', name: 'Montserrat SemiBold', color: '#C7C7C7' }} />
                       </i-hstack>
