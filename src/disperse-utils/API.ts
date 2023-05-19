@@ -78,7 +78,7 @@ const onDisperse = async (disperseData: IDisperseData) => {
       if (token?.address) {
         txData = await disperseContract.disperseToken.txData({ token: token.address, recipients, values });
       } else {
-        txData = await disperseContract.disperseEther.txData({ recipients, values });
+        txData = await disperseContract.disperseEther.txData({ recipients, values }, values.reduce((p,n)=>p.plus(n)));
       }
       receipt = await proxy.proxyCall({
         target: disperseAddress,
@@ -88,12 +88,12 @@ const onDisperse = async (disperseData: IDisperseData) => {
         data: txData,
         to: wallet.address,
         tokensOut: []
-      })
+      }, tokensIn.amount)
     } else {
       if (token?.address) {
         receipt = await disperseContract.disperseToken({ token: token.address, recipients, values });
       } else {
-        receipt = await disperseContract.disperseEther({ recipients, values });
+        receipt = await disperseContract.disperseEther({ recipients, values }, values.reduce((p,n)=>p.plus(n)));
       }
     }
   } catch (err) {

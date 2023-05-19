@@ -15759,7 +15759,7 @@ define("@scom/scom-disperse/disperse-utils/API.ts", ["require", "exports", "@sco
                     txData = await disperseContract.disperseToken.txData({ token: token.address, recipients, values });
                 }
                 else {
-                    txData = await disperseContract.disperseEther.txData({ recipients, values });
+                    txData = await disperseContract.disperseEther.txData({ recipients, values }, values.reduce((p, n) => p.plus(n)));
                 }
                 receipt = await proxy.proxyCall({
                     target: disperseAddress,
@@ -15769,14 +15769,14 @@ define("@scom/scom-disperse/disperse-utils/API.ts", ["require", "exports", "@sco
                     data: txData,
                     to: wallet.address,
                     tokensOut: []
-                });
+                }, tokensIn.amount);
             }
             else {
                 if (token === null || token === void 0 ? void 0 : token.address) {
                     receipt = await disperseContract.disperseToken({ token: token.address, recipients, values });
                 }
                 else {
-                    receipt = await disperseContract.disperseEther({ recipients, values });
+                    receipt = await disperseContract.disperseEther({ recipients, values }, values.reduce((p, n) => p.plus(n)));
                 }
             }
         }
