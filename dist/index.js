@@ -16989,6 +16989,7 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
         async setData(data) {
             this.configDApp.data = data;
             this._data = data;
+            this.setContainerData();
             await this.refreshUI();
             if (this.mdWallet) {
                 this.mdWallet.networks = data.networks;

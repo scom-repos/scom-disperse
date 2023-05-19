@@ -88,6 +88,7 @@ export default class ScomDisperse extends Module {
   private async setData(data: IDisperseConfigUI) {
     this.configDApp.data = data;
     this._data = data;
+    this.setContainerData();
     await this.refreshUI();
     if (this.mdWallet) {
       this.mdWallet.networks = data.networks;
