@@ -1,4 +1,5 @@
 import { Styles } from '@ijstech/components';
+const Theme = Styles.Theme.ThemeVars;
 
 export const disperseStyle = Styles.style({
   $nest: {
@@ -23,7 +24,7 @@ export const disperseStyle = Styles.style({
           borderColor: '#F29224'
         },
         'i-icon svg': {
-          fill: '#F29224'
+          fill: Theme.text.primary
         }
       }
     },
@@ -51,8 +52,8 @@ export const disperseStyle = Styles.style({
     '.input-batch': {
       $nest: {
         'textarea': {
-          background: '#34343A',
-          color: '#fff',
+          background: Theme.input.background,
+          color: Theme.input.fontColor,
           padding: '0.5rem 0.75rem',
           borderRadius: '10px',
           border: 'none',
@@ -61,7 +62,7 @@ export const disperseStyle = Styles.style({
           outline: 'none',
           $nest: {
             '&::placeholder': {
-              color: '#fff',
+              color: Theme.input.fontColor,
               opacity: 0.8
             },
             '&:focus::placeholder': {
@@ -91,12 +92,12 @@ export const disperseStyle = Styles.style({
     '.bg-modal': {
       $nest: {
         '.modal': {
-          background: '#000',
+          background: Theme.background.modal,
           width: 420,
           maxWidth: '100%',
           padding: '0.75rem 1rem',
           borderRadius: '1rem',
-          color: '#fff'
+          color: Theme.text.primary
         },
       }
     },

@@ -10020,6 +10020,7 @@ declare module "@scom/scom-disperse/common/result.tsx" {
         private confirmModal;
         private mainContent;
         private _message;
+        onCustomClose: any;
         get message(): IMessage;
         set message(value: IMessage);
         constructor(parent?: Container, options?: any);

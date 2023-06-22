@@ -1,4 +1,4 @@
-import { application, moment, Button, Container, customModule, EventBus, HStack, Image, Input, Label, Module, Panel, VStack, Modal, ControlElement, customElements, RequireJS, IDataSchema, Icon } from '@ijstech/components'
+import { application, moment, Button, Container, customModule, EventBus, HStack, Image, Input, Label, Module, Panel, VStack, Modal, ControlElement, customElements, RequireJS, IDataSchema, Icon, Styles } from '@ijstech/components'
 import { TokenSelection, Result } from './common/index';
 import { EventId, ITokenObject, toDisperseData, downloadCSVFile, formatNumber, viewOnExplorerByTxHash, isAddressValid, DisperseData, disperseDataToString, registerSendTxEvents, formatUTCDate, IDisperseConfigUI, INetworkConfig, ICommissionInfo } from './global/index';
 import { dummyAddressList, getDisperseAddress, getEmbedderCommissionFee, getProxyAddress, ImportFileWarning, isWalletConnected, setDataFromSCConfig } from './store/index';
@@ -17,6 +17,9 @@ import { getCommissionAmount, getCurrentCommissions } from './disperse-utils/API
 const moduleDir = application.currentModuleDir;
 // import { jsPDF } from 'jspdf';
 // import autoTable from 'jspdf-autotable';
+
+const currentTheme = Styles.Theme.currentTheme;
+const Theme = Styles.Theme.ThemeVars;
 
 declare const window: any;
 
@@ -134,6 +137,10 @@ export default class ScomDisperse extends Module {
     this.updateStyle('--background-main', this.tag[themeVar]?.backgroundColor);
     this.updateStyle('--input-font_color', this.tag[themeVar]?.inputFontColor);
     this.updateStyle('--input-background', this.tag[themeVar]?.inputBackgroundColor);
+    // this.updateStyle('--colors-primary-main', this.tag[themeVar]?.buttonBackgroundColor);
+    // this.updateStyle('--colors-primary-contrast_text', this.tag[themeVar]?.buttonFontColor);
+    this.updateStyle('--colors-secondary-main', this.tag[themeVar]?.secondaryColor);
+    this.updateStyle('--colors-secondary-contrast_text', this.tag[themeVar]?.secondaryFontColor);
   }
 
   private getActions() {
@@ -142,50 +149,53 @@ export default class ScomDisperse extends Module {
       properties: {}
     }
 
+    const _props: any = {
+      backgroundColor: {
+        type: 'string',
+        format: 'color'
+      },
+      fontColor: {
+        type: 'string',
+        format: 'color'
+      },
+      secondaryColor: {
+        type: 'string',
+        title: 'Block Background Color',
+        format: 'color'
+      },
+      secondaryFontColor: {
+        type: 'string',
+        title: 'Step Font Color',
+        format: 'color'
+      },
+      inputBackgroundColor: {
+        type: 'string',
+        format: 'color'
+      },
+      inputFontColor: {
+        type: 'string',
+        format: 'color'
+      },
+      // buttonBackgroundColor: {
+      // 	type: 'string',
+      // 	format: 'color'
+      // },
+      // buttonFontColor: {
+      // 	type: 'string',
+      // 	format: 'color'
+      // }
+    }
+
     const themeSchema: IDataSchema = {
       type: 'object',
       properties: {
         "dark": {
           type: 'object',
-          properties: {
-            backgroundColor: {
-              type: 'string',
-              format: 'color'
-            },
-            fontColor: {
-              type: 'string',
-              format: 'color'
-            },
-            inputBackgroundColor: {
-              type: 'string',
-              format: 'color'
-            },
-            inputFontColor: {
-              type: 'string',
-              format: 'color'
-            }
-          }
+          properties: _props
         },
         "light": {
           type: 'object',
-          properties: {
-            backgroundColor: {
-              type: 'string',
-              format: 'color'
-            },
-            fontColor: {
-              type: 'string',
-              format: 'color'
-            },
-            inputBackgroundColor: {
-              type: 'string',
-              format: 'color'
-            },
-            inputFontColor: {
-              type: 'string',
-              format: 'color'
-            }
-          }
+          properties: _props
         }
       }
     }
@@ -508,9 +518,9 @@ export default class ScomDisperse extends Module {
         this.addressesElm.appendChild(
           <i-hstack width="100%" verticalAlignment="center" gap={30}>
             <i-vstack width={450}>
-              <i-label caption={item.address} font={{ size: '16px', color: valid ? '#A8A8A8' : '#F05E61', name: 'Montserrat Medium' }} />
+              <i-label caption={item.address} opacity={0.75} font={{ size: '16px', color: valid ? Theme.text.primary : '#F05E61', name: 'Montserrat Medium' }} />
             </i-vstack>
-            <i-label caption={`${item.amount.toFixed()} ${symbol}`} font={{ size: '16px', color: '#A8A8A8', name: 'Montserrat Medium' }} class="text-right" />
+            <i-label caption={`${item.amount.toFixed()} ${symbol}`} opacity={0.75} font={{ size: '16px', name: 'Montserrat Medium' }} class="text-right" />
           </i-hstack>
         );
       };
@@ -546,7 +556,7 @@ export default class ScomDisperse extends Module {
         <i-label caption={token.address || token.symbol} font={{ size: '16px', name: 'Montserrat Medium' }} class="break-word" />
       </i-hstack>);
     } else {
-      this.tokenInfoElm.appendChild(<i-label caption="Please Select Token" font={{ size: '16px', color: '#A8A8A8', name: 'Montserrat Medium' }} />)
+      this.tokenInfoElm.appendChild(<i-label caption="Please Select Token" font={{ size: '16px', name: 'Montserrat Medium' }} opacity={0.75} />)
     }
     this.setThirdStatus(!!token);
   }
@@ -822,7 +832,7 @@ export default class ScomDisperse extends Module {
         <i-label caption="🎉 Disperse Successful! 🎉" class="text-center" font={{ size: '48px', name: 'Montserrat', bold: true }} />
         <i-vstack gap={16} width={750} maxWidth="100%" horizontalAlignment="center">
           <i-label caption="Token" font={{ size: '24px', name: 'Montserrat Medium' }} />
-          <i-hstack width="100%" verticalAlignment="center" horizontalAlignment="center" gap={16} padding={{ top: 20, bottom: 20, left: 60, right: 60 }} border={{ radius: 15, style: 'solid', width: 4, color: '#9C9C9C' }}>
+          <i-hstack width="100%" verticalAlignment="center" horizontalAlignment="center" gap={16} padding={{ top: 20, bottom: 20, left: 60, right: 60 }} border={{ radius: 15, style: 'solid', width: 4 }}>
             <i-image width={40} height={40} minWidth={30} url={img} />
             <i-label caption={`$${token.symbol}`} font={{ size: '20px', name: 'Montserrat Medium' }} />
             <i-label class="text-overflow" caption={token.address || token.symbol} font={{ size: '16px', name: 'Montserrat Medium' }} />
@@ -830,9 +840,9 @@ export default class ScomDisperse extends Module {
         </i-vstack>
         <i-vstack gap={8} width={750} maxWidth="100%" horizontalAlignment="center">
           <i-label caption="Explorer" font={{ size: '24px', name: 'Montserrat Medium' }} />
-          <i-hstack class="pointer" wrap="nowrap" width="100%" minHeight={88} verticalAlignment="center" horizontalAlignment="center" gap={16} padding={{ top: 20, bottom: 20, left: 20, right: 20 }} border={{ radius: 15, style: 'solid', width: 4, color: '#9C9C9C' }} onClick={() => viewOnExplorerByTxHash(chainId, data.receipt)}>
+          <i-hstack class="pointer" wrap="nowrap" width="100%" minHeight={88} verticalAlignment="center" horizontalAlignment="center" gap={16} padding={{ top: 20, bottom: 20, left: 20, right: 20 }} border={{ radius: 15, style: 'solid', width: 4 }} onClick={() => viewOnExplorerByTxHash(chainId, data.receipt)}>
             <i-label class="text-overflow" caption={data.receipt} font={{ size: '16px', name: 'Montserrat Medium' }} />
-            <i-icon class="link-icon" name="external-link-alt" width={20} height={20} fill="#fff" />
+            <i-icon class="link-icon" name="external-link-alt" width={20} height={20} fill={Theme.text.primary} />
           </i-hstack>
         </i-vstack>
         <i-hstack gap={30} maxWidth="100%" horizontalAlignment="center" verticalAlignment="center" wrap="wrap">
@@ -856,6 +866,16 @@ export default class ScomDisperse extends Module {
     this.isReadyCallbackQueued = true;
     super.init();
     this.loadLib();
+    this.setTag({
+      backgoundColor: currentTheme.background.main,
+      fontColor: currentTheme.text.primary,
+      // buttonBackgroundColor: currentTheme.colors.primary.main,
+      // buttonFontColor: currentTheme.colors.primary.contrastText,
+      inputBackgroundColor: currentTheme.input.background,
+      inputFontColor: currentTheme.input.fontColor,
+      secondaryFontColor: currentTheme.colors.secondary.contrastText,
+      secondaryColor: currentTheme.colors.secondary.main
+    });
     this.classList.add(disperseLayout);
     const connected = isWalletConnected();
     this.checkStepStatus(connected);
@@ -884,25 +904,25 @@ export default class ScomDisperse extends Module {
           </i-modal>
           <i-panel class="container-layout">
             <i-vstack id="containerElm" position="relative" minHeight={600}>
-              <i-hstack id="firstStepElm" class="step-elm" minHeight={200} margin={{ top: 40 }} padding={{ left: 50, right: 50, top: 10, bottom: 10 }} border={{ radius: 30 }} verticalAlignment="center" horizontalAlignment="space-between" background={{ color: '#000' }}>
+              <i-hstack id="firstStepElm" class="step-elm" minHeight={200} margin={{ top: 40 }} padding={{ left: 50, right: 50, top: 10, bottom: 10 }} border={{ radius: 30 }} verticalAlignment="center" horizontalAlignment="space-between" background={{ color: Theme.colors.secondary.main }}>
                 <i-hstack class="step-1" verticalAlignment="center" wrap="wrap" gap={15} margin={{ right: 100 }}>
-                  <i-label caption="STEP 1" font={{ size: '20px', name: 'Montserrat SemiBold', color: '#F29224' }} />
+                  <i-label caption="STEP 1" font={{ size: '20px', name: 'Montserrat SemiBold', color: Theme.colors.secondary.contrastText }} />
                   <i-label caption="Enter Token to Disperse" font={{ size: '20px', name: 'Montserrat SemiBold' }} />
                 </i-hstack>
                 <i-hstack class="step-1">
                   <i-hstack id="tokenElm" width="100%" wrap="nowrap" verticalAlignment="center" horizontalAlignment="space-between" padding={{ top: 20, bottom: 20, left: 60, right: 60 }} border={{ radius: 15, style: 'solid', width: 4 }}>
                     <i-hstack id="tokenInfoElm">
-                      <i-label caption="Please Select Token" font={{ size: '16px', color: '#A8A8A8', name: 'Montserrat Medium' }} />
+                      <i-label caption="Please Select Token" opacity={0.75} font={{ size: '16px', name: 'Montserrat Medium' }} />
                     </i-hstack>
-                    <i-icon name="caret-down" fill={'#F29224'} width={24} height={24} />
+                    <i-icon name="caret-down" fill={Theme.text.primary} width={24} height={24} />
                   </i-hstack>
                   <token-selection id="tokenSelection" />
                 </i-hstack>
               </i-hstack>
-              <i-vstack id="secondStepElm" class="step-elm" minHeight={300} margin={{ top: 40 }} padding={{ left: 50, right: 50, top: 10, bottom: 10 }} border={{ radius: 30 }} verticalAlignment="center" background={{ color: '#000' }}>
+              <i-vstack id="secondStepElm" class="step-elm" minHeight={300} margin={{ top: 40 }} padding={{ left: 50, right: 50, top: 10, bottom: 10 }} border={{ radius: 30 }} verticalAlignment="center" background={{ color: Theme.colors.secondary.main }}>
                 <i-hstack width="100%" verticalAlignment="center" horizontalAlignment="space-between" wrap="wrap" gap={15}>
                   <i-hstack verticalAlignment="center" wrap="wrap" gap={15} margin={{ right: 15 }}>
-                    <i-label caption="STEP 2" font={{ size: '20px', name: 'Montserrat SemiBold', color: '#F29224' }} />
+                    <i-label caption="STEP 2" font={{ size: '20px', name: 'Montserrat SemiBold', color: Theme.colors.secondary.contrastText }} />
                     <i-label caption="Enter Recipients and Amounts" font={{ size: '20px', name: 'Montserrat SemiBold' }} margin={{ right: 60 }} />
                     <i-label caption="Enter one address and amount on each line. Supports any format." font={{ size: '13px', name: 'Montserrat Medium' }} maxWidth="280px" class="break-word" />
                   </i-hstack>
@@ -917,10 +937,10 @@ export default class ScomDisperse extends Module {
               </i-vstack>
               <i-hstack id="thirdStepElm" class="step-elm" minHeight={240} margin={{ top: 40 }}>
                 <i-vstack width="100%">
-                  <i-hstack verticalAlignment="center" horizontalAlignment="space-between" wrap="wrap" background={{ color: "#34343A" }} border={{ radius: 30 }}>
-                    <i-vstack class="step-3" background={{ color: '#000' }} width={800} padding={{ top: 50, bottom: 21, left: 50, right: 50 }} gap={15} border={{ radius: 30 }}>
+                  <i-hstack verticalAlignment="center" horizontalAlignment="space-between" wrap="wrap" background={{ color: Theme.input.background }} border={{ radius: 30 }}>
+                    <i-vstack class="step-3" background={{ color: Theme.colors.secondary.main }} width={800} padding={{ top: 50, bottom: 21, left: 50, right: 50 }} gap={15} border={{ radius: 30 }}>
                       <i-hstack width="100%" verticalAlignment="center" gap={15}>
-                        <i-label caption="STEP 3" font={{ size: '20px', name: 'Montserrat SemiBold', color: '#F29224' }} />
+                        <i-label caption="STEP 3" font={{ size: '20px', name: 'Montserrat SemiBold', color: Theme.colors.secondary.contrastText }} />
                         <i-label caption="Confirm Disperse" font={{ size: '20px', name: 'Montserrat SemiBold' }} />
                       </i-hstack>
                       <i-vstack width="100%" verticalAlignment="center" gap={10} class="custom-scroll">
@@ -941,18 +961,18 @@ export default class ScomDisperse extends Module {
                     <i-vstack class="step-3" width={500} maxWidth="100%" verticalAlignment="center" gap={20} padding={{ left: 30, right: 50 }}>
                       <i-hstack gap={10} verticalAlignment="center" horizontalAlignment="space-between" wrap="wrap">
                         <i-hstack gap={4} verticalAlignment="center">
-                          <i-label caption="Total" font={{ size: '20px', name: 'Montserrat SemiBold' }} />
-                          <i-icon id="iconTotal" name="question-circle" fill="#fff" width={20} height={20} visible={false} />
+                          <i-label caption="Total" font={{ size: '20px', name: 'Montserrat SemiBold', color: Theme.input.fontColor }} />
+                          <i-icon id="iconTotal" name="question-circle" fill={Theme.input.fontColor} width={20} height={20} visible={false} />
                         </i-hstack>
-                        <i-label id="totalElm" class="text-right ml-auto" font={{ size: '20px', name: 'Montserrat SemiBold', color: '#C7C7C7' }} />
+                        <i-label id="totalElm" class="text-right ml-auto" font={{ size: '20px', name: 'Montserrat SemiBold', color: Theme.input.fontColor }} opacity={0.75} />
                       </i-hstack>
                       <i-hstack gap={10} verticalAlignment="center" horizontalAlignment="space-between" wrap="wrap">
-                        <i-label caption="Your Balance" font={{ size: '20px', name: 'Montserrat SemiBold' }} />
-                        <i-label id="balanceElm" class="text-right ml-auto" font={{ size: '20px', name: 'Montserrat SemiBold', color: '#C7C7C7' }} />
+                        <i-label caption="Your Balance" font={{ size: '20px', name: 'Montserrat SemiBold', color: Theme.input.fontColor }} />
+                        <i-label id="balanceElm" class="text-right ml-auto" font={{ size: '20px', name: 'Montserrat SemiBold', color: Theme.input.fontColor }} opacity={0.75} />
                       </i-hstack>
                       <i-hstack gap={10} verticalAlignment="center" horizontalAlignment="space-between" wrap="wrap">
-                        <i-label caption="Remaining" font={{ size: '20px', name: 'Montserrat SemiBold' }} />
-                        <i-label id="remainingElm" class="text-right ml-auto" font={{ size: '20px', name: 'Montserrat SemiBold', color: '#C7C7C7' }} />
+                        <i-label caption="Remaining" font={{ size: '20px', name: 'Montserrat SemiBold', color: Theme.input.fontColor }} />
+                        <i-label id="remainingElm" class="text-right ml-auto" font={{ size: '20px', name: 'Montserrat SemiBold', color: Theme.input.fontColor }} opacity={0.75} />
                       </i-hstack>
                     </i-vstack>
                   </i-hstack>

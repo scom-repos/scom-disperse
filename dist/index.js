@@ -13964,6 +13964,7 @@ define("@scom/scom-disperse/assets.ts", ["require", "exports", "@ijstech/compone
 define("@scom/scom-disperse/common/tokenSelection.css.ts", ["require", "exports", "@ijstech/components"], function (require, exports, components_4) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    const Theme = components_4.Styles.Theme.ThemeVars;
     components_4.Styles.cssRule('.token-selection', {
         $nest: {
             '.token-agree-input': {
@@ -14074,12 +14075,12 @@ define("@scom/scom-disperse/common/tokenSelection.css.ts", ["require", "exports"
             '.bg-modal': {
                 $nest: {
                     '.modal': {
-                        background: '#000',
+                        background: Theme.background.modal,
                         width: 450,
                         maxWidth: '100%',
                         padding: '0.75rem 1rem',
                         borderRadius: '1rem',
-                        color: '#fff',
+                        color: Theme.text.primary,
                         marginTop: 40
                     },
                 }
@@ -14100,6 +14101,9 @@ define("@scom/scom-disperse/common/tokenSelection.css.ts", ["require", "exports"
                                 transform: 'rotate(90deg)',
                                 opacity: 0.7
                             },
+                            'svg': {
+                                fill: `${Theme.input.fontColor} !important`
+                            },
                             'i-input': {
                                 width: '100%'
                             },
@@ -14108,9 +14112,9 @@ define("@scom/scom-disperse/common/tokenSelection.css.ts", ["require", "exports"
                                 height: 'auto !important',
                                 padding: '1rem 1.5rem 1rem 2.25rem',
                                 borderRadius: '0.5rem',
-                                border: '2px solid ##9C9C9C',
-                                background: 'transparent',
-                                color: 'inherit',
+                                border: '2px solid #9C9C9C',
+                                background: Theme.input.background,
+                                color: Theme.input.fontColor,
                                 fontSize: 'inherit',
                             }
                         }
@@ -14132,7 +14136,7 @@ define("@scom/scom-disperse/common/tokenSelection.css.ts", ["require", "exports"
                                 width: '10px',
                                 height: '14px',
                                 display: 'flex',
-                                fill: '#fff',
+                                fill: Theme.text.primary,
                                 position: 'absolute',
                                 right: '0',
                             },
@@ -14160,7 +14164,7 @@ define("@scom/scom-disperse/common/tokenSelection.css.ts", ["require", "exports"
                                 borderRadius: '1rem',
                                 border: '2px solid transparent',
                                 cursor: 'pointer',
-                                background: '#34343A',
+                                background: Theme.background.main,
                                 $nest: {
                                     '&:hover': {
                                         borderColor: '#F29224'
@@ -14192,13 +14196,13 @@ define("@scom/scom-disperse/common/tokenSelection.css.ts", ["require", "exports"
                                 padding: '0.75rem 0.5rem',
                                 borderRadius: '1rem',
                                 overflow: 'unset',
-                                background: '#34343A',
+                                background: Theme.background.main,
                                 cursor: 'pointer',
                                 marginBottom: '0.75rem',
                                 minHeight: '50px',
                                 $nest: {
                                     '&:hover': {
-                                        background: '#26262a'
+                                        opacity: 0.8
                                     },
                                     'i-image': {
                                         marginRight: '0.5rem'
@@ -14318,6 +14322,7 @@ define("@scom/scom-disperse/common/tokenSelection.tsx", ["require", "exports", "
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.TokenSelection = void 0;
+    const Theme = components_6.Styles.Theme.ThemeVars;
     ;
     let TokenSelection = class TokenSelection extends components_6.Module {
         constructor(parent, options) {
@@ -14588,14 +14593,14 @@ define("@scom/scom-disperse/common/tokenSelection.tsx", ["require", "exports", "
                                 this.$render("i-hstack", { class: "token-name", verticalAlignment: "center" },
                                     this.$render("i-label", { caption: token.name }),
                                     token.address && !token.isNative ?
-                                        this.$render("i-icon", { name: "copy", width: "14px", height: "14px", fill: '#fff', margin: { right: 8 }, tooltip: { content: `${token.symbol} has been copied`, trigger: 'click' }, onClick: () => components_6.application.copyToClipboard(token.address || ''), class: "inline-flex pointer" })
+                                        this.$render("i-icon", { name: "copy", width: "14px", height: "14px", fill: Theme.text.primary, margin: { right: 8 }, tooltip: { content: `${token.symbol} has been copied`, trigger: 'click' }, onClick: () => components_6.application.copyToClipboard(token.address || ''), class: "inline-flex pointer" })
                                         : [],
                                     token.address && this.checkHasMetaMask ?
                                         this.$render("i-image", { display: "flex", width: 16, height: 16, url: assets_1.default.fullPath('img/wallet/metamask.png'), tooltip: { content: 'Add to MetaMask' }, onClick: (target, event) => this.addToMetamask(event, token) })
                                         : []))),
                         this.$render("i-label", { class: "ml-auto", caption: index_11.formatNumber(token.balance, 4) })),
                     token.isNew ? (this.$render("i-hstack", { horizontalAlignment: "center" },
-                        this.$render("i-button", { caption: "Import", class: "btn-os", border: { radius: 5 }, padding: { top: 4, bottom: 4, left: 20, right: 20 }, font: { size: '16px', color: '#fff' }, margin: { top: 10 }, height: 34, onClick: (source, event) => this.showImportTokenModal(event, token) }))) : [])));
+                        this.$render("i-button", { caption: "Import", class: "btn-os", border: { radius: 5 }, padding: { top: 4, bottom: 4, left: 20, right: 20 }, font: { size: '16px', color: Theme.text.primary }, margin: { top: 10 }, height: 34, onClick: (source, event) => this.showImportTokenModal(event, token) }))) : [])));
         }
         async renderTokenItems() {
             if (!this.tokenList)
@@ -14744,7 +14749,7 @@ define("@scom/scom-disperse/common/tokenSelection.tsx", ["require", "exports", "
                     this.$render("i-button", { id: "btnToken", enabled: false, class: "custom-btn", rightIcon: { name: "caret-down" }, caption: "Select a token", onClick: () => this.showModal() })),
                 this.$render("i-modal", { id: "tokenSelectionModal", class: "bg-modal", title: "Select Token", closeIcon: { name: 'times' }, onClose: () => this.onCloseModal() },
                     this.$render("i-panel", { class: "search" },
-                        this.$render("i-icon", { width: 16, height: 16, name: "search", fill: "white" }),
+                        this.$render("i-icon", { width: 16, height: 16, name: "search", fill: Theme.input.fontColor }),
                         this.$render("i-input", { id: "tokenSearch", placeholder: "Search name or paste address", width: "100%", height: "auto", border: { width: 2, style: 'solid', color: '#9C9C9C', radius: 10 }, onKeyUp: this.filterSearch.bind(this) })),
                     this.$render("i-panel", { id: "commonTokenPanel", margin: { bottom: 16 }, class: "common-token" },
                         this.$render("i-label", { caption: "Common Tokens" }),
@@ -14774,36 +14779,77 @@ define("@scom/scom-disperse/common/tokenSelection.tsx", ["require", "exports", "
 define("@scom/scom-disperse/common/result.css.ts", ["require", "exports", "@ijstech/components"], function (require, exports, components_7) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    const Theme = components_7.Styles.Theme.ThemeVars;
     exports.default = components_7.Styles.style({
         textAlign: 'center',
         $nest: {
             'i-label > *': {
+                // color: Theme.text.primary,
                 fontSize: '.875rem',
                 wordBreak: 'normal'
             },
             '.modal': {
                 minWidth: '25%',
                 maxWidth: '100%',
-                width: 455
+                width: 455,
+                background: Theme.background.modal,
+                borderRadius: 12
+            },
+            '.i-modal-close svg': {
+                fill: Theme.text.primary
             },
             '.i-modal_content': {
-                padding: '0 2.563rem 3rem'
+                padding: '0 2.563rem 1.5rem'
             },
             '.i-modal_header': {
                 borderBottom: 'none !important'
+            },
+            '.waiting-txt > *': {
+                color: '#F6C958',
+                fontSize: '1.125rem'
+            },
+            '.confirm-txt > *': {
+                color: '#C2C3CB'
+            },
+            '.red-link *': {
+                color: '#FD4A4C',
+                textDecoration: 'none'
+            },
+            '.mb': {
+                marginBottom: '1rem'
             },
             'i-button': {
                 padding: '1rem 2rem',
                 textAlign: 'center'
             },
+            '.address-txt > *': {
+                lineHeight: '1.5rem'
+            },
+            '.btn-submit': {
+                padding: '.35rem 2.438rem',
+                borderRadius: 5
+            },
+            '.btn-cancel': {
+                padding: '.35rem 2.438rem',
+                borderRadius: 5,
+                background: '#2B304A 0% 0% no-repeat padding-box'
+            },
+            '.btn-os': {
+                background: 'transparent linear-gradient(90deg, #AC1D78 0%, #E04862 100%) 0% 0% no-repeat padding-box',
+                fontFamily: 'Raleway Bold',
+                fontSize: '1rem',
+                fontWeight: 'bold',
+                color: '#fff'
+                // color: Theme.colors.primary.contrastText
+            }
         }
     });
 });
-///<amd-module name='@scom/scom-disperse/common/result.tsx'/> 
-define("@scom/scom-disperse/common/result.tsx", ["require", "exports", "@ijstech/components", "@scom/scom-disperse/store/index.ts", "@scom/scom-disperse/global/index.ts", "@scom/scom-disperse/common/result.css.ts", "@scom/scom-disperse/assets.ts", "@ijstech/eth-wallet"], function (require, exports, components_8, index_12, index_13, result_css_1, assets_2, eth_wallet_5) {
+define("@scom/scom-disperse/common/result.tsx", ["require", "exports", "@ijstech/components", "@ijstech/eth-wallet", "@scom/scom-disperse/global/index.ts", "@scom/scom-disperse/store/index.ts", "@scom/scom-disperse/common/result.css.ts", "@scom/scom-disperse/assets.ts"], function (require, exports, components_8, eth_wallet_5, index_12, index_13, result_css_1, assets_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Result = void 0;
+    const Theme = components_8.Styles.Theme.ThemeVars;
     ;
     let Result = class Result extends components_8.Module {
         constructor(parent, options) {
@@ -14845,7 +14891,7 @@ define("@scom/scom-disperse/common/result.tsx", ["require", "exports", "@ijstech
         async buildLink() {
             if (this.message.txtHash) {
                 const chainId = eth_wallet_5.Wallet.getClientInstance().chainId;
-                index_13.viewOnExplorerByTxHash(chainId, this.message.txtHash);
+                index_12.viewOnExplorerByTxHash(chainId, this.message.txtHash);
             }
         }
         async renderUI() {
@@ -14859,73 +14905,71 @@ define("@scom/scom-disperse/common/result.tsx", ["require", "exports", "@ijstech
                     this.$render("i-vstack", { id: "loadingElm", class: "i-loading-overlay", height: "100%", background: { color: "transparent" } },
                         this.$render("i-vstack", { class: "i-loading-spinner", horizontalAlignment: "center", verticalAlignment: "center" },
                             this.$render("i-icon", { class: "i-loading-spinner_icon", image: { url: assets_2.default.fullPath('img/loading.svg'), width: 24, height: 24 } }),
-                            this.$render("i-label", { caption: "Loading...", font: { color: '#F29224' }, class: "i-loading-spinner_text" })))));
+                            this.$render("i-label", { caption: "Loading...", font: { color: '#FD4A4C' }, class: "i-loading-spinner_text" })))));
                 mainSection.appendChild(loading);
                 const section = new components_8.VStack();
                 section.margin = { bottom: 20 };
                 const captionList = ['Waiting For Confirmation', this.message.content || '', 'Confirm this transaction in your wallet'];
-                const options = [{ font: { color: '#F6C958', size: '20px' }, marginBottom: 15 }, { marginBottom: 15 }, { font: { color: '#C2C3CB' } }];
+                const classList = ['waiting-txt mb-1', 'mb-1', 'confirm-txt'];
                 for (let i = 0; i < captionList.length; i++) {
                     const caption = captionList[i];
-                    const option = options[i] || {};
-                    const label = await components_8.Label.create(Object.assign({}, option));
+                    const label = await components_8.Label.create();
                     label.caption = caption;
+                    if (classList[i]) {
+                        const classes = classList[i].split(' ');
+                        classes.forEach(className => label.classList.add(className));
+                    }
                     section.appendChild(label);
                 }
                 ;
                 mainSection.appendChild(section);
             }
             else if (this.message.status === 'success') {
-                const chainId = eth_wallet_5.Wallet.getClientInstance().chainId;
-                const networkType = index_12.getNetworkExplorerName(chainId);
+                const chainId = await eth_wallet_5.Wallet.getClientInstance().getChainId();
+                const explorerName = index_13.getNetworkExplorerName(chainId);
                 const image = await components_8.Image.create({
                     width: '50px',
-                    url: assets_2.default.fullPath('img/success-icon.svg'),
-                    margin: { bottom: 30 },
-                    display: 'inline-block'
+                    url: assets_2.default.fullPath('img/success-icon.svg')
                 });
+                image.classList.add("inline-block", "mb");
                 mainSection.appendChild(image);
-                const label = await components_8.Label.create({
-                    caption: 'Transaction Submitted',
-                    margin: { bottom: 10 },
-                    font: { size: '20px', color: '#F6C958' }
-                });
+                const label = await components_8.Label.create();
+                label.caption = 'Transaction Submitted';
+                label.classList.add("waiting-txt");
                 mainSection.appendChild(label);
                 const contentSection = await components_8.Panel.create();
                 contentSection.id = "contentSection";
                 mainSection.appendChild(contentSection);
                 const contentLabel = await components_8.Label.create();
                 contentLabel.caption = this.message.content || '';
-                contentLabel.style.overflowWrap = 'anywhere';
                 contentSection.appendChild(contentLabel);
                 if (this.message.txtHash) {
                     const section = new components_8.VStack();
                     const label1 = await components_8.Label.create({
-                        caption: this.message.txtHash.substring(0, 33),
-                        margin: { bottom: 15 }
+                        caption: this.message.txtHash.substr(0, 33),
+                        margin: { bottom: 4 }
                     });
                     section.appendChild(label1);
                     const label2 = await components_8.Label.create({
-                        caption: this.message.txtHash.substring(33, this.message.txtHash.length),
-                        margin: { bottom: 15 }
+                        caption: this.message.txtHash.substr(33, this.message.txtHash.length)
                     });
+                    label2.classList.add("mb-1");
                     section.appendChild(label2);
                     const link = await components_8.Label.create({
-                        caption: `View on ${networkType}`,
-                        display: 'block',
-                        font: { color: '#FF9900' },
+                        caption: `View on ${explorerName}`,
                     });
                     link.onClick = this.buildLink.bind(this);
-                    link.classList.add("pointer");
+                    link.classList.add("red-link", "block", "pointer");
                     section.appendChild(link);
                     contentSection.appendChild(section);
                 }
                 const button = new components_8.Button(mainSection, {
                     width: '100%',
                     caption: 'Close',
+                    // font: { color: Theme.colors.primary.contrastText }
+                    font: { color: '#fff' }
                 });
                 button.classList.add('btn-os');
-                button.classList.add('btn-approve');
                 button.classList.add('mt-1');
                 button.onClick = () => this.closeModal();
                 mainSection.appendChild(button);
@@ -14933,33 +14977,30 @@ define("@scom/scom-disperse/common/result.tsx", ["require", "exports", "@ijstech
             else {
                 const image = await components_8.Image.create({
                     width: '50px',
-                    url: assets_2.default.fullPath('img/warning-icon.png'),
-                    display: 'inline-block',
-                    margin: { bottom: 30 }
+                    url: assets_2.default.fullPath('img/oswap_error.png')
                 });
+                image.classList.add("inline-block", "mb");
                 mainSection.appendChild(image);
                 const label = await components_8.Label.create({
-                    caption: 'Transaction Rejected.',
-                    font: { size: '18px', color: '#F6C958' },
-                    margin: { bottom: 10 }
+                    caption: 'Transaction Rejected.'
                 });
+                label.classList.add("waiting-txt", "mb");
                 mainSection.appendChild(label);
                 const section = await components_8.VStack.create();
                 section.id = "contentSection";
-                const err = await this.onErrMsgChanged();
                 const contentLabel = await components_8.Label.create({
-                    caption: err,
-                    margin: { bottom: 15 },
-                    visible: !!err
+                    caption: await this.onErrMsgChanged()
                 });
+                contentLabel.classList.add("mb-1");
                 section.appendChild(contentLabel);
                 mainSection.appendChild(section);
                 const button = new components_8.Button(mainSection, {
                     width: '100%',
-                    caption: 'Cancel'
+                    caption: 'Cancel',
+                    // font: { color: Theme.colors.primary.contrastText }
+                    font: { color: '#fff' }
                 });
                 button.classList.add('btn-os');
-                button.classList.add('btn-approve');
                 button.classList.add('mt-1');
                 button.onClick = () => this.closeModal();
                 mainSection.appendChild(button);
@@ -14973,10 +15014,10 @@ define("@scom/scom-disperse/common/result.tsx", ["require", "exports", "@ijstech
             if (this.message.content.message && this.message.content.message.includes('Internal JSON-RPC error.')) {
                 this.message.content.message = JSON.parse(this.message.content.message.replace('Internal JSON-RPC error.\n', '')).message;
             }
-            return await index_13.parseContractError(this.message.content.message, this.message.obj);
+            return await index_12.parseContractError(this.message.content.message, this.message.obj);
         }
         render() {
-            return (this.$render("i-modal", { id: "confirmModal", closeIcon: { name: 'times' }, class: "dark-modal confirm-modal", minHeight: "280px" },
+            return (this.$render("i-modal", { id: "confirmModal", closeIcon: { name: 'times' }, class: "confirm-modal", minHeight: "280px" },
                 this.$render("i-panel", { id: "mainContent", class: "i-modal_content" })));
         }
     };
@@ -15800,6 +15841,7 @@ define("@scom/scom-disperse/disperse.css.ts", ["require", "exports", "@ijstech/c
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.disperseStyle = void 0;
+    const Theme = components_9.Styles.Theme.ThemeVars;
     exports.disperseStyle = components_9.Styles.style({
         $nest: {
             'i-hstack.disabled': {
@@ -15823,7 +15865,7 @@ define("@scom/scom-disperse/disperse.css.ts", ["require", "exports", "@ijstech/c
                         borderColor: '#F29224'
                     },
                     'i-icon svg': {
-                        fill: '#F29224'
+                        fill: Theme.text.primary
                     }
                 }
             },
@@ -15851,8 +15893,8 @@ define("@scom/scom-disperse/disperse.css.ts", ["require", "exports", "@ijstech/c
             '.input-batch': {
                 $nest: {
                     'textarea': {
-                        background: '#34343A',
-                        color: '#fff',
+                        background: Theme.input.background,
+                        color: Theme.input.fontColor,
                         padding: '0.5rem 0.75rem',
                         borderRadius: '10px',
                         border: 'none',
@@ -15861,7 +15903,7 @@ define("@scom/scom-disperse/disperse.css.ts", ["require", "exports", "@ijstech/c
                         outline: 'none',
                         $nest: {
                             '&::placeholder': {
-                                color: '#fff',
+                                color: Theme.input.fontColor,
                                 opacity: 0.8
                             },
                             '&:focus::placeholder': {
@@ -15891,12 +15933,12 @@ define("@scom/scom-disperse/disperse.css.ts", ["require", "exports", "@ijstech/c
             '.bg-modal': {
                 $nest: {
                     '.modal': {
-                        background: '#000',
+                        background: Theme.background.modal,
                         width: 420,
                         maxWidth: '100%',
                         padding: '0.75rem 1rem',
                         borderRadius: '1rem',
-                        color: '#fff'
+                        color: Theme.text.primary
                     },
                 }
             },
@@ -15960,21 +16002,7 @@ define("@scom/scom-disperse/index.css.ts", ["require", "exports", "@ijstech/comp
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.disperseLayout = void 0;
-    // Styles.Theme.darkTheme.background.default = '#212128';
-    // Styles.Theme.darkTheme.background.gradient = 'transparent linear-gradient(270deg, #FF9900 0%, #FC7428 100%) 0% 0% no-repeat padding-box';
-    // Styles.Theme.darkTheme.background.modal = '#000';
-    // Styles.Theme.darkTheme.background.main = '#222237',
-    // Styles.Theme.darkTheme.colors.primary.dark = '#F05E61';
-    // Styles.Theme.darkTheme.colors.primary.main = '#F29224';
-    // Styles.Theme.darkTheme.colors.secondary.dark = '#f7d063';
-    // Styles.Theme.darkTheme.colors.secondary.main = '#FF8800';
-    // Styles.Theme.darkTheme.text.secondary = 'hsla(0, 0%, 100%, 0.55)';
-    // Styles.Theme.darkTheme.typography.fontFamily = 'Proxima Nova';
-    // Styles.Theme.darkTheme.colors.warning.dark = '#f57c00';
-    // Styles.Theme.darkTheme.colors.warning.light = '#F6C958';
-    // Styles.Theme.darkTheme.colors.warning.main = '#ffa726';
-    // Styles.Theme.darkTheme.divider = '#0E132E';
-    // Styles.Theme.darkTheme.typography.fontSize = '16px';
+    const Theme = components_10.Styles.Theme.ThemeVars;
     const colorVar = {
         primaryButton: 'transparent linear-gradient(270deg, #FF9900 0%, #FC7428 100%) 0% 0% no-repeat padding-box',
         primaryGradient: 'linear-gradient(270deg, #FF9900 0%, #FC7428 100%)',
@@ -15982,26 +16010,22 @@ define("@scom/scom-disperse/index.css.ts", ["require", "exports", "@ijstech/comp
         primaryDisabled: 'transparent linear-gradient(270deg, #7B7B7B 0%, #929292 100%) 0% 0% no-repeat padding-box'
     };
     exports.disperseLayout = components_10.Styles.style({
-        background: '#212128',
+        background: Theme.background.main,
         marginInline: 'auto',
         $nest: {
-            'i-label': {
-                color: '#fff'
-            },
             'i-button': {
                 color: '#fff',
                 $nest: {
                     'i-icon.is-spin': {
+                        fill: '#fff !important'
+                    },
+                    'svg': {
                         fill: '#fff !important'
                     }
                 }
             },
             '.overflow-inherit': {
                 overflow: 'inherit',
-            },
-            '::selection': {
-                color: '#fff',
-                background: '#1890ff'
             },
             '.template-layout': {
                 maxWidth: '1200px',
@@ -16043,22 +16067,6 @@ define("@scom/scom-disperse/index.css.ts", ["require", "exports", "@ijstech/comp
                     }
                 }
             },
-            '.dark-bg, .dark-modal > div > div': {
-                background: colorVar.darkBg,
-                borderRadius: 5
-            },
-            '.network-msg': {
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: '15rem',
-                $nest: {
-                    'span': {
-                        fontSize: '1.25rem',
-                        color: '#F29224',
-                    },
-                },
-            },
             '.break-word': {
                 wordBreak: 'break-word',
             },
@@ -16068,7 +16076,7 @@ define("@scom/scom-disperse/index.css.ts", ["require", "exports", "@ijstech/comp
             'i-modal': {
                 $nest: {
                     '.modal': {
-                        background: '#000',
+                        background: Theme.background.modal
                     },
                     '.i-modal_header': {
                         marginBottom: '1rem',
@@ -16092,107 +16100,9 @@ define("@scom/scom-disperse/index.css.ts", ["require", "exports", "@ijstech/comp
                     },
                 },
             },
-            '.account-dropdown': {
-                $nest: {
-                    '.modal': {
-                        background: '#222237',
-                        border: `2px solid #0E132E`,
-                        padding: '10px',
-                        minWidth: 200,
-                        marginTop: 10
-                    },
-                    'i-button': {
-                        background: colorVar.primaryButton,
-                        cursor: 'pointer',
-                        padding: '.5rem .75rem'
-                    },
-                    '.icon': {
-                        backgroundColor: 'transparent',
-                        height: 'auto',
-                        width: 'auto',
-                        padding: '.5rem .75rem .5rem 0',
-                    },
-                    'i-icon': {
-                        height: 14,
-                        width: 14
-                    }
-                }
-            },
             '.hidden': {
                 display: 'none !important'
-            },
-            '.actions-dropdown': {
-                cursor: 'pointer',
-                position: 'relative',
-                $nest: {
-                    '> i-button': {
-                        height: 'auto',
-                        minWidth: 'auto',
-                        padding: '.5rem .75rem',
-                        border: 'none',
-                        background: colorVar.primaryButton,
-                        lineHeight: '1.25rem',
-                        fontWeight: 'bold',
-                        fontSize: '1rem',
-                        $nest: {
-                            '&.disabled': {
-                                background: colorVar.primaryDisabled,
-                                opacity: 0.9,
-                                cursor: 'default',
-                            },
-                        },
-                    },
-                    '.modal': {
-                        background: '#000',
-                        border: `2px solid #0E132E`,
-                        padding: '10px',
-                        marginTop: 0,
-                        minWidth: 0,
-                        $nest: {
-                            'i-button': {
-                                background: colorVar.primaryButton,
-                                marginBottom: '0.5rem',
-                                paddingBlock: '0.675rem',
-                                border: 'none',
-                                transition: 'all .2s ease-out',
-                                borderRadius: 5,
-                                padding: '0.25rem 1.5rem',
-                                opacity: 1,
-                                whiteSpace: 'nowrap',
-                                $nest: {
-                                    '&.disabled': {
-                                        background: colorVar.primaryDisabled,
-                                    },
-                                    '&:last-child': {
-                                        marginBottom: 0
-                                    },
-                                },
-                            }
-                        }
-                    },
-                    '.icon': {
-                        backgroundColor: 'transparent',
-                        height: 'auto',
-                        width: 'auto',
-                        padding: '.5rem .75rem .5rem 0',
-                    },
-                    'i-icon': {
-                        height: '16px !important',
-                        width: '16px !important',
-                        display: 'flex',
-                    },
-                    '.loading-icon': {
-                        marginLeft: '0.15rem',
-                    }
-                }
-            },
-            '@media screen and (max-width: 768px)': {
-                $nest: {
-                    '.actions-dropdown .button': {
-                        padding: '0.15rem',
-                    },
-                },
-            },
+            }
         }
     });
     components_10.Styles.fontFace({
@@ -16600,6 +16510,10 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     const moduleDir = components_13.application.currentModuleDir;
+    // import { jsPDF } from 'jspdf';
+    // import autoTable from 'jspdf-autotable';
+    const currentTheme = components_13.Styles.Theme.currentTheme;
+    const Theme = components_13.Styles.Theme.ThemeVars;
     let ScomDisperse = class ScomDisperse extends components_13.Module {
         constructor(parent, options) {
             super(parent, options);
@@ -16669,8 +16583,8 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                         }
                         this.addressesElm.appendChild(this.$render("i-hstack", { width: "100%", verticalAlignment: "center", gap: 30 },
                             this.$render("i-vstack", { width: 450 },
-                                this.$render("i-label", { caption: item.address, font: { size: '16px', color: valid ? '#A8A8A8' : '#F05E61', name: 'Montserrat Medium' } })),
-                            this.$render("i-label", { caption: `${item.amount.toFixed()} ${symbol}`, font: { size: '16px', color: '#A8A8A8', name: 'Montserrat Medium' }, class: "text-right" })));
+                                this.$render("i-label", { caption: item.address, opacity: 0.75, font: { size: '16px', color: valid ? Theme.text.primary : '#F05E61', name: 'Montserrat Medium' } })),
+                            this.$render("i-label", { caption: `${item.amount.toFixed()} ${symbol}`, opacity: 0.75, font: { size: '16px', name: 'Montserrat Medium' }, class: "text-right" })));
                     }
                     ;
                     this.totalElm.caption = `${index_21.formatNumber(this.total)} ${symbol}`;
@@ -16705,7 +16619,7 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                         this.$render("i-label", { caption: token.address || token.symbol, font: { size: '16px', name: 'Montserrat Medium' }, class: "break-word" })));
                 }
                 else {
-                    this.tokenInfoElm.appendChild(this.$render("i-label", { caption: "Please Select Token", font: { size: '16px', color: '#A8A8A8', name: 'Montserrat Medium' } }));
+                    this.tokenInfoElm.appendChild(this.$render("i-label", { caption: "Please Select Token", font: { size: '16px', name: 'Montserrat Medium' }, opacity: 0.75 }));
                 }
                 this.setThirdStatus(!!token);
             };
@@ -16957,15 +16871,15 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                     this.$render("i-label", { caption: "\uD83C\uDF89 Disperse Successful! \uD83C\uDF89", class: "text-center", font: { size: '48px', name: 'Montserrat', bold: true } }),
                     this.$render("i-vstack", { gap: 16, width: 750, maxWidth: "100%", horizontalAlignment: "center" },
                         this.$render("i-label", { caption: "Token", font: { size: '24px', name: 'Montserrat Medium' } }),
-                        this.$render("i-hstack", { width: "100%", verticalAlignment: "center", horizontalAlignment: "center", gap: 16, padding: { top: 20, bottom: 20, left: 60, right: 60 }, border: { radius: 15, style: 'solid', width: 4, color: '#9C9C9C' } },
+                        this.$render("i-hstack", { width: "100%", verticalAlignment: "center", horizontalAlignment: "center", gap: 16, padding: { top: 20, bottom: 20, left: 60, right: 60 }, border: { radius: 15, style: 'solid', width: 4 } },
                             this.$render("i-image", { width: 40, height: 40, minWidth: 30, url: img }),
                             this.$render("i-label", { caption: `$${token.symbol}`, font: { size: '20px', name: 'Montserrat Medium' } }),
                             this.$render("i-label", { class: "text-overflow", caption: token.address || token.symbol, font: { size: '16px', name: 'Montserrat Medium' } }))),
                     this.$render("i-vstack", { gap: 8, width: 750, maxWidth: "100%", horizontalAlignment: "center" },
                         this.$render("i-label", { caption: "Explorer", font: { size: '24px', name: 'Montserrat Medium' } }),
-                        this.$render("i-hstack", { class: "pointer", wrap: "nowrap", width: "100%", minHeight: 88, verticalAlignment: "center", horizontalAlignment: "center", gap: 16, padding: { top: 20, bottom: 20, left: 20, right: 20 }, border: { radius: 15, style: 'solid', width: 4, color: '#9C9C9C' }, onClick: () => index_21.viewOnExplorerByTxHash(chainId, data.receipt) },
+                        this.$render("i-hstack", { class: "pointer", wrap: "nowrap", width: "100%", minHeight: 88, verticalAlignment: "center", horizontalAlignment: "center", gap: 16, padding: { top: 20, bottom: 20, left: 20, right: 20 }, border: { radius: 15, style: 'solid', width: 4 }, onClick: () => index_21.viewOnExplorerByTxHash(chainId, data.receipt) },
                             this.$render("i-label", { class: "text-overflow", caption: data.receipt, font: { size: '16px', name: 'Montserrat Medium' } }),
-                            this.$render("i-icon", { class: "link-icon", name: "external-link-alt", width: 20, height: 20, fill: "#fff" }))),
+                            this.$render("i-icon", { class: "link-icon", name: "external-link-alt", width: 20, height: 20, fill: Theme.text.primary }))),
                     this.$render("i-hstack", { gap: 30, maxWidth: "100%", horizontalAlignment: "center", verticalAlignment: "center", wrap: "wrap" },
                         this.$render("i-button", { caption: "DOWNLOAD CSV", background: { color: "#34343A" }, width: 270, border: { radius: 12 }, padding: { top: 12, bottom: 12 }, onClick: () => this.onDownloadFile(true) }),
                         this.$render("i-button", { caption: "DOWNLOAD REPORT", background: { color: 'transparent linear-gradient(270deg, #FF9900 0%, #FC7428 100%) 0% 0% no-repeat padding-box' }, width: 270, border: { radius: 12 }, padding: { top: 12, bottom: 12 }, onClick: () => this.onDownloadReport(Object.assign({ symbol: token.symbol }, data)) }),
@@ -17027,62 +16941,68 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                 this.style.removeProperty(name);
         }
         updateTheme() {
-            var _a, _b, _c, _d, _e;
+            var _a, _b, _c, _d, _e, _f, _g;
             const themeVar = ((_a = this.dappContainer) === null || _a === void 0 ? void 0 : _a.theme) || 'light';
             this.updateStyle('--text-primary', (_b = this.tag[themeVar]) === null || _b === void 0 ? void 0 : _b.fontColor);
             this.updateStyle('--background-main', (_c = this.tag[themeVar]) === null || _c === void 0 ? void 0 : _c.backgroundColor);
             this.updateStyle('--input-font_color', (_d = this.tag[themeVar]) === null || _d === void 0 ? void 0 : _d.inputFontColor);
             this.updateStyle('--input-background', (_e = this.tag[themeVar]) === null || _e === void 0 ? void 0 : _e.inputBackgroundColor);
+            // this.updateStyle('--colors-primary-main', this.tag[themeVar]?.buttonBackgroundColor);
+            // this.updateStyle('--colors-primary-contrast_text', this.tag[themeVar]?.buttonFontColor);
+            this.updateStyle('--colors-secondary-main', (_f = this.tag[themeVar]) === null || _f === void 0 ? void 0 : _f.secondaryColor);
+            this.updateStyle('--colors-secondary-contrast_text', (_g = this.tag[themeVar]) === null || _g === void 0 ? void 0 : _g.secondaryFontColor);
         }
         getActions() {
             const propertiesSchema = {
                 type: "object",
                 properties: {}
             };
+            const _props = {
+                backgroundColor: {
+                    type: 'string',
+                    format: 'color'
+                },
+                fontColor: {
+                    type: 'string',
+                    format: 'color'
+                },
+                secondaryColor: {
+                    type: 'string',
+                    title: 'Block Background Color',
+                    format: 'color'
+                },
+                secondaryFontColor: {
+                    type: 'string',
+                    title: 'Step Font Color',
+                    format: 'color'
+                },
+                inputBackgroundColor: {
+                    type: 'string',
+                    format: 'color'
+                },
+                inputFontColor: {
+                    type: 'string',
+                    format: 'color'
+                },
+                // buttonBackgroundColor: {
+                // 	type: 'string',
+                // 	format: 'color'
+                // },
+                // buttonFontColor: {
+                // 	type: 'string',
+                // 	format: 'color'
+                // }
+            };
             const themeSchema = {
                 type: 'object',
                 properties: {
                     "dark": {
                         type: 'object',
-                        properties: {
-                            backgroundColor: {
-                                type: 'string',
-                                format: 'color'
-                            },
-                            fontColor: {
-                                type: 'string',
-                                format: 'color'
-                            },
-                            inputBackgroundColor: {
-                                type: 'string',
-                                format: 'color'
-                            },
-                            inputFontColor: {
-                                type: 'string',
-                                format: 'color'
-                            }
-                        }
+                        properties: _props
                     },
                     "light": {
                         type: 'object',
-                        properties: {
-                            backgroundColor: {
-                                type: 'string',
-                                format: 'color'
-                            },
-                            fontColor: {
-                                type: 'string',
-                                format: 'color'
-                            },
-                            inputBackgroundColor: {
-                                type: 'string',
-                                format: 'color'
-                            },
-                            inputFontColor: {
-                                type: 'string',
-                                format: 'color'
-                            }
-                        }
+                        properties: _props
                     }
                 }
             };
@@ -17341,6 +17261,16 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
             this.isReadyCallbackQueued = true;
             super.init();
             this.loadLib();
+            this.setTag({
+                backgoundColor: currentTheme.background.main,
+                fontColor: currentTheme.text.primary,
+                // buttonBackgroundColor: currentTheme.colors.primary.main,
+                // buttonFontColor: currentTheme.colors.primary.contrastText,
+                inputBackgroundColor: currentTheme.input.background,
+                inputFontColor: currentTheme.input.fontColor,
+                secondaryFontColor: currentTheme.colors.secondary.contrastText,
+                secondaryColor: currentTheme.colors.secondary.main
+            });
             this.classList.add(index_css_2.disperseLayout);
             const connected = index_22.isWalletConnected();
             this.checkStepStatus(connected);
@@ -17366,20 +17296,20 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                         this.$render("i-label", { id: "messageElm" })),
                     this.$render("i-panel", { class: "container-layout" },
                         this.$render("i-vstack", { id: "containerElm", position: "relative", minHeight: 600 },
-                            this.$render("i-hstack", { id: "firstStepElm", class: "step-elm", minHeight: 200, margin: { top: 40 }, padding: { left: 50, right: 50, top: 10, bottom: 10 }, border: { radius: 30 }, verticalAlignment: "center", horizontalAlignment: "space-between", background: { color: '#000' } },
+                            this.$render("i-hstack", { id: "firstStepElm", class: "step-elm", minHeight: 200, margin: { top: 40 }, padding: { left: 50, right: 50, top: 10, bottom: 10 }, border: { radius: 30 }, verticalAlignment: "center", horizontalAlignment: "space-between", background: { color: Theme.colors.secondary.main } },
                                 this.$render("i-hstack", { class: "step-1", verticalAlignment: "center", wrap: "wrap", gap: 15, margin: { right: 100 } },
-                                    this.$render("i-label", { caption: "STEP 1", font: { size: '20px', name: 'Montserrat SemiBold', color: '#F29224' } }),
+                                    this.$render("i-label", { caption: "STEP 1", font: { size: '20px', name: 'Montserrat SemiBold', color: Theme.colors.secondary.contrastText } }),
                                     this.$render("i-label", { caption: "Enter Token to Disperse", font: { size: '20px', name: 'Montserrat SemiBold' } })),
                                 this.$render("i-hstack", { class: "step-1" },
                                     this.$render("i-hstack", { id: "tokenElm", width: "100%", wrap: "nowrap", verticalAlignment: "center", horizontalAlignment: "space-between", padding: { top: 20, bottom: 20, left: 60, right: 60 }, border: { radius: 15, style: 'solid', width: 4 } },
                                         this.$render("i-hstack", { id: "tokenInfoElm" },
-                                            this.$render("i-label", { caption: "Please Select Token", font: { size: '16px', color: '#A8A8A8', name: 'Montserrat Medium' } })),
-                                        this.$render("i-icon", { name: "caret-down", fill: '#F29224', width: 24, height: 24 })),
+                                            this.$render("i-label", { caption: "Please Select Token", opacity: 0.75, font: { size: '16px', name: 'Montserrat Medium' } })),
+                                        this.$render("i-icon", { name: "caret-down", fill: Theme.text.primary, width: 24, height: 24 })),
                                     this.$render("token-selection", { id: "tokenSelection" }))),
-                            this.$render("i-vstack", { id: "secondStepElm", class: "step-elm", minHeight: 300, margin: { top: 40 }, padding: { left: 50, right: 50, top: 10, bottom: 10 }, border: { radius: 30 }, verticalAlignment: "center", background: { color: '#000' } },
+                            this.$render("i-vstack", { id: "secondStepElm", class: "step-elm", minHeight: 300, margin: { top: 40 }, padding: { left: 50, right: 50, top: 10, bottom: 10 }, border: { radius: 30 }, verticalAlignment: "center", background: { color: Theme.colors.secondary.main } },
                                 this.$render("i-hstack", { width: "100%", verticalAlignment: "center", horizontalAlignment: "space-between", wrap: "wrap", gap: 15 },
                                     this.$render("i-hstack", { verticalAlignment: "center", wrap: "wrap", gap: 15, margin: { right: 15 } },
-                                        this.$render("i-label", { caption: "STEP 2", font: { size: '20px', name: 'Montserrat SemiBold', color: '#F29224' } }),
+                                        this.$render("i-label", { caption: "STEP 2", font: { size: '20px', name: 'Montserrat SemiBold', color: Theme.colors.secondary.contrastText } }),
                                         this.$render("i-label", { caption: "Enter Recipients and Amounts", font: { size: '20px', name: 'Montserrat SemiBold' }, margin: { right: 60 } }),
                                         this.$render("i-label", { caption: "Enter one address and amount on each line. Supports any format.", font: { size: '13px', name: 'Montserrat Medium' }, maxWidth: "280px", class: "break-word" })),
                                     this.$render("i-hstack", { verticalAlignment: "center", wrap: "wrap", class: "ml-auto", horizontalAlignment: "end", gap: 15 },
@@ -17390,10 +17320,10 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                                 this.$render("i-input", { id: "inputBatch", height: "auto", enabled: false, placeholder: index_21.disperseDataToString(this.DummyDisperseData()), class: "input-batch custom-scroll", width: "100%", inputType: "textarea", rows: 4, margin: { top: 30 }, onChanged: this.onInputBatch })),
                             this.$render("i-hstack", { id: "thirdStepElm", class: "step-elm", minHeight: 240, margin: { top: 40 } },
                                 this.$render("i-vstack", { width: "100%" },
-                                    this.$render("i-hstack", { verticalAlignment: "center", horizontalAlignment: "space-between", wrap: "wrap", background: { color: "#34343A" }, border: { radius: 30 } },
-                                        this.$render("i-vstack", { class: "step-3", background: { color: '#000' }, width: 800, padding: { top: 50, bottom: 21, left: 50, right: 50 }, gap: 15, border: { radius: 30 } },
+                                    this.$render("i-hstack", { verticalAlignment: "center", horizontalAlignment: "space-between", wrap: "wrap", background: { color: Theme.input.background }, border: { radius: 30 } },
+                                        this.$render("i-vstack", { class: "step-3", background: { color: Theme.colors.secondary.main }, width: 800, padding: { top: 50, bottom: 21, left: 50, right: 50 }, gap: 15, border: { radius: 30 } },
                                             this.$render("i-hstack", { width: "100%", verticalAlignment: "center", gap: 15 },
-                                                this.$render("i-label", { caption: "STEP 3", font: { size: '20px', name: 'Montserrat SemiBold', color: '#F29224' } }),
+                                                this.$render("i-label", { caption: "STEP 3", font: { size: '20px', name: 'Montserrat SemiBold', color: Theme.colors.secondary.contrastText } }),
                                                 this.$render("i-label", { caption: "Confirm Disperse", font: { size: '20px', name: 'Montserrat SemiBold' } })),
                                             this.$render("i-vstack", { width: "100%", verticalAlignment: "center", gap: 10, class: "custom-scroll" },
                                                 this.$render("i-label", { id: "invalidElm", font: { size: '18px', color: '#F05E61' } }),
@@ -17407,15 +17337,15 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                                         this.$render("i-vstack", { class: "step-3", width: 500, maxWidth: "100%", verticalAlignment: "center", gap: 20, padding: { left: 30, right: 50 } },
                                             this.$render("i-hstack", { gap: 10, verticalAlignment: "center", horizontalAlignment: "space-between", wrap: "wrap" },
                                                 this.$render("i-hstack", { gap: 4, verticalAlignment: "center" },
-                                                    this.$render("i-label", { caption: "Total", font: { size: '20px', name: 'Montserrat SemiBold' } }),
-                                                    this.$render("i-icon", { id: "iconTotal", name: "question-circle", fill: "#fff", width: 20, height: 20, visible: false })),
-                                                this.$render("i-label", { id: "totalElm", class: "text-right ml-auto", font: { size: '20px', name: 'Montserrat SemiBold', color: '#C7C7C7' } })),
+                                                    this.$render("i-label", { caption: "Total", font: { size: '20px', name: 'Montserrat SemiBold', color: Theme.input.fontColor } }),
+                                                    this.$render("i-icon", { id: "iconTotal", name: "question-circle", fill: Theme.input.fontColor, width: 20, height: 20, visible: false })),
+                                                this.$render("i-label", { id: "totalElm", class: "text-right ml-auto", font: { size: '20px', name: 'Montserrat SemiBold', color: Theme.input.fontColor }, opacity: 0.75 })),
                                             this.$render("i-hstack", { gap: 10, verticalAlignment: "center", horizontalAlignment: "space-between", wrap: "wrap" },
-                                                this.$render("i-label", { caption: "Your Balance", font: { size: '20px', name: 'Montserrat SemiBold' } }),
-                                                this.$render("i-label", { id: "balanceElm", class: "text-right ml-auto", font: { size: '20px', name: 'Montserrat SemiBold', color: '#C7C7C7' } })),
+                                                this.$render("i-label", { caption: "Your Balance", font: { size: '20px', name: 'Montserrat SemiBold', color: Theme.input.fontColor } }),
+                                                this.$render("i-label", { id: "balanceElm", class: "text-right ml-auto", font: { size: '20px', name: 'Montserrat SemiBold', color: Theme.input.fontColor }, opacity: 0.75 })),
                                             this.$render("i-hstack", { gap: 10, verticalAlignment: "center", horizontalAlignment: "space-between", wrap: "wrap" },
-                                                this.$render("i-label", { caption: "Remaining", font: { size: '20px', name: 'Montserrat SemiBold' } }),
-                                                this.$render("i-label", { id: "remainingElm", class: "text-right ml-auto", font: { size: '20px', name: 'Montserrat SemiBold', color: '#C7C7C7' } })))),
+                                                this.$render("i-label", { caption: "Remaining", font: { size: '20px', name: 'Montserrat SemiBold', color: Theme.input.fontColor } }),
+                                                this.$render("i-label", { id: "remainingElm", class: "text-right ml-auto", font: { size: '20px', name: 'Montserrat SemiBold', color: Theme.input.fontColor }, opacity: 0.75 })))),
                                     this.$render("i-hstack", { verticalAlignment: "center", horizontalAlignment: "center", margin: { top: 60 }, gap: 30 },
                                         this.$render("i-button", { id: "btnApprove", caption: "Approve", class: "btn-os", width: 300, maxWidth: "100%", enabled: false, rightIcon: { spin: true, visible: false }, border: { radius: 12 }, padding: { top: 12, bottom: 12 }, onClick: this.handleApprove }),
                                         this.$render("i-button", { id: "btnDisperse", caption: "Disperse", class: "btn-os", width: 300, maxWidth: "100%", enabled: false, rightIcon: { spin: true, visible: false }, border: { radius: 12 }, padding: { top: 12, bottom: 12 }, onClick: this.handleDisperse }))))),
