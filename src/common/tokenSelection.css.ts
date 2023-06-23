@@ -1,4 +1,5 @@
 import { Styles } from '@ijstech/components';
+const Theme = Styles.Theme.ThemeVars;
 
 Styles.cssRule('.token-selection', {
   $nest: {
@@ -110,12 +111,12 @@ Styles.cssRule('.token-selection', {
     '.bg-modal': {
       $nest: {
         '.modal': {
-          background: '#000',
+          background: Theme.background.modal,
           width: 450,
           maxWidth: '100%',
           padding: '0.75rem 1rem',
           borderRadius: '1rem',
-          color: '#fff',
+          color: Theme.text.primary,
           marginTop: 40
         },
       }
@@ -136,6 +137,9 @@ Styles.cssRule('.token-selection', {
               transform: 'rotate(90deg)',
               opacity: 0.7
             },
+            'svg': {
+              fill: `${Theme.input.fontColor} !important`
+            },
             'i-input': {
               width: '100%'
             },
@@ -144,9 +148,9 @@ Styles.cssRule('.token-selection', {
               height: 'auto !important',
               padding: '1rem 1.5rem 1rem 2.25rem',
               borderRadius: '0.5rem',
-              border: '2px solid ##9C9C9C',
-              background: 'transparent',
-              color: 'inherit',
+              border: '2px solid #9C9C9C',
+              background: Theme.input.background,
+              color: Theme.input.fontColor,
               fontSize: 'inherit',
             }
           }
@@ -168,7 +172,7 @@ Styles.cssRule('.token-selection', {
               width: '10px',
               height: '14px',
               display: 'flex',
-              fill: '#fff',
+              fill: Theme.text.primary,
               position: 'absolute',
               right: '0',
             },
@@ -196,7 +200,7 @@ Styles.cssRule('.token-selection', {
               borderRadius: '1rem',
               border: '2px solid transparent',
               cursor: 'pointer',
-              background: '#34343A',
+              background: Theme.background.main,
               $nest: {
                 '&:hover': {
                   borderColor: '#F29224'
@@ -228,13 +232,13 @@ Styles.cssRule('.token-selection', {
               padding: '0.75rem 0.5rem',
               borderRadius: '1rem',
               overflow: 'unset',
-              background: '#34343A',
+              background: Theme.background.main,
               cursor: 'pointer',
               marginBottom: '0.75rem',
               minHeight: '50px',
               $nest: {
                 '&:hover': {
-                  background: '#26262a'
+                  opacity: 0.8
                 },
                 'i-image': {
                   marginRight: '0.5rem'

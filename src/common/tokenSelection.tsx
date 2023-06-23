@@ -1,8 +1,8 @@
 import { customElements, Module, Control, ControlElement, Modal, Input, Icon, Panel, Button, Image, observable, application, IEventBus, Container, Styles, GridLayout } from '@ijstech/components';
-import { 
-  isWalletConnected, 
-  getChainId, 
-  getTokenObject, 
+import {
+  isWalletConnected,
+  getChainId,
+  getTokenObject,
   getTokenIcon,
   hasUserToken,
   setUserTokens,
@@ -14,7 +14,9 @@ import './tokenSelection.css';
 import { ImportToken } from '../common/importToken';
 import { ChainNativeTokenByChainId, tokenStore, assets as tokenAssets } from '@scom/scom-token-list';
 
-interface TokenSelectionElement extends ControlElement{
+const Theme = Styles.Theme.ThemeVars;
+
+interface TokenSelectionElement extends ControlElement {
   disableSelect?: boolean,
   disabledMaxBtn?: boolean
 }
@@ -165,7 +167,7 @@ export class TokenSelection extends Module {
   get disableSelect(): boolean {
     return this._disableSelect;
   }
-  
+
   set disableSelect(value: boolean) {
     this._disableSelect = value;
     this.btnToken.enabled = !value;
@@ -250,7 +252,7 @@ export class TokenSelection extends Module {
       if (nativeToken?.symbol && token.symbol === nativeToken.symbol) {
         Object.assign(tokenObject, { isNative: true })
       }
-      if (!isWalletConnected()){
+      if (!isWalletConnected()) {
         Object.assign(tokenObject, {
           balance: 0,
         })
@@ -371,7 +373,7 @@ export class TokenSelection extends Module {
                       name="copy"
                       width="14px"
                       height="14px"
-                      fill={'#fff'}
+                      fill={Theme.text.primary}
                       margin={{ right: 8 }}
                       tooltip={{ content: `${token.symbol} has been copied`, trigger: 'click' }}
                       onClick={() => application.copyToClipboard(token.address || '')}
@@ -397,13 +399,13 @@ export class TokenSelection extends Module {
           </i-hstack>
           {
             token.isNew ? (
-              <i-hstack horizontalAlignment="center"> 
+              <i-hstack horizontalAlignment="center">
                 <i-button caption="Import"
-                class="btn-os"
-                  border={{radius: 5}}
-                  padding={{top: 4, bottom: 4, left: 20, right: 20}}
-                  font={{size: '16px', color: '#fff'}}
-                  margin={{top: 10}} height={34}
+                  class="btn-os"
+                  border={{ radius: 5 }}
+                  padding={{ top: 4, bottom: 4, left: 20, right: 20 }}
+                  font={{ size: '16px', color: Theme.text.primary }}
+                  margin={{ top: 10 }} height={34}
                   onClick={(source: Control, event: Event) => this.showImportTokenModal(event, token)}
                 />
               </i-hstack>
@@ -424,7 +426,7 @@ export class TokenSelection extends Module {
     } else if (this.targetChainId && this.targetChainId !== getChainId()) {
       this.tokenList.innerHTML = '';
       this.tokenList.append(<i-label class="text-center mt-1 mb-1" caption="No tokens found" />)
-    } else  {
+    } else {
       try {
         const tokenObj = await getTokenObject(this.filterValue, true);
         if (!tokenObj) throw new Error('Token is invalid');
@@ -511,7 +513,7 @@ export class TokenSelection extends Module {
         }
         image.url = logoAddress;
       }
-    } catch {}
+    } catch { }
   }
 
   private async onSelect(token: ITokenObject, isNew: boolean = false) {
@@ -524,7 +526,7 @@ export class TokenSelection extends Module {
       this.$eventBus.dispatch(EventId.EmitNewToken, token);
       isNew = true;
     }
-    this.onSelectToken({...token, isNew});
+    this.onSelectToken({ ...token, isNew });
     this.tokenSelectionModal.visible = false;
   }
 
@@ -565,15 +567,15 @@ export class TokenSelection extends Module {
     return (
       <i-panel class="token-selection">
         <i-panel id="tokenSelectionElm" visible={this.isTokenShown} class="flex">
-          <i-button id="btnMax" margin={{right: 4}} enabled={false} class="custom-btn hidden" caption="Max" onClick={() => this.onSetMaxBalance()} />
+          <i-button id="btnMax" margin={{ right: 4 }} enabled={false} class="custom-btn hidden" caption="Max" onClick={() => this.onSetMaxBalance()} />
           <i-button id="btnToken" enabled={false} class="custom-btn" rightIcon={{ name: "caret-down" }} caption="Select a token" onClick={() => this.showModal()} />
         </i-panel>
         <i-modal id="tokenSelectionModal" class="bg-modal" title="Select Token" closeIcon={{ name: 'times' }} onClose={() => this.onCloseModal()}>
           <i-panel class="search">
-            <i-icon width={16} height={16} name="search" fill="white" />
+            <i-icon width={16} height={16} name="search" fill={Theme.input.fontColor} />
             <i-input id="tokenSearch" placeholder="Search name or paste address" width="100%" height="auto" border={{ width: 2, style: 'solid', color: '#9C9C9C', radius: 10 }} onKeyUp={this.filterSearch.bind(this)} />
           </i-panel>
-          <i-panel id="commonTokenPanel" margin={{bottom: 16}} class="common-token">
+          <i-panel id="commonTokenPanel" margin={{ bottom: 16 }} class="common-token">
             <i-label caption="Common Tokens" />
             <i-grid-layout
               id="commonTokenList"
