@@ -1,6 +1,10 @@
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -55,8 +59,8 @@ define("@scom/scom-disperse/global/utils/helper.ts", ["require", "exports", "@ij
     })(SITE_ENV = exports.SITE_ENV || (exports.SITE_ENV = {}));
     exports.DefaultDateFormat = 'YYYY/MM/DD HH:mm:ss';
     const formatUTCDate = (date, formatType = exports.DefaultDateFormat) => {
-        const formatted = components_1.moment(date).format(formatType);
-        return `${formatted} (UTC+${components_1.moment().utcOffset() / 60})`;
+        const formatted = (0, components_1.moment)(date).format(formatType);
+        return `${formatted} (UTC+${(0, components_1.moment)().utcOffset() / 60})`;
     };
     exports.formatUTCDate = formatUTCDate;
     const formatNumber = (value, decimals) => {
@@ -71,7 +75,7 @@ define("@scom/scom-disperse/global/utils/helper.ts", ["require", "exports", "@ij
         if (val > 0 && new eth_wallet_1.BigNumber(val).lt(minValue)) {
             return `<${minValue}`;
         }
-        return exports.formatNumberWithSeparators(val, decimals || 4);
+        return (0, exports.formatNumberWithSeparators)(val, decimals || 4);
     };
     exports.formatNumber = formatNumber;
     const formatPercentNumber = (value, decimals) => {
@@ -82,7 +86,7 @@ define("@scom/scom-disperse/global/utils/helper.ts", ["require", "exports", "@ij
         else if (typeof value === 'object') {
             val = value.toNumber();
         }
-        return exports.formatNumberWithSeparators(val, decimals || 2);
+        return (0, exports.formatNumberWithSeparators)(val, decimals || 2);
     };
     exports.formatPercentNumber = formatPercentNumber;
     const formatNumberWithSeparators = (value, precision) => {
@@ -113,12 +117,12 @@ define("@scom/scom-disperse/global/utils/helper.ts", ["require", "exports", "@ij
     exports.isInvalidInput = isInvalidInput;
     const limitInputNumber = (input, decimals) => {
         const amount = input.value;
-        if (exports.isInvalidInput(amount)) {
+        if ((0, exports.isInvalidInput)(amount)) {
             input.value = '0';
             return;
         }
         if (!new eth_wallet_1.BigNumber(amount).isNaN()) {
-            input.value = exports.limitDecimals(amount, decimals || 18);
+            input.value = (0, exports.limitDecimals)(amount, decimals || 18);
         }
     };
     exports.limitInputNumber = limitInputNumber;
@@ -209,7 +213,7 @@ define("@scom/scom-disperse/global/utils/helper.ts", ["require", "exports", "@ij
             v = value.toString(16);
         }
         v = v.replace("0x", "");
-        v = exports.padLeft(v, 64);
+        v = (0, exports.padLeft)(v, 64);
         if (prefix)
             v = '0x' + v;
         return v;
@@ -356,7 +360,7 @@ define("@scom/scom-disperse/global/utils/helper.ts", ["require", "exports", "@ij
     };
     exports.getWeekDays = getWeekDays;
     const renderBalanceTooltip = (params, tokenMap, isBold) => {
-        const data = exports.formatNumberValue(params, tokenMap);
+        const data = (0, exports.formatNumberValue)(params, tokenMap);
         if (typeof data === "object") {
             const { result, tooltip } = data;
             if (isBold) {
@@ -782,8 +786,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/OpenSwap
             });
         }
     }
-    exports.OpenSwap = OpenSwap;
     OpenSwap._abi = OpenSwap_json_1.default.abi;
+    exports.OpenSwap = OpenSwap;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/amm/OSWAP_ERC20.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -975,8 +979,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/amm/OSWA
             });
         }
     }
-    exports.OSWAP_ERC20 = OSWAP_ERC20;
     OSWAP_ERC20._abi = OSWAP_ERC20_json_1.default.abi;
+    exports.OSWAP_ERC20 = OSWAP_ERC20;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/amm/OSWAP_Factory.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -1253,8 +1257,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/amm/OSWA
             });
         }
     }
-    exports.OSWAP_Factory = OSWAP_Factory;
     OSWAP_Factory._abi = OSWAP_Factory_json_1.default.abi;
+    exports.OSWAP_Factory = OSWAP_Factory;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/amm/OSWAP_Pair.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -1766,8 +1770,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/amm/OSWA
             });
         }
     }
-    exports.OSWAP_Pair = OSWAP_Pair;
     OSWAP_Pair._abi = OSWAP_Pair_json_1.default.abi;
+    exports.OSWAP_Pair = OSWAP_Pair;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/amm/OSWAP_PairCreator.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -1811,8 +1815,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/amm/OSWA
             });
         }
     }
-    exports.OSWAP_PairCreator = OSWAP_PairCreator;
     OSWAP_PairCreator._abi = OSWAP_PairCreator_json_1.default.abi;
+    exports.OSWAP_PairCreator = OSWAP_PairCreator;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/amm/OSWAP_Router.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -2224,8 +2228,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/amm/OSWA
             });
         }
     }
-    exports.OSWAP_Router = OSWAP_Router;
     OSWAP_Router._abi = OSWAP_Router_json_1.default.abi;
+    exports.OSWAP_Router = OSWAP_Router;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/amm/OSWAP_VotingExecutor1.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -2282,8 +2286,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/amm/OSWA
             });
         }
     }
-    exports.OSWAP_VotingExecutor1 = OSWAP_VotingExecutor1;
     OSWAP_VotingExecutor1._abi = OSWAP_VotingExecutor1_json_1.default.abi;
+    exports.OSWAP_VotingExecutor1 = OSWAP_VotingExecutor1;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/commons/OSWAP_FactoryBase.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -2457,8 +2461,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/commons/
             });
         }
     }
-    exports.OSWAP_FactoryBase = OSWAP_FactoryBase;
     OSWAP_FactoryBase._abi = OSWAP_FactoryBase_json_1.default.abi;
+    exports.OSWAP_FactoryBase = OSWAP_FactoryBase;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/commons/OSWAP_PausableFactory.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -2575,8 +2579,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/commons/
             });
         }
     }
-    exports.OSWAP_PausableFactory = OSWAP_PausableFactory;
     OSWAP_PausableFactory._abi = OSWAP_PausableFactory_json_1.default.abi;
+    exports.OSWAP_PausableFactory = OSWAP_PausableFactory;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/commons/OSWAP_PausablePair.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -2633,8 +2637,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/commons/
             });
         }
     }
-    exports.OSWAP_PausablePair = OSWAP_PausablePair;
     OSWAP_PausablePair._abi = OSWAP_PausablePair_json_1.default.abi;
+    exports.OSWAP_PausablePair = OSWAP_PausablePair;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/gov/OAXDEX_Administrator.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -3083,8 +3087,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/gov/OAXD
             });
         }
     }
-    exports.OAXDEX_Administrator = OAXDEX_Administrator;
     OAXDEX_Administrator._abi = OAXDEX_Administrator_json_1.default.abi;
+    exports.OAXDEX_Administrator = OAXDEX_Administrator;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/gov/OAXDEX_Governance.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -3767,8 +3771,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/gov/OAXD
             });
         }
     }
-    exports.OAXDEX_Governance = OAXDEX_Governance;
     OAXDEX_Governance._abi = OAXDEX_Governance_json_1.default.abi;
+    exports.OAXDEX_Governance = OAXDEX_Governance;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/gov/OAXDEX_VotingContract.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -4014,8 +4018,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/gov/OAXD
             });
         }
     }
-    exports.OAXDEX_VotingContract = OAXDEX_VotingContract;
     OAXDEX_VotingContract._abi = OAXDEX_VotingContract_json_1.default.abi;
+    exports.OAXDEX_VotingContract = OAXDEX_VotingContract;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/gov/OAXDEX_VotingExecutor.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -4072,8 +4076,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/gov/OAXD
             });
         }
     }
-    exports.OAXDEX_VotingExecutor = OAXDEX_VotingExecutor;
     OAXDEX_VotingExecutor._abi = OAXDEX_VotingExecutor_json_1.default.abi;
+    exports.OAXDEX_VotingExecutor = OAXDEX_VotingExecutor;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/gov/OAXDEX_VotingRegistry.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -4125,8 +4129,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/gov/OAXD
             });
         }
     }
-    exports.OAXDEX_VotingRegistry = OAXDEX_VotingRegistry;
     OAXDEX_VotingRegistry._abi = OAXDEX_VotingRegistry_json_1.default.abi;
+    exports.OAXDEX_VotingRegistry = OAXDEX_VotingRegistry;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/libraries/ERC20.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -4307,8 +4311,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/librarie
             });
         }
     }
-    exports.ERC20 = ERC20;
     ERC20._abi = ERC20_json_1.default.abi;
+    exports.ERC20 = ERC20;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/oracle/OSWAP_CertiKSecurityOracle.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -4348,8 +4352,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/oracle/O
             this.oracleAddress = oracleAddress_call;
         }
     }
-    exports.OSWAP_CertiKSecurityOracle = OSWAP_CertiKSecurityOracle;
     OSWAP_CertiKSecurityOracle._abi = OSWAP_CertiKSecurityOracle_json_1.default.abi;
+    exports.OSWAP_CertiKSecurityOracle = OSWAP_CertiKSecurityOracle;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/oracle/OSWAP_OracleFactory.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -4948,8 +4952,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/oracle/O
             });
         }
     }
-    exports.OSWAP_OracleFactory = OSWAP_OracleFactory;
     OSWAP_OracleFactory._abi = OSWAP_OracleFactory_json_1.default.abi;
+    exports.OSWAP_OracleFactory = OSWAP_OracleFactory;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/oracle/OSWAP_OracleLiquidityProvider.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -5110,8 +5114,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/oracle/O
             });
         }
     }
-    exports.OSWAP_OracleLiquidityProvider = OSWAP_OracleLiquidityProvider;
     OSWAP_OracleLiquidityProvider._abi = OSWAP_OracleLiquidityProvider_json_1.default.abi;
+    exports.OSWAP_OracleLiquidityProvider = OSWAP_OracleLiquidityProvider;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/oracle/OSWAP_OraclePair.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -5761,8 +5765,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/oracle/O
             });
         }
     }
-    exports.OSWAP_OraclePair = OSWAP_OraclePair;
     OSWAP_OraclePair._abi = OSWAP_OraclePair_json_1.default.abi;
+    exports.OSWAP_OraclePair = OSWAP_OraclePair;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/oracle/OSWAP_OraclePairCreator.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -5806,8 +5810,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/oracle/O
             });
         }
     }
-    exports.OSWAP_OraclePairCreator = OSWAP_OraclePairCreator;
     OSWAP_OraclePairCreator._abi = OSWAP_OraclePairCreator_json_1.default.abi;
+    exports.OSWAP_OraclePairCreator = OSWAP_OraclePairCreator;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/oracle/OSWAP_VotingExecutor2.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -5864,8 +5868,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/oracle/O
             });
         }
     }
-    exports.OSWAP_VotingExecutor2 = OSWAP_VotingExecutor2;
     OSWAP_VotingExecutor2._abi = OSWAP_VotingExecutor2_json_1.default.abi;
+    exports.OSWAP_VotingExecutor2 = OSWAP_VotingExecutor2;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/range/OSWAP_RangeFactory.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -6252,8 +6256,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/range/OS
             });
         }
     }
-    exports.OSWAP_RangeFactory = OSWAP_RangeFactory;
     OSWAP_RangeFactory._abi = OSWAP_RangeFactory_json_1.default.abi;
+    exports.OSWAP_RangeFactory = OSWAP_RangeFactory;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/range/OSWAP_RangeLiquidityProvider.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -6432,8 +6436,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/range/OS
             });
         }
     }
-    exports.OSWAP_RangeLiquidityProvider = OSWAP_RangeLiquidityProvider;
     OSWAP_RangeLiquidityProvider._abi = OSWAP_RangeLiquidityProvider_json_1.default.abi;
+    exports.OSWAP_RangeLiquidityProvider = OSWAP_RangeLiquidityProvider;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/range/OSWAP_RangePair.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -6977,8 +6981,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/range/OS
             });
         }
     }
-    exports.OSWAP_RangePair = OSWAP_RangePair;
     OSWAP_RangePair._abi = OSWAP_RangePair_json_1.default.abi;
+    exports.OSWAP_RangePair = OSWAP_RangePair;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/range/OSWAP_RangePairCreator.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -7022,8 +7026,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/range/OS
             });
         }
     }
-    exports.OSWAP_RangePairCreator = OSWAP_RangePairCreator;
     OSWAP_RangePairCreator._abi = OSWAP_RangePairCreator_json_1.default.abi;
+    exports.OSWAP_RangePairCreator = OSWAP_RangePairCreator;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/range/OSWAP_VotingExecutor3.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -7086,8 +7090,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/range/OS
             });
         }
     }
-    exports.OSWAP_VotingExecutor3 = OSWAP_VotingExecutor3;
     OSWAP_VotingExecutor3._abi = OSWAP_VotingExecutor3_json_1.default.abi;
+    exports.OSWAP_VotingExecutor3 = OSWAP_VotingExecutor3;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_ConfigStore.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -7193,8 +7197,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restrict
             });
         }
     }
-    exports.OSWAP_ConfigStore = OSWAP_ConfigStore;
     OSWAP_ConfigStore._abi = OSWAP_ConfigStore_json_1.default.abi;
+    exports.OSWAP_ConfigStore = OSWAP_ConfigStore;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_OtcLiquidityProvider.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -7409,8 +7413,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restrict
             });
         }
     }
-    exports.OSWAP_OtcLiquidityProvider = OSWAP_OtcLiquidityProvider;
     OSWAP_OtcLiquidityProvider._abi = OSWAP_OtcLiquidityProvider_json_1.default.abi;
+    exports.OSWAP_OtcLiquidityProvider = OSWAP_OtcLiquidityProvider;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_OtcPairOracle.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -7474,8 +7478,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restrict
             this.isSupported = isSupported_call;
         }
     }
-    exports.OSWAP_OtcPairOracle = OSWAP_OtcPairOracle;
     OSWAP_OtcPairOracle._abi = OSWAP_OtcPairOracle_json_1.default.abi;
+    exports.OSWAP_OtcPairOracle = OSWAP_OtcPairOracle;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_RestrictedFactory.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -7941,8 +7945,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restrict
             });
         }
     }
-    exports.OSWAP_RestrictedFactory = OSWAP_RestrictedFactory;
     OSWAP_RestrictedFactory._abi = OSWAP_RestrictedFactory_json_1.default.abi;
+    exports.OSWAP_RestrictedFactory = OSWAP_RestrictedFactory;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_RestrictedLiquidityProvider1.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -8157,8 +8161,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restrict
             });
         }
     }
-    exports.OSWAP_RestrictedLiquidityProvider1 = OSWAP_RestrictedLiquidityProvider1;
     OSWAP_RestrictedLiquidityProvider1._abi = OSWAP_RestrictedLiquidityProvider1_json_1.default.abi;
+    exports.OSWAP_RestrictedLiquidityProvider1 = OSWAP_RestrictedLiquidityProvider1;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_RestrictedLiquidityProvider3.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -8333,8 +8337,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restrict
             });
         }
     }
-    exports.OSWAP_RestrictedLiquidityProvider3 = OSWAP_RestrictedLiquidityProvider3;
     OSWAP_RestrictedLiquidityProvider3._abi = OSWAP_RestrictedLiquidityProvider3_json_1.default.abi;
+    exports.OSWAP_RestrictedLiquidityProvider3 = OSWAP_RestrictedLiquidityProvider3;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_RestrictedLiquidityProvider4.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -8509,8 +8513,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restrict
             });
         }
     }
-    exports.OSWAP_RestrictedLiquidityProvider4 = OSWAP_RestrictedLiquidityProvider4;
     OSWAP_RestrictedLiquidityProvider4._abi = OSWAP_RestrictedLiquidityProvider4_json_1.default.abi;
+    exports.OSWAP_RestrictedLiquidityProvider4 = OSWAP_RestrictedLiquidityProvider4;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_RestrictedPair.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -8996,8 +9000,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restrict
             });
         }
     }
-    exports.OSWAP_RestrictedPair = OSWAP_RestrictedPair;
     OSWAP_RestrictedPair._abi = OSWAP_RestrictedPair_json_1.default.abi;
+    exports.OSWAP_RestrictedPair = OSWAP_RestrictedPair;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_RestrictedPairOracle.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -9061,8 +9065,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restrict
             this.isSupported = isSupported_call;
         }
     }
-    exports.OSWAP_RestrictedPairOracle = OSWAP_RestrictedPairOracle;
     OSWAP_RestrictedPairOracle._abi = OSWAP_RestrictedPairOracle_json_1.default.abi;
+    exports.OSWAP_RestrictedPairOracle = OSWAP_RestrictedPairOracle;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_VotingExecutor4.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -9125,8 +9129,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restrict
             });
         }
     }
-    exports.OSWAP_VotingExecutor4 = OSWAP_VotingExecutor4;
     OSWAP_VotingExecutor4._abi = OSWAP_VotingExecutor4_json_1.default.abi;
+    exports.OSWAP_VotingExecutor4 = OSWAP_VotingExecutor4;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/router/OSWAP_HybridRouter.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -9350,8 +9354,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/router/O
             });
         }
     }
-    exports.OSWAP_HybridRouter = OSWAP_HybridRouter;
     OSWAP_HybridRouter._abi = OSWAP_HybridRouter_json_1.default.abi;
+    exports.OSWAP_HybridRouter = OSWAP_HybridRouter;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/router/OSWAP_HybridRouterRegistry.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -9780,8 +9784,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/router/O
             });
         }
     }
-    exports.OSWAP_HybridRouterRegistry = OSWAP_HybridRouterRegistry;
     OSWAP_HybridRouterRegistry._abi = OSWAP_HybridRouterRegistry_json_1.default.abi;
+    exports.OSWAP_HybridRouterRegistry = OSWAP_HybridRouterRegistry;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/router/OSWAP_OracleRouter.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -10025,8 +10029,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/router/O
             });
         }
     }
-    exports.OSWAP_OracleRouter = OSWAP_OracleRouter;
     OSWAP_OracleRouter._abi = OSWAP_OracleRouter_json_1.default.abi;
+    exports.OSWAP_OracleRouter = OSWAP_OracleRouter;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_OtcPair.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -10661,8 +10665,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restrict
             });
         }
     }
-    exports.OSWAP_OtcPair = OSWAP_OtcPair;
     OSWAP_OtcPair._abi = OSWAP_OtcPair_json_1.default.abi;
+    exports.OSWAP_OtcPair = OSWAP_OtcPair;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_OtcPairCreator.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -10706,8 +10710,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restrict
             });
         }
     }
-    exports.OSWAP_OtcPairCreator = OSWAP_OtcPairCreator;
     OSWAP_OtcPairCreator._abi = OSWAP_OtcPairCreator_json_1.default.abi;
+    exports.OSWAP_OtcPairCreator = OSWAP_OtcPairCreator;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_RestrictedPair1.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -11337,8 +11341,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restrict
             });
         }
     }
-    exports.OSWAP_RestrictedPair1 = OSWAP_RestrictedPair1;
     OSWAP_RestrictedPair1._abi = OSWAP_RestrictedPair1_json_1.default.abi;
+    exports.OSWAP_RestrictedPair1 = OSWAP_RestrictedPair1;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_RestrictedPair3.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -11970,8 +11974,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restrict
             });
         }
     }
-    exports.OSWAP_RestrictedPair3 = OSWAP_RestrictedPair3;
     OSWAP_RestrictedPair3._abi = OSWAP_RestrictedPair3_json_1.default.abi;
+    exports.OSWAP_RestrictedPair3 = OSWAP_RestrictedPair3;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_RestrictedPair4.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -12650,8 +12654,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restrict
             });
         }
     }
-    exports.OSWAP_RestrictedPair4 = OSWAP_RestrictedPair4;
     OSWAP_RestrictedPair4._abi = OSWAP_RestrictedPair4_json_1.default.abi;
+    exports.OSWAP_RestrictedPair4 = OSWAP_RestrictedPair4;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_RestrictedPairCreator1.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -12695,8 +12699,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restrict
             });
         }
     }
-    exports.OSWAP_RestrictedPairCreator1 = OSWAP_RestrictedPairCreator1;
     OSWAP_RestrictedPairCreator1._abi = OSWAP_RestrictedPairCreator1_json_1.default.abi;
+    exports.OSWAP_RestrictedPairCreator1 = OSWAP_RestrictedPairCreator1;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_RestrictedPairCreator4.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -12740,8 +12744,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restrict
             });
         }
     }
-    exports.OSWAP_RestrictedPairCreator4 = OSWAP_RestrictedPairCreator4;
     OSWAP_RestrictedPairCreator4._abi = OSWAP_RestrictedPairCreator4_json_1.default.abi;
+    exports.OSWAP_RestrictedPairCreator4 = OSWAP_RestrictedPairCreator4;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/router/OSWAP_HybridRouter2.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -13004,8 +13008,8 @@ define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/router/O
             });
         }
     }
-    exports.OSWAP_HybridRouter2 = OSWAP_HybridRouter2;
     OSWAP_HybridRouter2._abi = OSWAP_HybridRouter2_json_1.default.abi;
+    exports.OSWAP_HybridRouter2 = OSWAP_HybridRouter2;
 });
 define("@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/index.ts", ["require", "exports", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/OpenSwap.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/amm/OSWAP_ERC20.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/amm/OSWAP_Factory.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/amm/OSWAP_Pair.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/amm/OSWAP_PairCreator.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/amm/OSWAP_Router.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/amm/OSWAP_VotingExecutor1.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/commons/OSWAP_FactoryBase.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/commons/OSWAP_PausableFactory.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/commons/OSWAP_PausablePair.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/gov/OAXDEX_Administrator.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/gov/OAXDEX_Governance.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/gov/OAXDEX_VotingContract.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/gov/OAXDEX_VotingExecutor.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/gov/OAXDEX_VotingRegistry.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/libraries/ERC20.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/oracle/OSWAP_CertiKSecurityOracle.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/oracle/OSWAP_OracleFactory.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/oracle/OSWAP_OracleLiquidityProvider.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/oracle/OSWAP_OraclePair.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/oracle/OSWAP_OraclePairCreator.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/oracle/OSWAP_VotingExecutor2.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/range/OSWAP_RangeFactory.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/range/OSWAP_RangeLiquidityProvider.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/range/OSWAP_RangePair.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/range/OSWAP_RangePairCreator.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/range/OSWAP_VotingExecutor3.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_ConfigStore.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_OtcLiquidityProvider.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_OtcPairOracle.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_RestrictedFactory.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_RestrictedLiquidityProvider1.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_RestrictedLiquidityProvider3.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_RestrictedLiquidityProvider4.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_RestrictedPair.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_RestrictedPairOracle.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_VotingExecutor4.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/router/OSWAP_HybridRouter.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/router/OSWAP_HybridRouterRegistry.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/router/OSWAP_OracleRouter.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_OtcPair.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_OtcPairCreator.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_RestrictedPair1.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_RestrictedPair3.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_RestrictedPair4.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_RestrictedPairCreator1.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/restricted/OSWAP_RestrictedPairCreator4.ts", "@scom/scom-disperse/contracts/oswap-openswap-contract/contracts/router/OSWAP_HybridRouter2.ts"], function (require, exports, OpenSwap_1, OSWAP_ERC20_1, OSWAP_Factory_1, OSWAP_Pair_1, OSWAP_PairCreator_1, OSWAP_Router_1, OSWAP_VotingExecutor1_1, OSWAP_FactoryBase_1, OSWAP_PausableFactory_1, OSWAP_PausablePair_1, OAXDEX_Administrator_1, OAXDEX_Governance_1, OAXDEX_VotingContract_1, OAXDEX_VotingExecutor_1, OAXDEX_VotingRegistry_1, ERC20_1, OSWAP_CertiKSecurityOracle_1, OSWAP_OracleFactory_1, OSWAP_OracleLiquidityProvider_1, OSWAP_OraclePair_1, OSWAP_OraclePairCreator_1, OSWAP_VotingExecutor2_1, OSWAP_RangeFactory_1, OSWAP_RangeLiquidityProvider_1, OSWAP_RangePair_1, OSWAP_RangePairCreator_1, OSWAP_VotingExecutor3_1, OSWAP_ConfigStore_1, OSWAP_OtcLiquidityProvider_1, OSWAP_OtcPairOracle_1, OSWAP_RestrictedFactory_1, OSWAP_RestrictedLiquidityProvider1_1, OSWAP_RestrictedLiquidityProvider3_1, OSWAP_RestrictedLiquidityProvider4_1, OSWAP_RestrictedPair_1, OSWAP_RestrictedPairOracle_1, OSWAP_VotingExecutor4_1, OSWAP_HybridRouter_1, OSWAP_HybridRouterRegistry_1, OSWAP_OracleRouter_1, OSWAP_OtcPair_1, OSWAP_OtcPairCreator_1, OSWAP_RestrictedPair1_1, OSWAP_RestrictedPair3_1, OSWAP_RestrictedPair4_1, OSWAP_RestrictedPairCreator1_1, OSWAP_RestrictedPairCreator4_1, OSWAP_HybridRouter2_1) {
     "use strict";
@@ -13710,7 +13714,7 @@ define("@scom/scom-disperse/store/utils.ts", ["require", "exports", "@ijstech/et
     const setNetworkList = (networkList, infuraId) => {
         const wallet = eth_wallet_3.Wallet.getClientInstance();
         exports.state.networkMap = {};
-        const defaultNetworkList = scom_network_list_1.default();
+        const defaultNetworkList = (0, scom_network_list_1.default)();
         const defaultNetworkMap = defaultNetworkList.reduce((acc, cur) => {
             acc[cur.chainId] = cur;
             return acc;
@@ -13733,8 +13737,8 @@ define("@scom/scom-disperse/store/utils.ts", ["require", "exports", "@ijstech/et
     };
     exports.getNetworkInfo = getNetworkInfo;
     const getNetworkExplorerName = (chainId) => {
-        if (exports.getNetworkInfo(chainId)) {
-            return exports.getNetworkInfo(chainId).explorerName;
+        if ((0, exports.getNetworkInfo)(chainId)) {
+            return (0, exports.getNetworkInfo)(chainId).explorerName;
         }
         return 'Unknown';
     };
@@ -13778,13 +13782,13 @@ define("@scom/scom-disperse/store/utils.ts", ["require", "exports", "@ijstech/et
             setNetworkList(options.networks, options.infuraId);
         }
         if (options.proxyAddresses) {
-            exports.setProxyAddresses(options.proxyAddresses);
+            (0, exports.setProxyAddresses)(options.proxyAddresses);
         }
         if (options.ipfsGatewayUrl) {
-            exports.setIPFSGatewayUrl(options.ipfsGatewayUrl);
+            (0, exports.setIPFSGatewayUrl)(options.ipfsGatewayUrl);
         }
         if (options.apiGatewayUrls) {
-            exports.setAPIGatewayUrls(options.apiGatewayUrls);
+            (0, exports.setAPIGatewayUrls)(options.apiGatewayUrls);
         }
         if (options.embedderCommissionFee) {
             setEmbedderCommissionFee(options.embedderCommissionFee);
@@ -13832,7 +13836,7 @@ define("@scom/scom-disperse/store/utils.ts", ["require", "exports", "@ijstech/et
         const wallet = eth_wallet_3.Wallet.getClientInstance();
         await wallet.switchNetwork(chainId);
         if (!isWalletConnected()) {
-            components_2.application.EventBus.dispatch("chainChanged" /* chainChanged */, chainId);
+            components_2.application.EventBus.dispatch("chainChanged" /* EventId.chainChanged */, chainId);
         }
     }
     exports.switchNetwork = switchNetwork;
@@ -13841,11 +13845,11 @@ define("@scom/scom-disperse/store/utils.ts", ["require", "exports", "@ijstech/et
     };
     exports.getSupportedNetworks = getSupportedNetworks;
     function getChainId() {
-        return isWalletConnected() ? eth_wallet_3.Wallet.getClientInstance().chainId : exports.state.currentChainId || exports.getDefaultChainId();
+        return isWalletConnected() ? eth_wallet_3.Wallet.getClientInstance().chainId : exports.state.currentChainId || (0, exports.getDefaultChainId)();
     }
     exports.getChainId = getChainId;
     const getDefaultChainId = () => {
-        switch (exports.getSiteEnv()) {
+        switch ((0, exports.getSiteEnv)()) {
             case index_4.SITE_ENV.TESTNET:
             // return ChainNetwork.Fuju;
             case index_4.SITE_ENV.DEV:
@@ -13925,14 +13929,14 @@ define("@scom/scom-disperse/store/index.ts", ["require", "exports", "@scom/scom-
         const tokenMap = scom_token_list_2.tokenStore.tokenMap;
         let ChainNativeToken;
         let tokenObject;
-        if (utils_1.isWalletConnected()) {
-            ChainNativeToken = utils_1.getChainNativeToken(utils_1.getChainId());
+        if ((0, utils_1.isWalletConnected)()) {
+            ChainNativeToken = (0, utils_1.getChainNativeToken)((0, utils_1.getChainId)());
             tokenObject = address == ChainNativeToken.symbol ? ChainNativeToken : tokenMap[address.toLowerCase()];
         }
         else {
             tokenObject = tokenMap[address.toLowerCase()];
         }
-        return scom_token_list_2.assets.tokenPath(tokenObject, utils_1.getChainId());
+        return scom_token_list_2.assets.tokenPath(tokenObject, (0, utils_1.getChainId)());
     };
     exports.getTokenIcon = getTokenIcon;
     const tokenSymbol = (address) => {
@@ -14266,10 +14270,10 @@ define("@scom/scom-disperse/common/importToken.tsx", ["require", "exports", "@ij
         async onImportToken(source, event) {
             event.stopPropagation();
             const tokenObj = this.token;
-            index_9.addUserTokens(tokenObj);
+            (0, index_9.addUserTokens)(tokenObj);
             scom_token_list_3.tokenStore.updateTokenMapData();
             await scom_token_list_3.tokenStore.updateAllTokenBalances();
-            this.$eventBus.dispatch("emitNewToken" /* EmitNewToken */, tokenObj);
+            this.$eventBus.dispatch("emitNewToken" /* EventId.EmitNewToken */, tokenObj);
             if (typeof this.onUpdate === 'function') {
                 this.onUpdate(tokenObj);
             }
@@ -14280,7 +14284,7 @@ define("@scom/scom-disperse/common/importToken.tsx", ["require", "exports", "@ij
         }
         viewContract() {
             const chainId = eth_wallet_4.Wallet.getClientInstance().chainId;
-            index_8.viewOnExplorerByAddress(chainId, this._state.address);
+            (0, index_8.viewOnExplorerByAddress)(chainId, this._state.address);
         }
         async init() {
             super.init();
@@ -14311,10 +14315,10 @@ define("@scom/scom-disperse/common/importToken.tsx", ["require", "exports", "@ij
         }
     };
     __decorate([
-        components_5.observable()
+        (0, components_5.observable)()
     ], ImportToken.prototype, "_state", void 0);
     ImportToken = __decorate([
-        components_5.customElements('import-token')
+        (0, components_5.customElements)('import-token')
     ], ImportToken);
     exports.ImportToken = ImportToken;
 });
@@ -14325,27 +14329,6 @@ define("@scom/scom-disperse/common/tokenSelection.tsx", ["require", "exports", "
     const Theme = components_6.Styles.Theme.ThemeVars;
     ;
     let TokenSelection = class TokenSelection extends components_6.Module {
-        constructor(parent, options) {
-            super(parent, options);
-            this._isTokenShown = true;
-            this._isSortBalanceShown = true;
-            this._isBtnMaxShown = true;
-            this.defaultUrl = assets_1.default.fullPath('img/tokens/token-placeholder.svg');
-            this.sortToken = (a, b, asc) => {
-                if (a.balance != b.balance) {
-                    return asc ? (a.balance - b.balance) : (b.balance - a.balance);
-                }
-                if (a.symbol.toLowerCase() < b.symbol.toLowerCase()) {
-                    return -1;
-                }
-                if (a.symbol.toLowerCase() > b.symbol.toLowerCase()) {
-                    return 1;
-                }
-                return 0;
-            };
-            this.$eventBus = components_6.application.EventBus;
-            this.registerEvent();
-        }
         get token() {
             return this._token;
         }
@@ -14426,7 +14409,7 @@ define("@scom/scom-disperse/common/tokenSelection.tsx", ["require", "exports", "
             if (this.targetChainId) {
                 return this.targetChainId;
             }
-            return index_10.isWalletConnected() ? this.currentChainId : index_10.getChainId();
+            return (0, index_10.isWalletConnected)() ? this.currentChainId : (0, index_10.getChainId)();
         }
         get disableSelect() {
             return this._disableSelect;
@@ -14446,9 +14429,9 @@ define("@scom/scom-disperse/common/tokenSelection.tsx", ["require", "exports", "
         }
         async initData() {
             if (!this.chainId) {
-                this.currentChainId = index_10.getChainId();
+                this.currentChainId = (0, index_10.getChainId)();
             }
-            if (index_10.isWalletConnected()) {
+            if ((0, index_10.isWalletConnected)()) {
                 this.tokenBalancesMap = scom_token_list_4.tokenStore.tokenBalances;
             }
             this.renderTokenItems();
@@ -14464,13 +14447,13 @@ define("@scom/scom-disperse/common/tokenSelection.tsx", ["require", "exports", "
         }
         async onChainChange() {
             if (!this.targetChainId) {
-                this.currentChainId = index_10.getChainId();
+                this.currentChainId = (0, index_10.getChainId)();
                 scom_token_list_4.tokenStore.updateTokenMapData();
                 this.updateDataByChain();
             }
         }
         async onWalletConnect() {
-            this.checkHasMetaMask = index_10.hasMetaMask();
+            this.checkHasMetaMask = (0, index_10.hasMetaMask)();
             scom_token_list_4.tokenStore.updateTokenMapData();
             await scom_token_list_4.tokenStore.updateAllTokenBalances();
             await this.initData();
@@ -14485,11 +14468,11 @@ define("@scom/scom-disperse/common/tokenSelection.tsx", ["require", "exports", "
             await this.initData();
         }
         registerEvent() {
-            this.$eventBus.register(this, "isWalletConnected" /* IsWalletConnected */, this.onWalletConnect);
-            this.$eventBus.register(this, "IsWalletDisconnected" /* IsWalletDisconnected */, this.onWalletDisconnect);
-            this.$eventBus.register(this, "chainChanged" /* chainChanged */, this.onChainChange);
-            this.$eventBus.register(this, "Paid" /* Paid */, this.onPaid);
-            this.$eventBus.register(this, "emitNewToken" /* EmitNewToken */, this.updateDataByNewToken);
+            this.$eventBus.register(this, "isWalletConnected" /* EventId.IsWalletConnected */, this.onWalletConnect);
+            this.$eventBus.register(this, "IsWalletDisconnected" /* EventId.IsWalletDisconnected */, this.onWalletDisconnect);
+            this.$eventBus.register(this, "chainChanged" /* EventId.chainChanged */, this.onChainChange);
+            this.$eventBus.register(this, "Paid" /* EventId.Paid */, this.onPaid);
+            this.$eventBus.register(this, "emitNewToken" /* EventId.EmitNewToken */, this.updateDataByNewToken);
         }
         get tokenDataList() {
             let tokenList = [];
@@ -14506,7 +14489,7 @@ define("@scom/scom-disperse/common/tokenSelection.tsx", ["require", "exports", "
                 if ((nativeToken === null || nativeToken === void 0 ? void 0 : nativeToken.symbol) && token.symbol === nativeToken.symbol) {
                     Object.assign(tokenObject, { isNative: true });
                 }
-                if (!index_10.isWalletConnected()) {
+                if (!(0, index_10.isWalletConnected)()) {
                     Object.assign(tokenObject, {
                         balance: 0,
                     });
@@ -14571,7 +14554,7 @@ define("@scom/scom-disperse/common/tokenSelection.tsx", ["require", "exports", "
             if (this.isCommonShown && this.commonTokenDataList) {
                 this.commonTokenPanel.classList.remove('hidden');
                 this.commonTokenDataList.forEach((token) => {
-                    const logoAddress = token.address && !this.targetChainId ? index_10.getTokenIcon(token.address) : scom_token_list_4.assets.tokenPath(token, this.chainId);
+                    const logoAddress = token.address && !this.targetChainId ? (0, index_10.getTokenIcon)(token.address) : scom_token_list_4.assets.tokenPath(token, this.chainId);
                     this.commonTokenList.appendChild(this.$render("i-hstack", { onClick: () => this.onSelect(token), tooltip: { content: token.name }, verticalAlignment: "center", class: "grid-item", wrap: "nowrap" },
                         this.$render("i-image", { width: 24, height: 24, url: logoAddress, fallbackUrl: this.defaultUrl }),
                         this.$render("i-label", { caption: token.symbol })));
@@ -14582,7 +14565,7 @@ define("@scom/scom-disperse/common/tokenSelection.tsx", ["require", "exports", "
             }
         }
         renderToken(token) {
-            const logoAddress = token.address && !this.targetChainId ? index_10.getTokenIcon(token.address) : scom_token_list_4.assets.tokenPath(token, this.chainId);
+            const logoAddress = token.address && !this.targetChainId ? (0, index_10.getTokenIcon)(token.address) : scom_token_list_4.assets.tokenPath(token, this.chainId);
             return (this.$render("i-hstack", { width: "100%", verticalAlignment: "center", class: "token-item", onClick: () => this.onSelect(token) },
                 this.$render("i-vstack", { width: "100%" },
                     this.$render("i-hstack", { verticalAlignment: "center" },
@@ -14598,7 +14581,7 @@ define("@scom/scom-disperse/common/tokenSelection.tsx", ["require", "exports", "
                                     token.address && this.checkHasMetaMask ?
                                         this.$render("i-image", { display: "flex", width: 16, height: 16, url: assets_1.default.fullPath('img/wallet/metamask.png'), tooltip: { content: 'Add to MetaMask' }, onClick: (target, event) => this.addToMetamask(event, token) })
                                         : []))),
-                        this.$render("i-label", { class: "ml-auto", caption: index_11.formatNumber(token.balance, 4) })),
+                        this.$render("i-label", { class: "ml-auto", caption: (0, index_11.formatNumber)(token.balance, 4) })),
                     token.isNew ? (this.$render("i-hstack", { horizontalAlignment: "center" },
                         this.$render("i-button", { caption: "Import", class: "btn-os", border: { radius: 5 }, padding: { top: 4, bottom: 4, left: 20, right: 20 }, font: { size: '16px', color: Theme.text.primary }, margin: { top: 10 }, height: 34, onClick: (source, event) => this.showImportTokenModal(event, token) }))) : [])));
         }
@@ -14611,13 +14594,13 @@ define("@scom/scom-disperse/common/tokenSelection.tsx", ["require", "exports", "
                 const tokenItems = this.tokenDataListFiltered.map((token) => this.renderToken(token));
                 this.tokenList.append(...tokenItems);
             }
-            else if (this.targetChainId && this.targetChainId !== index_10.getChainId()) {
+            else if (this.targetChainId && this.targetChainId !== (0, index_10.getChainId)()) {
                 this.tokenList.innerHTML = '';
                 this.tokenList.append(this.$render("i-label", { class: "text-center mt-1 mb-1", caption: "No tokens found" }));
             }
             else {
                 try {
-                    const tokenObj = await index_10.getTokenObject(this.filterValue, true);
+                    const tokenObj = await (0, index_10.getTokenObject)(this.filterValue, true);
                     if (!tokenObj)
                         throw new Error('Token is invalid');
                     this.tokenList.innerHTML = '';
@@ -14659,7 +14642,7 @@ define("@scom/scom-disperse/common/tokenSelection.tsx", ["require", "exports", "
             this.tokenSelectionModal.visible = true;
         }
         updateStatusButton() {
-            const status = index_10.isWalletConnected();
+            const status = (0, index_10.isWalletConnected)();
             if (this.btnToken) {
                 this.btnToken.enabled = !this.disableSelect && status;
             }
@@ -14691,7 +14674,7 @@ define("@scom/scom-disperse/common/tokenSelection.tsx", ["require", "exports", "
                     if (this.isBtnMaxShown) {
                         this.btnMax.classList.remove('hidden');
                     }
-                    const logoAddress = token.address && !this.targetChainId ? index_10.getTokenIcon(token.address) : scom_token_list_4.assets.tokenPath(token, this.chainId);
+                    const logoAddress = token.address && !this.targetChainId ? (0, index_10.getTokenIcon)(token.address) : scom_token_list_4.assets.tokenPath(token, this.chainId);
                     if (!image) {
                         image = new components_6.Image(btnToken, {
                             width: 20,
@@ -14708,15 +14691,36 @@ define("@scom/scom-disperse/common/tokenSelection.tsx", ["require", "exports", "
         async onSelect(token, isNew = false) {
             this.token = token;
             // The token has been not imported
-            if (!isNew && token.isNew && !index_10.hasUserToken(token.address || '', this.chainId)) {
-                index_10.setUserTokens(token, this.chainId);
+            if (!isNew && token.isNew && !(0, index_10.hasUserToken)(token.address || '', this.chainId)) {
+                (0, index_10.setUserTokens)(token, this.chainId);
                 scom_token_list_4.tokenStore.updateTokenMapData();
                 await scom_token_list_4.tokenStore.updateAllTokenBalances();
-                this.$eventBus.dispatch("emitNewToken" /* EmitNewToken */, token);
+                this.$eventBus.dispatch("emitNewToken" /* EventId.EmitNewToken */, token);
                 isNew = true;
             }
             this.onSelectToken(Object.assign(Object.assign({}, token), { isNew }));
             this.tokenSelectionModal.visible = false;
+        }
+        constructor(parent, options) {
+            super(parent, options);
+            this._isTokenShown = true;
+            this._isSortBalanceShown = true;
+            this._isBtnMaxShown = true;
+            this.defaultUrl = assets_1.default.fullPath('img/tokens/token-placeholder.svg');
+            this.sortToken = (a, b, asc) => {
+                if (a.balance != b.balance) {
+                    return asc ? (a.balance - b.balance) : (b.balance - a.balance);
+                }
+                if (a.symbol.toLowerCase() < b.symbol.toLowerCase()) {
+                    return -1;
+                }
+                if (a.symbol.toLowerCase() > b.symbol.toLowerCase()) {
+                    return 1;
+                }
+                return 0;
+            };
+            this.$eventBus = components_6.application.EventBus;
+            this.registerEvent();
         }
         ;
         async init() {
@@ -14726,7 +14730,7 @@ define("@scom/scom-disperse/common/tokenSelection.tsx", ["require", "exports", "
             this.disabledMaxBtn = this.getAttribute("disabledMaxBtn", true);
             this.updateStatusButton();
             this.updateButton(this._token);
-            if (!index_10.isWalletConnected())
+            if (!(0, index_10.isWalletConnected)())
                 this.disableSelect = false;
         }
         showImportTokenModal(event, token) {
@@ -14765,13 +14769,13 @@ define("@scom/scom-disperse/common/tokenSelection.tsx", ["require", "exports", "
         }
     };
     __decorate([
-        components_6.observable()
+        (0, components_6.observable)()
     ], TokenSelection.prototype, "sortValue", void 0);
     __decorate([
-        components_6.observable()
+        (0, components_6.observable)()
     ], TokenSelection.prototype, "filterValue", void 0);
     TokenSelection = __decorate([
-        components_6.customElements('token-selection')
+        (0, components_6.customElements)('token-selection')
     ], TokenSelection);
     exports.TokenSelection = TokenSelection;
     ;
@@ -14852,15 +14856,15 @@ define("@scom/scom-disperse/common/result.tsx", ["require", "exports", "@ijstech
     const Theme = components_8.Styles.Theme.ThemeVars;
     ;
     let Result = class Result extends components_8.Module {
-        constructor(parent, options) {
-            super(parent, options);
-        }
         get message() {
             return this._message;
         }
         set message(value) {
             this._message = value;
             this.renderUI();
+        }
+        constructor(parent, options) {
+            super(parent, options);
         }
         ;
         async init() {
@@ -14891,7 +14895,7 @@ define("@scom/scom-disperse/common/result.tsx", ["require", "exports", "@ijstech
         async buildLink() {
             if (this.message.txtHash) {
                 const chainId = eth_wallet_5.Wallet.getClientInstance().chainId;
-                index_12.viewOnExplorerByTxHash(chainId, this.message.txtHash);
+                (0, index_12.viewOnExplorerByTxHash)(chainId, this.message.txtHash);
             }
         }
         async renderUI() {
@@ -14926,7 +14930,7 @@ define("@scom/scom-disperse/common/result.tsx", ["require", "exports", "@ijstech
             }
             else if (this.message.status === 'success') {
                 const chainId = await eth_wallet_5.Wallet.getClientInstance().getChainId();
-                const explorerName = index_13.getNetworkExplorerName(chainId);
+                const explorerName = (0, index_13.getNetworkExplorerName)(chainId);
                 const image = await components_8.Image.create({
                     width: '50px',
                     url: assets_2.default.fullPath('img/success-icon.svg')
@@ -15014,7 +15018,7 @@ define("@scom/scom-disperse/common/result.tsx", ["require", "exports", "@ijstech
             if (this.message.content.message && this.message.content.message.includes('Internal JSON-RPC error.')) {
                 this.message.content.message = JSON.parse(this.message.content.message.replace('Internal JSON-RPC error.\n', '')).message;
             }
-            return await index_12.parseContractError(this.message.content.message, this.message.obj);
+            return await (0, index_12.parseContractError)(this.message.content.message, this.message.obj);
         }
         render() {
             return (this.$render("i-modal", { id: "confirmModal", closeIcon: { name: 'times' }, class: "confirm-modal", minHeight: "280px" },
@@ -15022,7 +15026,7 @@ define("@scom/scom-disperse/common/result.tsx", ["require", "exports", "@ijstech
         }
     };
     Result = __decorate([
-        components_8.customElements('disperse-result')
+        (0, components_8.customElements)('disperse-result')
     ], Result);
     exports.Result = Result;
     ;
@@ -15281,8 +15285,8 @@ define("@scom/scom-disperse/contracts/scom-commission-proxy-contract/contracts/P
             });
         }
     }
-    exports.Proxy = Proxy;
     Proxy._abi = Proxy_json_1.default.abi;
+    exports.Proxy = Proxy;
 });
 define("@scom/scom-disperse/contracts/scom-commission-proxy-contract/contracts/ProxyV2.json.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -15530,8 +15534,8 @@ define("@scom/scom-disperse/contracts/scom-commission-proxy-contract/contracts/P
             });
         }
     }
-    exports.ProxyV2 = ProxyV2;
     ProxyV2._abi = ProxyV2_json_1.default.abi;
+    exports.ProxyV2 = ProxyV2;
 });
 define("@scom/scom-disperse/contracts/scom-commission-proxy-contract/contracts/index.ts", ["require", "exports", "@scom/scom-disperse/contracts/scom-commission-proxy-contract/contracts/Proxy.ts", "@scom/scom-disperse/contracts/scom-commission-proxy-contract/contracts/ProxyV2.ts"], function (require, exports, Proxy_1, ProxyV2_1) {
     "use strict";
@@ -15667,8 +15671,8 @@ define("@scom/scom-disperse/contracts/scom-disperse-contract/contracts/Disperse.
             });
         }
     }
-    exports.Disperse = Disperse;
     Disperse._abi = Disperse_json_1.default.abi;
+    exports.Disperse = Disperse;
 });
 define("@scom/scom-disperse/contracts/scom-disperse-contract/contracts/index.ts", ["require", "exports", "@scom/scom-disperse/contracts/scom-disperse-contract/contracts/Disperse.ts"], function (require, exports, Disperse_1) {
     "use strict";
@@ -15754,11 +15758,11 @@ define("@scom/scom-disperse/disperse-utils/API.ts", ["require", "exports", "@sco
     };
     exports.onApproveToken = onApproveToken;
     const getCurrentCommissions = (commissions) => {
-        return (commissions || []).filter(v => v.chainId == index_15.getChainId());
+        return (commissions || []).filter(v => v.chainId == (0, index_15.getChainId)());
     };
     exports.getCurrentCommissions = getCurrentCommissions;
     const getCommissionAmount = (commissions, amount) => {
-        const _commissions = (commissions || []).filter(v => v.chainId == index_15.getChainId()).map(v => {
+        const _commissions = (commissions || []).filter(v => v.chainId == (0, index_15.getChainId)()).map(v => {
             return {
                 to: v.walletAddress,
                 amount: amount.times(v.share)
@@ -15771,10 +15775,10 @@ define("@scom/scom-disperse/disperse-utils/API.ts", ["require", "exports", "@sco
     const onDisperse = async (disperseData) => {
         const { token, data, commissions } = disperseData;
         const wallet = eth_wallet_6.Wallet.getClientInstance();
-        const disperseAddress = index_15.getDisperseAddress();
+        const disperseAddress = (0, index_15.getDisperseAddress)();
         const disperseContract = new index_18.Contracts.Disperse(wallet, disperseAddress);
         const amount = eth_wallet_6.Utils.toDecimals(data.reduce((pv, cv) => pv.plus(cv.amount), new eth_wallet_6.BigNumber('0'))).dp(0);
-        const _commissions = (commissions || []).filter(v => v.chainId == index_15.getChainId()).map(v => {
+        const _commissions = (commissions || []).filter(v => v.chainId == (0, index_15.getChainId)()).map(v => {
             return {
                 to: v.walletAddress,
                 amount: amount.times(v.share).dp(0)
@@ -15787,7 +15791,7 @@ define("@scom/scom-disperse/disperse-utils/API.ts", ["require", "exports", "@sco
         let receipt;
         try {
             if (_commissions.length) {
-                const proxyAddress = index_15.getProxyAddress();
+                const proxyAddress = (0, index_15.getProxyAddress)();
                 const proxy = new index_17.Contracts.Proxy(wallet, proxyAddress);
                 const tokensIn = {
                     token: token.address || eth_wallet_6.Utils.nullAddress,
@@ -16237,11 +16241,11 @@ define("@scom/scom-disperse/config/index.tsx", ["require", "exports", "@ijstech/
                     key: 'chainId',
                     textAlign: 'left',
                     onRenderCell: function (source, columnData, rowData) {
-                        const supportedNetworks = index_19.getSupportedNetworks();
+                        const supportedNetworks = (0, index_19.getSupportedNetworks)();
                         const network = supportedNetworks.find(net => net.chainId === columnData);
                         if (!network)
                             return this.$render("i-panel", null);
-                        const networkInfo = index_19.getNetworkInfo(network.chainId);
+                        const networkInfo = (0, index_19.getNetworkInfo)(network.chainId);
                         const imgUrl = networkInfo.image || '';
                         const hstack = new components_12.HStack(undefined, {
                             verticalAlignment: 'center',
@@ -16328,8 +16332,8 @@ define("@scom/scom-disperse/config/index.tsx", ["require", "exports", "@ijstech/
         }
         async init() {
             super.init();
-            const embedderFee = index_19.getEmbedderCommissionFee();
-            this.lbCommissionShare.caption = `${index_20.formatNumber(new eth_wallet_7.BigNumber(embedderFee).times(100).toFixed(), 4)} %`;
+            const embedderFee = (0, index_19.getEmbedderCommissionFee)();
+            this.lbCommissionShare.caption = `${(0, index_20.formatNumber)(new eth_wallet_7.BigNumber(embedderFee).times(100).toFixed(), 4)} %`;
             const commissions = this.getAttribute('commissions', true, []);
             this.commissionInfoList = commissions;
             this.tableCommissions.data = commissions;
@@ -16351,7 +16355,7 @@ define("@scom/scom-disperse/config/index.tsx", ["require", "exports", "@ijstech/
             this._onCustomCommissionsChanged = value;
         }
         getSupportedChainIds() {
-            return index_19.getSupportedNetworks().map(v => ({ chainId: v.chainId }));
+            return (0, index_19.getSupportedNetworks)().map(v => ({ chainId: v.chainId }));
         }
         onModalAddCommissionClosed() {
             this.networkPicker.clearNetwork();
@@ -16363,7 +16367,7 @@ define("@scom/scom-disperse/config/index.tsx", ["require", "exports", "@ijstech/
         }
         async onConfirmCommissionClicked() {
             var _a;
-            const embedderFee = index_19.getEmbedderCommissionFee();
+            const embedderFee = (0, index_19.getEmbedderCommissionFee)();
             this.commissionInfoList.push({
                 chainId: (_a = this.networkPicker.selectedNetwork) === null || _a === void 0 ? void 0 : _a.chainId,
                 walletAddress: this.inputWalletAddress.value,
@@ -16388,7 +16392,7 @@ define("@scom/scom-disperse/config/index.tsx", ["require", "exports", "@ijstech/
             else if (!this.inputWalletAddress.value) {
                 this.lbErrMsg.caption = 'Please enter wallet address';
             }
-            else if (!index_20.isWalletAddress(this.inputWalletAddress.value)) {
+            else if (!(0, index_20.isWalletAddress)(this.inputWalletAddress.value)) {
                 this.lbErrMsg.caption = 'Please enter valid wallet address';
             }
             else {
@@ -16451,7 +16455,7 @@ define("@scom/scom-disperse/config/index.tsx", ["require", "exports", "@ijstech/
     };
     Config = __decorate([
         components_12.customModule,
-        components_12.customElements("i-scom-disperse-config")
+        (0, components_12.customElements)("i-scom-disperse-config")
     ], Config);
     exports.default = Config;
 });
@@ -16515,388 +16519,6 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
     const currentTheme = components_13.Styles.Theme.currentTheme;
     const Theme = components_13.Styles.Theme.ThemeVars;
     let ScomDisperse = class ScomDisperse extends components_13.Module {
-        constructor(parent, options) {
-            super(parent, options);
-            this.resultAddresses = [];
-            this._data = {
-                defaultChainId: 0,
-                wallets: [],
-                networks: []
-            };
-            this.tag = {};
-            this.defaultEdit = true;
-            this.registerEvent = () => {
-                this.$eventBus.register(this, "isWalletConnected" /* IsWalletConnected */, this.onWalletConnect);
-                this.$eventBus.register(this, "IsWalletDisconnected" /* IsWalletDisconnected */, this.onWalletConnect);
-                this.$eventBus.register(this, "chainChanged" /* chainChanged */, this.onChainChanged);
-            };
-            this.onWalletConnect = (connected) => {
-                this.setContainerData();
-                this.checkStepStatus(connected);
-            };
-            this.onChainChanged = () => {
-                this.resetData();
-                this.onWalletConnect(index_22.isWalletConnected());
-            };
-            this.setContainerData = () => {
-                var _a;
-                const data = {
-                    defaultChainId: this.defaultChainId,
-                    wallets: this.wallets,
-                    networks: this.networks,
-                    showHeader: this.showHeader
-                };
-                if ((_a = this.dappContainer) === null || _a === void 0 ? void 0 : _a.setData)
-                    this.dappContainer.setData(data);
-            };
-            this.checkStepStatus = (connected) => {
-                this.firstStepElm.enabled = connected;
-                this.tokenSelection.enabled = connected;
-                this.tokenElm.enabled = connected;
-                if (!connected) {
-                    this.tokenSelection.token = undefined;
-                    this.onSelectToken(null);
-                }
-                this.setThirdStatus(!!this.token);
-                this.updateCommissionsTooltip();
-                this.updateContractAddress();
-            };
-            this.setThirdStatus = (enabled) => {
-                this.secondStepElm.enabled = enabled;
-                this.inputBatch.enabled = enabled;
-                this.btnImport.enabled = enabled;
-                this.setFourthStatus();
-            };
-            this.setFourthStatus = async () => {
-                var _a;
-                if (index_22.isWalletConnected() && this.hasAddress) {
-                    this.btnDownload.enabled = true;
-                    this.containerElm.minHeight = '1000px';
-                    this.thirdStepElm.visible = true;
-                    const symbol = ((_a = this.token) === null || _a === void 0 ? void 0 : _a.symbol) || '';
-                    this.addressesElm.clearInnerHTML();
-                    let countInvalid = 0;
-                    for (const item of this.listAddresses) {
-                        const valid = await index_21.isAddressValid(item.address);
-                        if (!valid) {
-                            ++countInvalid;
-                        }
-                        this.addressesElm.appendChild(this.$render("i-hstack", { width: "100%", verticalAlignment: "center", gap: 30 },
-                            this.$render("i-vstack", { width: 450 },
-                                this.$render("i-label", { caption: item.address, opacity: 0.75, font: { size: '16px', color: valid ? Theme.text.primary : '#F05E61', name: 'Montserrat Medium' } })),
-                            this.$render("i-label", { caption: `${item.amount.toFixed()} ${symbol}`, opacity: 0.75, font: { size: '16px', name: 'Montserrat Medium' }, class: "text-right" })));
-                    }
-                    ;
-                    this.totalElm.caption = `${index_21.formatNumber(this.total)} ${symbol}`;
-                    this.balanceElm.caption = `${index_21.formatNumber(this.balance)} ${symbol}`;
-                    this.remainingElm.caption = `${index_21.formatNumber(this.remaining)} ${symbol}`;
-                    if (countInvalid) {
-                        this.invalidElm.caption = `There ${countInvalid === 1 ? 'is' : 'are'} ${countInvalid} invalid ${countInvalid === 1 ? 'address' : 'addresses'}!`;
-                        this.invalidElm.visible = true;
-                        this.btnApprove.caption = 'Approve';
-                        this.btnApprove.enabled = false;
-                        this.btnDisperse.enabled = false;
-                    }
-                    else {
-                        this.invalidElm.visible = false;
-                        this.getApprovalStatus();
-                    }
-                }
-                else {
-                    this.containerElm.minHeight = '600px';
-                    this.thirdStepElm.visible = false;
-                    this.btnDownload.enabled = false;
-                }
-            };
-            this.onSelectToken = (token) => {
-                this.token = token;
-                this.tokenInfoElm.clearInnerHTML();
-                if (token) {
-                    const img = scom_token_list_5.assets.tokenPath(token, eth_wallet_8.Wallet.getClientInstance().chainId);
-                    this.tokenInfoElm.appendChild(this.$render("i-hstack", { gap: "16px", verticalAlignment: "center" },
-                        this.$render("i-image", { width: 40, height: 40, minWidth: 30, url: img }),
-                        this.$render("i-label", { caption: `$${token.symbol}`, font: { size: '20px', name: 'Montserrat Medium' } }),
-                        this.$render("i-label", { caption: token.address || token.symbol, font: { size: '16px', name: 'Montserrat Medium' }, class: "break-word" })));
-                }
-                else {
-                    this.tokenInfoElm.appendChild(this.$render("i-label", { caption: "Please Select Token", font: { size: '16px', name: 'Montserrat Medium' }, opacity: 0.75 }));
-                }
-                this.setThirdStatus(!!token);
-            };
-            this.onDisperseAgain = () => {
-                var _a, _b;
-                this.containerElm.visible = true;
-                this.resultElm.visible = false;
-                const parent = (_b = (_a = this.parentNode) === null || _a === void 0 ? void 0 : _a.parentNode) === null || _b === void 0 ? void 0 : _b.parentElement;
-                if (parent) {
-                    parent.scrollTop = 0;
-                }
-            };
-            this.onDownloadReport = (data) => {
-                const doc = new window.jsPDF();
-                const logo = assets_4.default.fullPath('./img/sc-header.png');
-                const totalAmount = this.resultAddresses.reduce((pv, cv) => pv.plus(cv.amount), new eth_wallet_8.BigNumber('0'));
-                const rows = this.resultAddresses.map(item => [item.address, index_21.formatNumber(item.amount)]);
-                rows.push(['Total', index_21.formatNumber(totalAmount)]);
-                // doc.addImage(logo, 'png', 15, 10, 20, 24);
-                doc.setFontSize(36);
-                doc.setFont('helvetica', 'bold');
-                doc.text('Disperse Result', 42, 26.5);
-                doc.setFontSize(11);
-                doc.setFont('helvetica', 'normal');
-                doc.text(`Transaction Hash: ${data.receipt}`, 15, 42);
-                doc.text(`Timestamp: ${data.timestamp}`, 15, 50);
-                doc.text(`From Address: ${data.address}`, 15, 58);
-                doc.text(`Total Amount: ${index_21.formatNumber(totalAmount)} ${data.symbol}`, 15, 66);
-                const cols = ['TRANSFER TO', 'TRANSFER AMOUNT'];
-                const table = [cols, ...rows];
-                let y = 75;
-                for (let i = 0; i < table.length; i++) {
-                    let row = table[i];
-                    let x = 15;
-                    for (let j = 0; j < cols.length; j++) {
-                        const data = row[j];
-                        doc.text(`${data}`, x, y);
-                        x += 120;
-                    }
-                    y += 8;
-                }
-                // doc.autoTable({
-                //   head: [['TRANSFER TO', 'TRANSFER AMOUNT']],
-                //   body: rows,
-                //   headStyles: { textColor: '#000', fillColor: '#fff', lineWidth: 0.1 },
-                //   theme: 'grid',
-                //   startY: 75,
-                // });
-                doc.save('report.pdf');
-            };
-            this.onDownloadFile = (isResult) => {
-                let content = '';
-                const arr = isResult ? this.resultAddresses : this.listAddresses;
-                arr.forEach((item) => {
-                    content += `${item.address},${item.amount.toFixed()}\r\n`;
-                });
-                index_21.downloadCSVFile(content, 'disperse.csv');
-            };
-            this.onImportFile = () => {
-                var _a, _b;
-                (_b = (_a = this.importFileElm.firstChild) === null || _a === void 0 ? void 0 : _a.firstChild) === null || _b === void 0 ? void 0 : _b.click();
-            };
-            this.onInputBatch = () => {
-                this.setFourthStatus();
-            };
-            this.convertCSVToText = (result) => {
-                if (!result)
-                    this.showImportCSVError(index_22.ImportFileWarning.Broken);
-                const arr = index_21.toDisperseData(result.replace(/"/g, ''));
-                if (arr.length > 0) {
-                    let text = arr.reduce((prev, next, idx) => prev += `${idx ? '\n' : ''}${next.address}, ${next.amount.toFixed()}`, "");
-                    this.inputBatch.value = text;
-                }
-                else {
-                    this.showImportCSVError(index_22.ImportFileWarning.Empty);
-                }
-                this.setFourthStatus();
-            };
-            this.initInputFile = () => {
-                var _a;
-                this.importFileElm.caption = '<input type="file" accept=".csv, .txt" />';
-                const inputElm = (_a = this.importFileElm.firstChild) === null || _a === void 0 ? void 0 : _a.firstChild;
-                if (inputElm) {
-                    inputElm.onchange = (event) => {
-                        const reader = new FileReader();
-                        const files = event.target.files;
-                        if (!files.length) {
-                            return;
-                        }
-                        const file = files[0];
-                        // const fileName = file.name;
-                        // const lastDot = fileName.lastIndexOf('.');
-                        // const ext = fileName.substring(lastDot + 1);
-                        // if (ext.toLowerCase() !== 'csv') { //no need to check file ext
-                        //   return;
-                        // }
-                        reader.readAsBinaryString(file);
-                        reader.onload = (event) => {
-                            const { loaded, total } = event;
-                            const isCompleted = loaded === total;
-                            this.btnImport.enabled = isCompleted;
-                            this.btnImport.rightIcon.visible = !isCompleted;
-                            this.btnImport.caption = !isCompleted ? 'Importing' : 'Import CSV';
-                            if (isCompleted) {
-                                this.initInputFile();
-                                this.convertCSVToText(reader.result);
-                            }
-                        };
-                    };
-                }
-            };
-            this.resetData = () => {
-                this.setEnabledStatus(true);
-                this.btnApprove.rightIcon.visible = false;
-                this.btnApprove.caption = 'Approve';
-                this.btnApprove.enabled = false;
-                this.btnDisperse.rightIcon.visible = false;
-                this.btnDisperse.caption = 'Disperse';
-                this.btnDisperse.enabled = false;
-                this.inputBatch.value = '';
-                this.invalidElm.visible = false;
-                this.onSelectToken(null);
-                this.checkStepStatus(index_22.isWalletConnected());
-            };
-            this.showMessage = (status, content) => {
-                this.disperseResult.message = {
-                    status,
-                    content,
-                };
-                this.disperseResult.showModal();
-            };
-            this.setEnabledStatus = (enabled) => {
-                this.tokenElm.onClick = () => enabled ? this.tokenSelection.showModal() : {};
-                this.tokenElm.enabled = enabled;
-                this.btnImport.enabled = enabled;
-                this.inputBatch.enabled = enabled;
-            };
-            this.updateCommissionsTooltip = () => {
-                const commissionFee = new eth_wallet_8.BigNumber(index_22.getEmbedderCommissionFee());
-                if (commissionFee.gt(0) && API_2.getCurrentCommissions(this.commissions).length) {
-                    this.iconTotal.visible = true;
-                    this.iconTotal.tooltip.content = `A commission fee of ${commissionFee.times(100)}% will be applied to the total amount you input.`;
-                }
-                else {
-                    this.iconTotal.visible = false;
-                }
-            };
-            this.updateContractAddress = () => {
-                if (API_2.getCurrentCommissions(this.commissions).length) {
-                    this.contractAddress = index_22.getProxyAddress();
-                }
-                else {
-                    this.contractAddress = index_22.getDisperseAddress();
-                }
-            };
-            this.getApprovalStatus = async () => {
-                if (!this.token)
-                    return;
-                if (this.remaining.lt(0)) {
-                    this.btnApprove.caption = 'Approve';
-                    this.btnApprove.enabled = false;
-                    this.btnDisperse.enabled = false;
-                    return;
-                }
-                if (this.token.isNative) {
-                    this.btnApprove.enabled = false;
-                    this.btnDisperse.enabled = true;
-                }
-                else {
-                    const allowance = await index_23.onCheckAllowance(this.token, this.contractAddress);
-                    if (allowance === null)
-                        return;
-                    const inputVal = new eth_wallet_8.BigNumber(this.total);
-                    const isApproved = !inputVal.gt(0) || inputVal.lte(allowance);
-                    if (!isApproved) {
-                        this.btnApprove.caption = 'Approve';
-                    }
-                    this.btnApprove.enabled = !isApproved;
-                    this.btnDisperse.enabled = isApproved;
-                }
-            };
-            this.handleApprove = async () => {
-                if (!this.token)
-                    return;
-                this.showMessage('warning', 'Approving');
-                const callBackActions = async (err, receipt) => {
-                    if (err) {
-                        this.showMessage('error', err);
-                    }
-                    else if (receipt) {
-                        this.showMessage('success', receipt);
-                        this.btnApprove.rightIcon.visible = true;
-                        this.btnApprove.caption = 'Approving';
-                        this.setEnabledStatus(false);
-                    }
-                };
-                const confirmationCallBackActions = async () => {
-                    this.btnApprove.rightIcon.visible = false;
-                    await this.getApprovalStatus();
-                    this.btnApprove.caption = this.btnApprove.enabled ? 'Approve' : 'Approved';
-                    this.btnDisperse.enabled = !this.btnApprove.enabled && this.remaining.gte(0);
-                    this.setEnabledStatus(true);
-                };
-                index_21.registerSendTxEvents({
-                    transactionHash: callBackActions,
-                    confirmation: confirmationCallBackActions
-                });
-                index_23.onApproveToken(this.token, this.contractAddress);
-            };
-            this.handleDisperse = async () => {
-                const token = Object.assign({}, this.token);
-                if (!token)
-                    return;
-                this.resultAddresses = [...this.listAddresses];
-                let receipt = '';
-                let timestamp = '';
-                const address = eth_wallet_8.Wallet.getClientInstance().address;
-                this.showMessage('warning', 'Dispersing');
-                const callBackActions = async (err, _receipt) => {
-                    if (err) {
-                        this.showMessage('error', err);
-                    }
-                    else if (_receipt) {
-                        timestamp = index_21.formatUTCDate(components_13.moment());
-                        receipt = _receipt;
-                        this.btnDisperse.rightIcon.visible = true;
-                        this.btnDisperse.caption = 'Dispersing';
-                        this.setEnabledStatus(false);
-                        this.showMessage('success', _receipt);
-                    }
-                };
-                const confirmationCallBackActions = async () => {
-                    await scom_token_list_5.tokenStore.updateAllTokenBalances();
-                    this.disperseResult.closeModal();
-                    this.renderResult(token, { receipt, address, timestamp });
-                    this.resetData();
-                };
-                index_21.registerSendTxEvents({
-                    transactionHash: callBackActions,
-                    confirmation: confirmationCallBackActions
-                });
-                index_23.onDisperse({ token, data: this.listAddresses, commissions: this.commissions });
-            };
-            this.renderResult = (token, data) => {
-                const img = scom_token_list_5.assets.tokenPath(token, eth_wallet_8.Wallet.getClientInstance().chainId);
-                const chainId = eth_wallet_8.Wallet.getClientInstance().chainId;
-                this.resultElm.clearInnerHTML();
-                this.resultElm.appendChild(this.$render("i-vstack", { gap: 50, horizontalAlignment: "center" },
-                    this.$render("i-label", { caption: "\uD83C\uDF89 Disperse Successful! \uD83C\uDF89", class: "text-center", font: { size: '48px', name: 'Montserrat', bold: true } }),
-                    this.$render("i-vstack", { gap: 16, width: 750, maxWidth: "100%", horizontalAlignment: "center" },
-                        this.$render("i-label", { caption: "Token", font: { size: '24px', name: 'Montserrat Medium' } }),
-                        this.$render("i-hstack", { width: "100%", verticalAlignment: "center", horizontalAlignment: "center", gap: 16, padding: { top: 20, bottom: 20, left: 60, right: 60 }, border: { radius: 15, style: 'solid', width: 4 } },
-                            this.$render("i-image", { width: 40, height: 40, minWidth: 30, url: img }),
-                            this.$render("i-label", { caption: `$${token.symbol}`, font: { size: '20px', name: 'Montserrat Medium' } }),
-                            this.$render("i-label", { class: "text-overflow", caption: token.address || token.symbol, font: { size: '16px', name: 'Montserrat Medium' } }))),
-                    this.$render("i-vstack", { gap: 8, width: 750, maxWidth: "100%", horizontalAlignment: "center" },
-                        this.$render("i-label", { caption: "Explorer", font: { size: '24px', name: 'Montserrat Medium' } }),
-                        this.$render("i-hstack", { class: "pointer", wrap: "nowrap", width: "100%", minHeight: 88, verticalAlignment: "center", horizontalAlignment: "center", gap: 16, padding: { top: 20, bottom: 20, left: 20, right: 20 }, border: { radius: 15, style: 'solid', width: 4 }, onClick: () => index_21.viewOnExplorerByTxHash(chainId, data.receipt) },
-                            this.$render("i-label", { class: "text-overflow", caption: data.receipt, font: { size: '16px', name: 'Montserrat Medium' } }),
-                            this.$render("i-icon", { class: "link-icon", name: "external-link-alt", width: 20, height: 20, fill: Theme.text.primary }))),
-                    this.$render("i-hstack", { gap: 30, maxWidth: "100%", horizontalAlignment: "center", verticalAlignment: "center", wrap: "wrap" },
-                        this.$render("i-button", { caption: "DOWNLOAD CSV", background: { color: "#34343A" }, width: 270, border: { radius: 12 }, padding: { top: 12, bottom: 12 }, onClick: () => this.onDownloadFile(true) }),
-                        this.$render("i-button", { caption: "DOWNLOAD REPORT", background: { color: 'transparent linear-gradient(270deg, #FF9900 0%, #FC7428 100%) 0% 0% no-repeat padding-box' }, width: 270, border: { radius: 12 }, padding: { top: 12, bottom: 12 }, onClick: () => this.onDownloadReport(Object.assign({ symbol: token.symbol }, data)) }),
-                        this.$render("i-button", { caption: "DISPERSE AGAIN", background: { color: 'linear-gradient(90deg, #456ED7 0%, #67BBBB 99.97%)' }, width: 270, border: { radius: 12 }, padding: { top: 12, bottom: 12 }, onClick: this.onDisperseAgain }))));
-                this.containerElm.visible = false;
-                this.resultElm.visible = true;
-            };
-            this.onLoad = () => {
-                this.containerElm.visible = true;
-                this.resultElm.visible = false;
-                this.resetData();
-            };
-            index_22.setDataFromSCConfig(data_json_1.default);
-            scom_token_list_5.tokenStore.updateTokenMapData();
-            this.$eventBus = components_13.application.EventBus;
-            this.registerEvent();
-        }
         getData() {
             return this._data;
         }
@@ -17188,10 +16810,392 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
         async refreshUI() {
             this.onLoad();
         }
+        constructor(parent, options) {
+            super(parent, options);
+            this.resultAddresses = [];
+            this._data = {
+                defaultChainId: 0,
+                wallets: [],
+                networks: []
+            };
+            this.tag = {};
+            this.defaultEdit = true;
+            this.registerEvent = () => {
+                this.$eventBus.register(this, "isWalletConnected" /* EventId.IsWalletConnected */, this.onWalletConnect);
+                this.$eventBus.register(this, "IsWalletDisconnected" /* EventId.IsWalletDisconnected */, this.onWalletConnect);
+                this.$eventBus.register(this, "chainChanged" /* EventId.chainChanged */, this.onChainChanged);
+            };
+            this.onWalletConnect = (connected) => {
+                this.setContainerData();
+                this.checkStepStatus(connected);
+            };
+            this.onChainChanged = () => {
+                this.resetData();
+                this.onWalletConnect((0, index_22.isWalletConnected)());
+            };
+            this.setContainerData = () => {
+                var _a;
+                const data = {
+                    defaultChainId: this.defaultChainId,
+                    wallets: this.wallets,
+                    networks: this.networks,
+                    showHeader: this.showHeader
+                };
+                if ((_a = this.dappContainer) === null || _a === void 0 ? void 0 : _a.setData)
+                    this.dappContainer.setData(data);
+            };
+            this.checkStepStatus = (connected) => {
+                this.firstStepElm.enabled = connected;
+                this.tokenSelection.enabled = connected;
+                this.tokenElm.enabled = connected;
+                if (!connected) {
+                    this.tokenSelection.token = undefined;
+                    this.onSelectToken(null);
+                }
+                this.setThirdStatus(!!this.token);
+                this.updateCommissionsTooltip();
+                this.updateContractAddress();
+            };
+            this.setThirdStatus = (enabled) => {
+                this.secondStepElm.enabled = enabled;
+                this.inputBatch.enabled = enabled;
+                this.btnImport.enabled = enabled;
+                this.setFourthStatus();
+            };
+            this.setFourthStatus = async () => {
+                var _a;
+                if ((0, index_22.isWalletConnected)() && this.hasAddress) {
+                    this.btnDownload.enabled = true;
+                    this.containerElm.minHeight = '1000px';
+                    this.thirdStepElm.visible = true;
+                    const symbol = ((_a = this.token) === null || _a === void 0 ? void 0 : _a.symbol) || '';
+                    this.addressesElm.clearInnerHTML();
+                    let countInvalid = 0;
+                    for (const item of this.listAddresses) {
+                        const valid = await (0, index_21.isAddressValid)(item.address);
+                        if (!valid) {
+                            ++countInvalid;
+                        }
+                        this.addressesElm.appendChild(this.$render("i-hstack", { width: "100%", verticalAlignment: "center", gap: 30 },
+                            this.$render("i-vstack", { width: 450 },
+                                this.$render("i-label", { caption: item.address, opacity: 0.75, font: { size: '16px', color: valid ? Theme.text.primary : '#F05E61', name: 'Montserrat Medium' } })),
+                            this.$render("i-label", { caption: `${item.amount.toFixed()} ${symbol}`, opacity: 0.75, font: { size: '16px', name: 'Montserrat Medium' }, class: "text-right" })));
+                    }
+                    ;
+                    this.totalElm.caption = `${(0, index_21.formatNumber)(this.total)} ${symbol}`;
+                    this.balanceElm.caption = `${(0, index_21.formatNumber)(this.balance)} ${symbol}`;
+                    this.remainingElm.caption = `${(0, index_21.formatNumber)(this.remaining)} ${symbol}`;
+                    if (countInvalid) {
+                        this.invalidElm.caption = `There ${countInvalid === 1 ? 'is' : 'are'} ${countInvalid} invalid ${countInvalid === 1 ? 'address' : 'addresses'}!`;
+                        this.invalidElm.visible = true;
+                        this.btnApprove.caption = 'Approve';
+                        this.btnApprove.enabled = false;
+                        this.btnDisperse.enabled = false;
+                    }
+                    else {
+                        this.invalidElm.visible = false;
+                        this.getApprovalStatus();
+                    }
+                }
+                else {
+                    this.containerElm.minHeight = '600px';
+                    this.thirdStepElm.visible = false;
+                    this.btnDownload.enabled = false;
+                }
+            };
+            this.onSelectToken = (token) => {
+                this.token = token;
+                this.tokenInfoElm.clearInnerHTML();
+                if (token) {
+                    const img = scom_token_list_5.assets.tokenPath(token, eth_wallet_8.Wallet.getClientInstance().chainId);
+                    this.tokenInfoElm.appendChild(this.$render("i-hstack", { gap: "16px", verticalAlignment: "center" },
+                        this.$render("i-image", { width: 40, height: 40, minWidth: 30, url: img }),
+                        this.$render("i-label", { caption: `$${token.symbol}`, font: { size: '20px', name: 'Montserrat Medium' } }),
+                        this.$render("i-label", { caption: token.address || token.symbol, font: { size: '16px', name: 'Montserrat Medium' }, class: "break-word" })));
+                }
+                else {
+                    this.tokenInfoElm.appendChild(this.$render("i-label", { caption: "Please Select Token", font: { size: '16px', name: 'Montserrat Medium' }, opacity: 0.75 }));
+                }
+                this.setThirdStatus(!!token);
+            };
+            this.onDisperseAgain = () => {
+                var _a, _b;
+                this.containerElm.visible = true;
+                this.resultElm.visible = false;
+                const parent = (_b = (_a = this.parentNode) === null || _a === void 0 ? void 0 : _a.parentNode) === null || _b === void 0 ? void 0 : _b.parentElement;
+                if (parent) {
+                    parent.scrollTop = 0;
+                }
+            };
+            this.onDownloadReport = (data) => {
+                const doc = new window.jsPDF();
+                const logo = assets_4.default.fullPath('./img/sc-header.png');
+                const totalAmount = this.resultAddresses.reduce((pv, cv) => pv.plus(cv.amount), new eth_wallet_8.BigNumber('0'));
+                const rows = this.resultAddresses.map(item => [item.address, (0, index_21.formatNumber)(item.amount)]);
+                rows.push(['Total', (0, index_21.formatNumber)(totalAmount)]);
+                // doc.addImage(logo, 'png', 15, 10, 20, 24);
+                doc.setFontSize(36);
+                doc.setFont('helvetica', 'bold');
+                doc.text('Disperse Result', 42, 26.5);
+                doc.setFontSize(11);
+                doc.setFont('helvetica', 'normal');
+                doc.text(`Transaction Hash: ${data.receipt}`, 15, 42);
+                doc.text(`Timestamp: ${data.timestamp}`, 15, 50);
+                doc.text(`From Address: ${data.address}`, 15, 58);
+                doc.text(`Total Amount: ${(0, index_21.formatNumber)(totalAmount)} ${data.symbol}`, 15, 66);
+                const cols = ['TRANSFER TO', 'TRANSFER AMOUNT'];
+                const table = [cols, ...rows];
+                let y = 75;
+                for (let i = 0; i < table.length; i++) {
+                    let row = table[i];
+                    let x = 15;
+                    for (let j = 0; j < cols.length; j++) {
+                        const data = row[j];
+                        doc.text(`${data}`, x, y);
+                        x += 120;
+                    }
+                    y += 8;
+                }
+                // doc.autoTable({
+                //   head: [['TRANSFER TO', 'TRANSFER AMOUNT']],
+                //   body: rows,
+                //   headStyles: { textColor: '#000', fillColor: '#fff', lineWidth: 0.1 },
+                //   theme: 'grid',
+                //   startY: 75,
+                // });
+                doc.save('report.pdf');
+            };
+            this.onDownloadFile = (isResult) => {
+                let content = '';
+                const arr = isResult ? this.resultAddresses : this.listAddresses;
+                arr.forEach((item) => {
+                    content += `${item.address},${item.amount.toFixed()}\r\n`;
+                });
+                (0, index_21.downloadCSVFile)(content, 'disperse.csv');
+            };
+            this.onImportFile = () => {
+                var _a, _b;
+                (_b = (_a = this.importFileElm.firstChild) === null || _a === void 0 ? void 0 : _a.firstChild) === null || _b === void 0 ? void 0 : _b.click();
+            };
+            this.onInputBatch = () => {
+                this.setFourthStatus();
+            };
+            this.convertCSVToText = (result) => {
+                if (!result)
+                    this.showImportCSVError(index_22.ImportFileWarning.Broken);
+                const arr = (0, index_21.toDisperseData)(result.replace(/"/g, ''));
+                if (arr.length > 0) {
+                    let text = arr.reduce((prev, next, idx) => prev += `${idx ? '\n' : ''}${next.address}, ${next.amount.toFixed()}`, "");
+                    this.inputBatch.value = text;
+                }
+                else {
+                    this.showImportCSVError(index_22.ImportFileWarning.Empty);
+                }
+                this.setFourthStatus();
+            };
+            this.initInputFile = () => {
+                var _a;
+                this.importFileElm.caption = '<input type="file" accept=".csv, .txt" />';
+                const inputElm = (_a = this.importFileElm.firstChild) === null || _a === void 0 ? void 0 : _a.firstChild;
+                if (inputElm) {
+                    inputElm.onchange = (event) => {
+                        const reader = new FileReader();
+                        const files = event.target.files;
+                        if (!files.length) {
+                            return;
+                        }
+                        const file = files[0];
+                        // const fileName = file.name;
+                        // const lastDot = fileName.lastIndexOf('.');
+                        // const ext = fileName.substring(lastDot + 1);
+                        // if (ext.toLowerCase() !== 'csv') { //no need to check file ext
+                        //   return;
+                        // }
+                        reader.readAsBinaryString(file);
+                        reader.onload = (event) => {
+                            const { loaded, total } = event;
+                            const isCompleted = loaded === total;
+                            this.btnImport.enabled = isCompleted;
+                            this.btnImport.rightIcon.visible = !isCompleted;
+                            this.btnImport.caption = !isCompleted ? 'Importing' : 'Import CSV';
+                            if (isCompleted) {
+                                this.initInputFile();
+                                this.convertCSVToText(reader.result);
+                            }
+                        };
+                    };
+                }
+            };
+            this.resetData = () => {
+                this.setEnabledStatus(true);
+                this.btnApprove.rightIcon.visible = false;
+                this.btnApprove.caption = 'Approve';
+                this.btnApprove.enabled = false;
+                this.btnDisperse.rightIcon.visible = false;
+                this.btnDisperse.caption = 'Disperse';
+                this.btnDisperse.enabled = false;
+                this.inputBatch.value = '';
+                this.invalidElm.visible = false;
+                this.onSelectToken(null);
+                this.checkStepStatus((0, index_22.isWalletConnected)());
+            };
+            this.showMessage = (status, content) => {
+                this.disperseResult.message = {
+                    status,
+                    content,
+                };
+                this.disperseResult.showModal();
+            };
+            this.setEnabledStatus = (enabled) => {
+                this.tokenElm.onClick = () => enabled ? this.tokenSelection.showModal() : {};
+                this.tokenElm.enabled = enabled;
+                this.btnImport.enabled = enabled;
+                this.inputBatch.enabled = enabled;
+            };
+            this.updateCommissionsTooltip = () => {
+                const commissionFee = new eth_wallet_8.BigNumber((0, index_22.getEmbedderCommissionFee)());
+                if (commissionFee.gt(0) && (0, API_2.getCurrentCommissions)(this.commissions).length) {
+                    this.iconTotal.visible = true;
+                    this.iconTotal.tooltip.content = `A commission fee of ${commissionFee.times(100)}% will be applied to the total amount you input.`;
+                }
+                else {
+                    this.iconTotal.visible = false;
+                }
+            };
+            this.updateContractAddress = () => {
+                if ((0, API_2.getCurrentCommissions)(this.commissions).length) {
+                    this.contractAddress = (0, index_22.getProxyAddress)();
+                }
+                else {
+                    this.contractAddress = (0, index_22.getDisperseAddress)();
+                }
+            };
+            this.getApprovalStatus = async () => {
+                if (!this.token)
+                    return;
+                if (this.remaining.lt(0)) {
+                    this.btnApprove.caption = 'Approve';
+                    this.btnApprove.enabled = false;
+                    this.btnDisperse.enabled = false;
+                    return;
+                }
+                if (this.token.isNative) {
+                    this.btnApprove.enabled = false;
+                    this.btnDisperse.enabled = true;
+                }
+                else {
+                    const allowance = await (0, index_23.onCheckAllowance)(this.token, this.contractAddress);
+                    if (allowance === null)
+                        return;
+                    const inputVal = new eth_wallet_8.BigNumber(this.total);
+                    const isApproved = !inputVal.gt(0) || inputVal.lte(allowance);
+                    if (!isApproved) {
+                        this.btnApprove.caption = 'Approve';
+                    }
+                    this.btnApprove.enabled = !isApproved;
+                    this.btnDisperse.enabled = isApproved;
+                }
+            };
+            this.handleApprove = async () => {
+                if (!this.token)
+                    return;
+                this.showMessage('warning', 'Approving');
+                const callBackActions = async (err, receipt) => {
+                    if (err) {
+                        this.showMessage('error', err);
+                    }
+                    else if (receipt) {
+                        this.showMessage('success', receipt);
+                        this.btnApprove.rightIcon.visible = true;
+                        this.btnApprove.caption = 'Approving';
+                        this.setEnabledStatus(false);
+                    }
+                };
+                const confirmationCallBackActions = async () => {
+                    this.btnApprove.rightIcon.visible = false;
+                    await this.getApprovalStatus();
+                    this.btnApprove.caption = this.btnApprove.enabled ? 'Approve' : 'Approved';
+                    this.btnDisperse.enabled = !this.btnApprove.enabled && this.remaining.gte(0);
+                    this.setEnabledStatus(true);
+                };
+                (0, index_21.registerSendTxEvents)({
+                    transactionHash: callBackActions,
+                    confirmation: confirmationCallBackActions
+                });
+                (0, index_23.onApproveToken)(this.token, this.contractAddress);
+            };
+            this.handleDisperse = async () => {
+                const token = Object.assign({}, this.token);
+                if (!token)
+                    return;
+                this.resultAddresses = [...this.listAddresses];
+                let receipt = '';
+                let timestamp = '';
+                const address = eth_wallet_8.Wallet.getClientInstance().address;
+                this.showMessage('warning', 'Dispersing');
+                const callBackActions = async (err, _receipt) => {
+                    if (err) {
+                        this.showMessage('error', err);
+                    }
+                    else if (_receipt) {
+                        timestamp = (0, index_21.formatUTCDate)((0, components_13.moment)());
+                        receipt = _receipt;
+                        this.btnDisperse.rightIcon.visible = true;
+                        this.btnDisperse.caption = 'Dispersing';
+                        this.setEnabledStatus(false);
+                        this.showMessage('success', _receipt);
+                    }
+                };
+                const confirmationCallBackActions = async () => {
+                    await scom_token_list_5.tokenStore.updateAllTokenBalances();
+                    this.disperseResult.closeModal();
+                    this.renderResult(token, { receipt, address, timestamp });
+                    this.resetData();
+                };
+                (0, index_21.registerSendTxEvents)({
+                    transactionHash: callBackActions,
+                    confirmation: confirmationCallBackActions
+                });
+                (0, index_23.onDisperse)({ token, data: this.listAddresses, commissions: this.commissions });
+            };
+            this.renderResult = (token, data) => {
+                const img = scom_token_list_5.assets.tokenPath(token, eth_wallet_8.Wallet.getClientInstance().chainId);
+                const chainId = eth_wallet_8.Wallet.getClientInstance().chainId;
+                this.resultElm.clearInnerHTML();
+                this.resultElm.appendChild(this.$render("i-vstack", { gap: 50, horizontalAlignment: "center" },
+                    this.$render("i-label", { caption: "\uD83C\uDF89 Disperse Successful! \uD83C\uDF89", class: "text-center", font: { size: '48px', name: 'Montserrat', bold: true } }),
+                    this.$render("i-vstack", { gap: 16, width: 750, maxWidth: "100%", horizontalAlignment: "center" },
+                        this.$render("i-label", { caption: "Token", font: { size: '24px', name: 'Montserrat Medium' } }),
+                        this.$render("i-hstack", { width: "100%", verticalAlignment: "center", horizontalAlignment: "center", gap: 16, padding: { top: 20, bottom: 20, left: 60, right: 60 }, border: { radius: 15, style: 'solid', width: 4 } },
+                            this.$render("i-image", { width: 40, height: 40, minWidth: 30, url: img }),
+                            this.$render("i-label", { caption: `$${token.symbol}`, font: { size: '20px', name: 'Montserrat Medium' } }),
+                            this.$render("i-label", { class: "text-overflow", caption: token.address || token.symbol, font: { size: '16px', name: 'Montserrat Medium' } }))),
+                    this.$render("i-vstack", { gap: 8, width: 750, maxWidth: "100%", horizontalAlignment: "center" },
+                        this.$render("i-label", { caption: "Explorer", font: { size: '24px', name: 'Montserrat Medium' } }),
+                        this.$render("i-hstack", { class: "pointer", wrap: "nowrap", width: "100%", minHeight: 88, verticalAlignment: "center", horizontalAlignment: "center", gap: 16, padding: { top: 20, bottom: 20, left: 20, right: 20 }, border: { radius: 15, style: 'solid', width: 4 }, onClick: () => (0, index_21.viewOnExplorerByTxHash)(chainId, data.receipt) },
+                            this.$render("i-label", { class: "text-overflow", caption: data.receipt, font: { size: '16px', name: 'Montserrat Medium' } }),
+                            this.$render("i-icon", { class: "link-icon", name: "external-link-alt", width: 20, height: 20, fill: Theme.text.primary }))),
+                    this.$render("i-hstack", { gap: 30, maxWidth: "100%", horizontalAlignment: "center", verticalAlignment: "center", wrap: "wrap" },
+                        this.$render("i-button", { caption: "DOWNLOAD CSV", background: { color: "#34343A" }, width: 270, border: { radius: 12 }, padding: { top: 12, bottom: 12 }, onClick: () => this.onDownloadFile(true) }),
+                        this.$render("i-button", { caption: "DOWNLOAD REPORT", background: { color: 'transparent linear-gradient(270deg, #FF9900 0%, #FC7428 100%) 0% 0% no-repeat padding-box' }, width: 270, border: { radius: 12 }, padding: { top: 12, bottom: 12 }, onClick: () => this.onDownloadReport(Object.assign({ symbol: token.symbol }, data)) }),
+                        this.$render("i-button", { caption: "DISPERSE AGAIN", background: { color: 'linear-gradient(90deg, #456ED7 0%, #67BBBB 99.97%)' }, width: 270, border: { radius: 12 }, padding: { top: 12, bottom: 12 }, onClick: this.onDisperseAgain }))));
+                this.containerElm.visible = false;
+                this.resultElm.visible = true;
+            };
+            this.onLoad = () => {
+                this.containerElm.visible = true;
+                this.resultElm.visible = false;
+                this.resetData();
+            };
+            (0, index_22.setDataFromSCConfig)(data_json_1.default);
+            scom_token_list_5.tokenStore.updateTokenMapData();
+            this.$eventBus = components_13.application.EventBus;
+            this.registerEvent();
+        }
         ;
         get listAddresses() {
             if (this.inputBatch.value) {
-                return index_21.toDisperseData(this.inputBatch.value);
+                return (0, index_21.toDisperseData)(this.inputBatch.value);
             }
             return [];
         }
@@ -17207,7 +17211,7 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
         }
         get total() {
             const _total = this.listAddresses.reduce((pv, cv) => pv.plus(cv.amount), new eth_wallet_8.BigNumber('0'));
-            const commissionsAmount = API_2.getCommissionAmount(this.commissions, _total);
+            const commissionsAmount = (0, API_2.getCommissionAmount)(this.commissions, _total);
             return _total.plus(commissionsAmount);
         }
         get remaining() {
@@ -17261,30 +17265,33 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
             this.isReadyCallbackQueued = true;
             super.init();
             this.loadLib();
-            this.setTag({
-                backgoundColor: currentTheme.background.main,
-                fontColor: currentTheme.text.primary,
-                // buttonBackgroundColor: currentTheme.colors.primary.main,
-                // buttonFontColor: currentTheme.colors.primary.contrastText,
-                inputBackgroundColor: currentTheme.input.background,
-                inputFontColor: currentTheme.input.fontColor,
-                secondaryFontColor: currentTheme.colors.secondary.contrastText,
-                secondaryColor: currentTheme.colors.secondary.main
-            });
             this.classList.add(index_css_2.disperseLayout);
-            const connected = index_22.isWalletConnected();
+            const connected = (0, index_22.isWalletConnected)();
             this.checkStepStatus(connected);
             this.tokenSelection.isTokenShown = false;
             this.tokenSelection.isCommonShown = true;
             this.tokenSelection.onSelectToken = this.onSelectToken;
             this.tokenElm.onClick = () => this.tokenSelection.showModal();
             this.initInputFile();
-            const commissions = this.getAttribute('commissions', true, []);
-            const defaultChainId = this.getAttribute('defaultChainId', true);
-            const networks = this.getAttribute('networks', true);
-            const wallets = this.getAttribute('wallets', true);
-            const showHeader = this.getAttribute('showHeader', true);
-            await this.setData({ commissions, defaultChainId, networks, wallets, showHeader });
+            const lazyLoad = this.getAttribute('lazyLoad', true, false);
+            if (!lazyLoad) {
+                this.setTag({
+                    backgoundColor: currentTheme.background.main,
+                    fontColor: currentTheme.text.primary,
+                    // buttonBackgroundColor: currentTheme.colors.primary.main,
+                    // buttonFontColor: currentTheme.colors.primary.contrastText,
+                    inputBackgroundColor: currentTheme.input.background,
+                    inputFontColor: currentTheme.input.fontColor,
+                    secondaryFontColor: currentTheme.colors.secondary.contrastText,
+                    secondaryColor: currentTheme.colors.secondary.main
+                });
+                const commissions = this.getAttribute('commissions', true, []);
+                const defaultChainId = this.getAttribute('defaultChainId', true);
+                const networks = this.getAttribute('networks', true);
+                const wallets = this.getAttribute('wallets', true);
+                const showHeader = this.getAttribute('showHeader', true);
+                await this.setData({ commissions, defaultChainId, networks, wallets, showHeader });
+            }
             this.setContainerData();
             this.isReadyCallbackQueued = false;
             this.executeReadyCallback();
@@ -17317,7 +17324,7 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                                         this.$render("i-button", { id: "btnImport", caption: "Import CSV", enabled: false, class: "csv-button", onClick: this.onImportFile }),
                                         this.$render("i-label", { id: "importFileElm", visible: false }))),
                                 this.$render("i-label", { id: "importWarning", caption: "", font: { size: '13px', name: 'Montserrat Medium' } }),
-                                this.$render("i-input", { id: "inputBatch", height: "auto", enabled: false, placeholder: index_21.disperseDataToString(this.DummyDisperseData()), class: "input-batch custom-scroll", width: "100%", inputType: "textarea", rows: 4, margin: { top: 30 }, onChanged: this.onInputBatch })),
+                                this.$render("i-input", { id: "inputBatch", height: "auto", enabled: false, placeholder: (0, index_21.disperseDataToString)(this.DummyDisperseData()), class: "input-batch custom-scroll", width: "100%", inputType: "textarea", rows: 4, margin: { top: 30 }, onChanged: this.onInputBatch })),
                             this.$render("i-hstack", { id: "thirdStepElm", class: "step-elm", minHeight: 240, margin: { top: 40 } },
                                 this.$render("i-vstack", { width: "100%" },
                                     this.$render("i-hstack", { verticalAlignment: "center", horizontalAlignment: "space-between", wrap: "wrap", background: { color: Theme.input.background }, border: { radius: 30 } },
@@ -17357,7 +17364,7 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
     };
     ScomDisperse = __decorate([
         components_13.customModule,
-        components_13.customElements('i-scom-disperse')
+        (0, components_13.customElements)('i-scom-disperse')
     ], ScomDisperse);
     exports.default = ScomDisperse;
 });
