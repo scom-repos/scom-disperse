@@ -10808,6 +10808,7 @@ declare module "@scom/scom-disperse" {
         networks: INetworkConfig[];
         wallets: IWalletPlugin[];
         showHeader?: boolean;
+        lazyLoad?: boolean;
     }
     global {
         namespace JSX {

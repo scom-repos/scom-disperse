@@ -28,6 +28,7 @@ interface ScomDisperseElement extends ControlElement {
   networks: INetworkConfig[];
   wallets: IWalletPlugin[];
   showHeader?: boolean;
+  lazyLoad?: boolean;
 }
 
 declare global {
@@ -866,16 +867,6 @@ export default class ScomDisperse extends Module {
     this.isReadyCallbackQueued = true;
     super.init();
     this.loadLib();
-    this.setTag({
-      backgoundColor: currentTheme.background.main,
-      fontColor: currentTheme.text.primary,
-      // buttonBackgroundColor: currentTheme.colors.primary.main,
-      // buttonFontColor: currentTheme.colors.primary.contrastText,
-      inputBackgroundColor: currentTheme.input.background,
-      inputFontColor: currentTheme.input.fontColor,
-      secondaryFontColor: currentTheme.colors.secondary.contrastText,
-      secondaryColor: currentTheme.colors.secondary.main
-    });
     this.classList.add(disperseLayout);
     const connected = isWalletConnected();
     this.checkStepStatus(connected);
@@ -884,12 +875,26 @@ export default class ScomDisperse extends Module {
     this.tokenSelection.onSelectToken = this.onSelectToken;
     this.tokenElm.onClick = () => this.tokenSelection.showModal();
     this.initInputFile();
-    const commissions = this.getAttribute('commissions', true, []);
-    const defaultChainId = this.getAttribute('defaultChainId', true);
-    const networks = this.getAttribute('networks', true);
-    const wallets = this.getAttribute('wallets', true);
-    const showHeader = this.getAttribute('showHeader', true);
-    await this.setData({ commissions, defaultChainId, networks, wallets, showHeader });
+
+    const lazyLoad = this.getAttribute('lazyLoad', true, false);
+		if (!lazyLoad) {
+      this.setTag({
+        backgoundColor: currentTheme.background.main,
+        fontColor: currentTheme.text.primary,
+        // buttonBackgroundColor: currentTheme.colors.primary.main,
+        // buttonFontColor: currentTheme.colors.primary.contrastText,
+        inputBackgroundColor: currentTheme.input.background,
+        inputFontColor: currentTheme.input.fontColor,
+        secondaryFontColor: currentTheme.colors.secondary.contrastText,
+        secondaryColor: currentTheme.colors.secondary.main
+      });
+      const commissions = this.getAttribute('commissions', true, []);
+      const defaultChainId = this.getAttribute('defaultChainId', true);
+      const networks = this.getAttribute('networks', true);
+      const wallets = this.getAttribute('wallets', true);
+      const showHeader = this.getAttribute('showHeader', true);
+      await this.setData({ commissions, defaultChainId, networks, wallets, showHeader });
+    }
     this.setContainerData();
     this.isReadyCallbackQueued = false;
     this.executeReadyCallback();
