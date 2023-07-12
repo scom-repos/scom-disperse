@@ -1,9 +1,10 @@
 import { getChainId, getDisperseAddress, getProxyAddress, INFINITE } from "../store/index";
-import { DisperseData, ICommissionInfo, ITokenObject } from "../global/index"
+import { DisperseData, ICommissionInfo } from "../global/index"
 import { Wallet, BigNumber, Utils } from "@ijstech/eth-wallet";
 import { Contracts as OpenSwapContracts } from "../contracts/oswap-openswap-contract/index";
 import { Contracts as ProxyContracts } from "../contracts/scom-commission-proxy-contract/index";
 import { Contracts } from "../contracts/scom-disperse-contract/index";
+import { ITokenObject } from "@scom/scom-token-list";
 
 const onCheckAllowance = async (token: ITokenObject, spender: string) => {
   if (!token.address) return null;
@@ -97,9 +98,9 @@ const onDisperse = async (disperseData: IDisperseData) => {
       }
     }
   } catch (err) {
-    console.error(err);
+    return { receipt: null, error: err };
   }
-  return receipt;
+  return { receipt };
 }
 
 export {

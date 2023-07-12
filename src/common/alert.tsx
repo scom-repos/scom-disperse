@@ -2,14 +2,14 @@ import { customElements, Module, ControlElement, Modal, Panel, Label, Image, But
 import { Wallet } from '@ijstech/eth-wallet';
 import { parseContractError, viewOnExplorerByTxHash } from '../global/index';
 import { getNetworkExplorerName } from '../store/index';
-import styleClass from './result.css';
+import styleClass from './alert.css';
 import Assets from '../assets';
 const Theme = Styles.Theme.ThemeVars;
 
 declare global {
   namespace JSX {
     interface IntrinsicElements {
-      ['disperse-result']: ControlElement;
+      ['disperse-alert']: ControlElement;
     }
   }
 };
@@ -19,11 +19,10 @@ export interface IMessage {
   content?: any,
   txtHash?: string,
   obj?: any,
-  customRedirect?: any,
 }
 
-@customElements('disperse-result')
-export class Result extends Module {
+@customElements('disperse-alert')
+export class Alert extends Module {
   private confirmModal: Modal;
   private mainContent: Panel;
   private _message: any;
@@ -45,7 +44,11 @@ export class Result extends Module {
   async init() {
     this.classList.add(styleClass);
     super.init();
-    this.confirmModal.onClose = () => this.onCloseRedirect();
+    this.confirmModal.onClose = () => {
+      if (this.onCustomClose) {
+        this.onCustomClose();
+      }
+    }
   }
 
   closeModal() {
@@ -56,33 +59,20 @@ export class Result extends Module {
     this.confirmModal.visible = true;
   }
 
-  onCloseRedirect() {
-    const customRedirect = this.message?.customRedirect;
-    if (customRedirect && customRedirect.name) {
-      this._message.customRedirect = null;
-      if (customRedirect.params) {
-        const queries = new URLSearchParams(customRedirect.params).toString();
-        window.location.assign(`/#/${customRedirect.name}?${queries}`);
-      } else {
-        window.location.assign(`/#/${customRedirect.name}`);
-      }
-    }
-  }
-
   async buildLink() {
     if (this.message.txtHash) {
-      const chainId: number = Wallet.getClientInstance().chainId;
+      const chainId: number = await Wallet.getClientInstance().getChainId();
       viewOnExplorerByTxHash(chainId, this.message.txtHash);
     }
   }
 
   async renderUI() {
-    this.mainContent.clearInnerHTML();
+    this.mainContent.innerHTML = '';
     const mainSection = await VStack.create({
       horizontalAlignment: 'center'
     });
     if (this.message.status === 'warning') {
-      mainSection.id = "warningSection";
+      mainSection.id = 'warningSection';
       const loading = (
         <i-panel height={100}>
           <i-vstack id="loadingElm" class="i-loading-overlay" height="100%" background={{ color: "transparent" }}>
@@ -90,8 +80,8 @@ export class Result extends Module {
               <i-icon
                 class="i-loading-spinner_icon"
                 image={{ url: Assets.fullPath('img/loading.svg'), width: 24, height: 24 }}
-              />
-              <i-label caption="Loading..." font={{ color: '#FD4A4C' }} class="i-loading-spinner_text" />
+              ></i-icon>
+              <i-label caption="Loading..." font={{ color: '#FD4A4C' }} class="i-loading-spinner_text"></i-label>
             </i-vstack>
           </i-vstack>
         </i-panel>
@@ -118,21 +108,24 @@ export class Result extends Module {
 
       const image = await Image.create({
         width: '50px',
-        url: Assets.fullPath('img/success-icon.svg')
+        url: Assets.fullPath('img/success-icon.svg'),
+        display: 'inline-block',
+        margin: { bottom: 16 }
       });
-      image.classList.add("inline-block", "mb");
       mainSection.appendChild(image);
 
       const label = await Label.create();
       label.caption = 'Transaction Submitted';
-      label.classList.add("waiting-txt");
+      label.classList.add('waiting-txt');
       mainSection.appendChild(label);
 
       const contentSection = await Panel.create();
-      contentSection.id = "contentSection";
+      contentSection.id = 'contentSection';
       mainSection.appendChild(contentSection);
 
-      const contentLabel = await Label.create();
+      const contentLabel = await Label.create({
+        wordBreak: 'break-all'
+      });
       contentLabel.caption = this.message.content || '';
       contentSection.appendChild(contentLabel);
 
@@ -146,9 +139,9 @@ export class Result extends Module {
         section.appendChild(label1);
 
         const label2 = await Label.create({
-          caption: this.message.txtHash.substr(33, this.message.txtHash.length)
+          caption: this.message.txtHash.substr(33, this.message.txtHash.length),
+          margin: { bottom: 16 }
         });
-        label2.classList.add("mb-1");
         section.appendChild(label2);
 
         const link = await Label.create({
@@ -164,44 +157,45 @@ export class Result extends Module {
       const button = new Button(mainSection, {
         width: '100%',
         caption: 'Close',
-        // font: { color: Theme.colors.primary.contrastText }
-        font: { color: '#fff' }
+        margin: { top: 16 },
+        font: { color: Theme.colors.primary.contrastText }
       });
       button.classList.add('btn-os');
-      button.classList.add('mt-1');
       button.onClick = () => this.closeModal();
       mainSection.appendChild(button);
     } else {
       const image = await Image.create({
         width: '50px',
-        url: Assets.fullPath('img/oswap_error.png')
+        url: Assets.fullPath('img/oswap_error.png'),
+        display: 'inline-block',
+        margin: { bottom: 16 }
       });
-      image.classList.add("inline-block", "mb");
       mainSection.appendChild(image);
 
       const label = await Label.create({
-        caption: 'Transaction Rejected.'
+        caption: 'Transaction Rejected.',
+        margin: { bottom: 16 }
       });
-      label.classList.add("waiting-txt", "mb");
+      label.classList.add('waiting-txt');
       mainSection.appendChild(label);
 
       const section = await VStack.create();
-      section.id = "contentSection";
+      section.id = 'contentSection';
       const contentLabel = await Label.create({
-        caption: await this.onErrMsgChanged()
+        caption: await this.onErrMsgChanged(),
+        margin: { bottom: 16 },
+        wordBreak: 'break-all'
       });
-      contentLabel.classList.add("mb-1");
       section.appendChild(contentLabel);
       mainSection.appendChild(section);
 
       const button = new Button(mainSection, {
         width: '100%',
         caption: 'Cancel',
-        // font: { color: Theme.colors.primary.contrastText }
-        font: { color: '#fff' }
+        margin: { top: 16 },
+        font: { color: Theme.colors.primary.contrastText }
       });
       button.classList.add('btn-os');
-      button.classList.add('mt-1');
       button.onClick = () => this.closeModal();
       mainSection.appendChild(button);
     }

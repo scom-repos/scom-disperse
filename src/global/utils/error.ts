@@ -17,7 +17,7 @@ export async function parseContractError(oMessage:string, tokens: string[]):Prom
         'execution reverted: OAXDEX: LOCKED': 'Locked',
         'execution reverted: OAXDEX: INVALID_SIGNATURE': 'Invalid signature',
         'execution reverted: OAXDEX: EXPIRED': 'Expired',
-        'MetaMask Tx Signature: User denied transaction signature.': 'User denied transaction signature',
+        'Returned error: MetaMask Tx Signature: User denied transaction signature.': 'User denied transaction signature',
         'execution reverted: OracleAdaptor: Price outside allowed range' : 'Circuit Breaker: Exceeds Price Protection Range',
         'execution reverted: PAIR_NOT_MATCH': 'Pair Not Match',
         'execution reverted: Cap exceeded' : 'Trolls have been sold out',
@@ -30,20 +30,5 @@ export async function parseContractError(oMessage:string, tokens: string[]):Prom
         return s;
     }
 
-    return '';
-    // switch (oMessage) {
-    //     case 'execution reverted: OracleAdaptor: Exceessive amount':
-    //         try {
-    //             const tokenIn = tokens[0] === MAIN_TOKEN.symbol ? WETH9.address : tokens[0];
-    //             const tokenOut = tokens[1] === MAIN_TOKEN.symbol ? WETH9.address : tokens[1];
-    //             let oracleAdapterAddress = await eth.call('OSWAP_OracleFactory', Address['OSWAP_OracleFactory'], 'oracles', [tokenIn, tokenOut]);
-    //             let maxVal = await eth.call('OSWAP_OracleChainlinkPriceGuardTestnet', oracleAdapterAddress, 'maxValue', [])
-    //             maxVal = web3.utils.fromWei(maxVal);
-    //             return `Exceeded Swap limit of ${maxVal} USD equivalent`;
-    //         } catch {
-    //             return '';
-    //         }
-    //     default:
-    //         return '';
-    // }
+    return oMessage;
 }

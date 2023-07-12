@@ -1,18 +1,17 @@
 import { customElements, Module, Control, ControlElement, Modal, Input, Icon, Panel, Button, Image, observable, application, IEventBus, Container, Styles, GridLayout } from '@ijstech/components';
 import {
-  isWalletConnected,
   getChainId,
   getTokenObject,
-  getTokenIcon,
   hasUserToken,
   setUserTokens,
   hasMetaMask,
+  getRpcWallet,
 } from '../store/index';
-import { ITokenObject, formatNumber, EventId } from '../global/index';
+import { formatNumber, EventId } from '../global/index';
 import Assets from '../assets';
 import './tokenSelection.css';
 import { ImportToken } from '../common/importToken';
-import { ChainNativeTokenByChainId, tokenStore, assets as tokenAssets } from '@scom/scom-token-list';
+import { ChainNativeTokenByChainId, tokenStore, assets as tokenAssets, ITokenObject, isWalletConnected } from '@scom/scom-token-list';
 
 const Theme = Styles.Theme.ThemeVars;
 
@@ -35,7 +34,6 @@ declare global {
 export class TokenSelection extends Module {
   private _isTokenShown: boolean = true;
   private _token?: ITokenObject;
-  private _targetChainId: number;
   private _tokenDataListProp: Array<ITokenObject>;
   private _onSelectToken: any;
   private _isCommonShown: boolean;
@@ -44,7 +42,6 @@ export class TokenSelection extends Module {
   private _onSetMaxBalance: any;
   private tokenSelectionElm: Panel;
   private tokenSelectionModal: Modal;
-  private currentChainId: number;
   private tokenBalancesMap: any;
   private btnToken: Button;
   private btnMax: Button;
@@ -84,15 +81,6 @@ export class TokenSelection extends Module {
     if (this.tokenSelectionElm) {
       this.tokenSelectionElm.visible = value;
     }
-  }
-
-  get targetChainId(): number {
-    return this._targetChainId;
-  }
-
-  set targetChainId(value: number) {
-    this._targetChainId = value;
-    this.updateDataByChain();
   }
 
   get tokenDataListProp(): Array<ITokenObject> {
@@ -158,10 +146,7 @@ export class TokenSelection extends Module {
   }
 
   get chainId(): number {
-    if (this.targetChainId) {
-      return this.targetChainId;
-    }
-    return isWalletConnected() ? this.currentChainId : getChainId();
+    return getChainId();
   }
 
   get disableSelect(): boolean {
@@ -184,10 +169,7 @@ export class TokenSelection extends Module {
     this.btnMax.enabled = !value;
   }
 
-  private async initData() {
-    if (!this.chainId) {
-      this.currentChainId = getChainId();
-    }
+  async initData() {
     if (isWalletConnected()) {
       this.tokenBalancesMap = tokenStore.tokenBalances;
     }
@@ -195,7 +177,8 @@ export class TokenSelection extends Module {
   }
 
   private async updateDataByChain() {
-    this.tokenBalancesMap = await tokenStore.updateAllTokenBalances();
+    const rpcWallet = getRpcWallet();
+    this.tokenBalancesMap = await tokenStore.updateAllTokenBalances(rpcWallet);
     this.renderTokenItems();
     this.updateButton();
   }
@@ -205,24 +188,13 @@ export class TokenSelection extends Module {
     this.renderTokenItems();
   }
 
-  private async onChainChange() {
-    if (!this.targetChainId) {
-      this.currentChainId = getChainId();
-      tokenStore.updateTokenMapData();
-      this.updateDataByChain();
-    }
-  }
-
   private async onWalletConnect() {
     this.checkHasMetaMask = hasMetaMask();
-    tokenStore.updateTokenMapData();
-    await tokenStore.updateAllTokenBalances();
     await this.initData();
     this.updateStatusButton();
   }
 
   private async onWalletDisconnect() {
-    tokenStore.updateTokenMapData();
     await this.initData();
   }
 
@@ -232,9 +204,8 @@ export class TokenSelection extends Module {
   }
 
   private registerEvent() {
-    this.$eventBus.register(this, EventId.IsWalletConnected, this.onWalletConnect);
-    this.$eventBus.register(this, EventId.IsWalletDisconnected, this.onWalletDisconnect);
-    this.$eventBus.register(this, EventId.chainChanged, this.onChainChange);
+    // this.$eventBus.register(this, EventId.IsWalletConnected, this.onWalletConnect);
+    // this.$eventBus.register(this, EventId.IsWalletDisconnected, this.onWalletDisconnect);
     this.$eventBus.register(this, EventId.Paid, this.onPaid);
     this.$eventBus.register(this, EventId.EmitNewToken, this.updateDataByNewToken);
   }
@@ -331,7 +302,7 @@ export class TokenSelection extends Module {
     if (this.isCommonShown && this.commonTokenDataList) {
       this.commonTokenPanel.classList.remove('hidden');
       this.commonTokenDataList.forEach((token: ITokenObject) => {
-        const logoAddress = token.address && !this.targetChainId ? getTokenIcon(token.address) : tokenAssets.tokenPath(token, this.chainId);
+        const logoAddress = tokenAssets.tokenPath(token, this.chainId);
 
         this.commonTokenList.appendChild(
           <i-hstack
@@ -352,7 +323,7 @@ export class TokenSelection extends Module {
   }
 
   private renderToken(token: ITokenObject) {
-    const logoAddress = token.address && !this.targetChainId ? getTokenIcon(token.address) : tokenAssets.tokenPath(token, this.chainId);
+    const logoAddress = tokenAssets.tokenPath(token, this.chainId);
     return (
       <i-hstack
         width="100%"
@@ -423,15 +394,12 @@ export class TokenSelection extends Module {
     if (this.tokenDataListFiltered.length) {
       const tokenItems = this.tokenDataListFiltered.map((token: ITokenObject) => this.renderToken(token));
       this.tokenList.append(...tokenItems);
-    } else if (this.targetChainId && this.targetChainId !== getChainId()) {
-      this.tokenList.innerHTML = '';
-      this.tokenList.append(<i-label class="text-center mt-1 mb-1" caption="No tokens found" />)
     } else {
       try {
         const tokenObj = await getTokenObject(this.filterValue, true);
         if (!tokenObj) throw new Error('Token is invalid');
         this.tokenList.innerHTML = '';
-        this.tokenList.appendChild(this.renderToken({ ...tokenObj, isNew: true }));
+        this.tokenList.appendChild(this.renderToken({ ...tokenObj, isNew: true, chainId: this.chainId }));
       } catch (err) {
         this.tokenList.innerHTML = '';
         this.tokenList.append(
@@ -465,9 +433,10 @@ export class TokenSelection extends Module {
     this.sortValue = undefined;
     this.iconSortUp.classList.remove('icon-sorted');
     this.iconSortDown.classList.remove('icon-sorted');
-    // if (!this.tokenList.innerHTML) {
-    //   await this.initData();
-    // }
+    if (!this.tokenList.hasChildNodes()) {
+      tokenStore.updateTokenMapData(getChainId());
+      this.initData();
+    }
     this.tokenSelectionModal.visible = true;
   }
 
@@ -502,7 +471,7 @@ export class TokenSelection extends Module {
         if (this.isBtnMaxShown) {
           this.btnMax.classList.remove('hidden');
         }
-        const logoAddress = token.address && !this.targetChainId ? getTokenIcon(token.address) : tokenAssets.tokenPath(token, this.chainId);
+        const logoAddress = tokenAssets.tokenPath(token, this.chainId);
         if (!image) {
           image = new Image(btnToken, {
             width: 20,
@@ -521,8 +490,9 @@ export class TokenSelection extends Module {
     // The token has been not imported
     if (!isNew && token.isNew && !hasUserToken(token.address || '', this.chainId)) {
       setUserTokens(token, this.chainId);
-      tokenStore.updateTokenMapData();
-      await tokenStore.updateAllTokenBalances();
+      const rpcWallet = getRpcWallet();
+      tokenStore.updateTokenMapData(this.chainId);
+      await tokenStore.updateAllTokenBalances(rpcWallet);
       this.$eventBus.dispatch(EventId.EmitNewToken, token);
       isNew = true;
     }
@@ -537,7 +507,6 @@ export class TokenSelection extends Module {
   };
 
   async init() {
-    await this.onWalletConnect();
     super.init();
     this.disableSelect = this.getAttribute("disableSelect", true);
     this.disabledMaxBtn = this.getAttribute("disabledMaxBtn", true);

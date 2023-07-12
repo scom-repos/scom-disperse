@@ -1,24 +1,23 @@
-import { application, moment, Button, Container, customModule, EventBus, HStack, Image, Input, Label, Module, Panel, VStack, Modal, ControlElement, customElements, RequireJS, IDataSchema, Icon, Styles } from '@ijstech/components'
-import { TokenSelection, Result } from './common/index';
-import { EventId, ITokenObject, toDisperseData, downloadCSVFile, formatNumber, viewOnExplorerByTxHash, isAddressValid, DisperseData, disperseDataToString, registerSendTxEvents, formatUTCDate, IDisperseConfigUI, INetworkConfig, ICommissionInfo } from './global/index';
-import { dummyAddressList, getDisperseAddress, getEmbedderCommissionFee, getProxyAddress, ImportFileWarning, isWalletConnected, setDataFromSCConfig } from './store/index';
-import { BigNumber, Wallet } from '@ijstech/eth-wallet';
+import { application, moment, Button, Container, customModule, EventBus, HStack, Input, Label, Module, Panel, VStack, Modal, ControlElement, customElements, RequireJS, IDataSchema, Icon, Styles } from '@ijstech/components'
+import { TokenSelection, Alert } from './common/index';
+import { EventId, toDisperseData, downloadCSVFile, formatNumber, viewOnExplorerByTxHash, isAddressValid, DisperseData, disperseDataToString, registerSendTxEvents, formatUTCDate, IDisperseConfigUI, INetworkConfig, ICommissionInfo } from './global/index';
+import { dummyAddressList, getChainId, getDisperseAddress, getEmbedderCommissionFee, getProxyAddress, getRpcWallet, ImportFileWarning, initRpcWallet, isClientWalletConnected, isRpcWalletConnected, setDataFromSCConfig } from './store/index';
+import { BigNumber, Constants, IEventBusRegistry, Wallet } from '@ijstech/eth-wallet';
 import { onApproveToken, onCheckAllowance, onDisperse } from './disperse-utils/index';
 import Assets from './assets';
 import { disperseStyle } from './disperse.css';
 import { disperseLayout } from './index.css';
 import { RenderResultData, DownloadReportData } from './disperse.type';
-import { tokenStore, assets as tokenAssets } from '@scom/scom-token-list';
-import Config from './config/index';
+import { tokenStore, assets as tokenAssets, ITokenObject } from '@scom/scom-token-list';
 import configData from './data.json';
 import ScomWalletModal, { IWalletPlugin } from '@scom/scom-wallet-modal';
 import ScomDappContainer from '@scom/scom-dapp-container';
 import { getCommissionAmount, getCurrentCommissions } from './disperse-utils/API';
+import ScomCommissionFeeSetup from '@scom/scom-commission-fee-setup';
 const moduleDir = application.currentModuleDir;
 // import { jsPDF } from 'jspdf';
 // import autoTable from 'jspdf-autotable';
 
-const currentTheme = Styles.Theme.currentTheme;
 const Theme = Styles.Theme.ThemeVars;
 
 declare const window: any;
@@ -63,15 +62,16 @@ export default class ScomDisperse extends Module {
   private remainingElm: Label;
   private btnApprove: Button;
   private btnDisperse: Button;
-  private disperseResult: Result;
+  private disperseAlert: Alert;
   private resultAddresses: DisperseData[] = [];
   private invalidElm: Label;
   private messageModal: Modal;
   private messageElm: Label;
-  private configDApp: Config;
   private mdWallet: ScomWalletModal;
   private dappContainer: ScomDappContainer;
   private iconTotal: Icon;
+  private hStackGroupButton: HStack;
+  private btnWallet: Button;
 
   private contractAddress: string;
   private _data: IDisperseConfigUI = {
@@ -81,18 +81,33 @@ export default class ScomDisperse extends Module {
   };
   tag: any = {};
   defaultEdit: boolean = true;
-  readonly onConfirm: () => Promise<void>;
-  readonly onDiscard: () => Promise<void>;
-  readonly onEdit: () => Promise<void>;
+  private rpcWalletEvents: IEventBusRegistry[] = [];
+	private clientEvents: any[] = [];
 
   private getData() {
     return this._data;
   }
 
   private async setData(data: IDisperseConfigUI) {
-    this.configDApp.data = data;
     this._data = data;
-    this.setContainerData();
+
+    const rpcWalletId = initRpcWallet(this.defaultChainId);
+		const rpcWallet = getRpcWallet();
+		const event = rpcWallet.registerWalletEvent(this, Constants.RpcWalletEvent.Connected, async (connected: boolean) => {
+			this.updateContractAddress();
+      this.onWalletConnect(isClientWalletConnected());
+		});
+		this.rpcWalletEvents.push(event);
+
+    const containerData = {
+			defaultChainId: this.defaultChainId,
+			wallets: this.wallets,
+			networks: this.networks,
+			showHeader: this.showHeader,
+			rpcWalletId: rpcWallet.instanceId
+		}
+		if (this.dappContainer?.setData) this.dappContainer.setData(containerData);
+
     await this.refreshUI();
     if (this.mdWallet) {
       this.mdWallet.networks = data.networks;
@@ -219,13 +234,11 @@ export default class ScomDisperse extends Module {
             execute: async () => {
               _oldData = { ...this._data };
               if (userInputData.commissions) this._data.commissions = userInputData.commissions;
-              this.configDApp.data = this._data;
               this.refreshUI();
               if (builder?.setData) builder.setData(this._data);
             },
             undo: () => {
               this._data = { ..._oldData };
-              this.configDApp.data = this._data;
               this.refreshUI();
               if (builder?.setData) builder.setData(this._data);
             },
@@ -235,8 +248,10 @@ export default class ScomDisperse extends Module {
         customUI: {
           render: (data?: any, onConfirm?: (result: boolean, data: any) => void) => {
             const vstack = new VStack();
-            const config = new Config(null, {
-              commissions: self._data.commissions
+            const config = new ScomCommissionFeeSetup(null, {
+              commissions: self._data.commissions,
+              fee: getEmbedderCommissionFee(),
+              networks: self._data.networks
             });
             const button = new Button(null, {
               caption: 'Confirm',
@@ -244,7 +259,7 @@ export default class ScomDisperse extends Module {
             vstack.append(config);
             vstack.append(button);
             button.onClick = async () => {
-              const commissions = config.data.commissions;
+              const commissions = config.commissions;
               if (onConfirm) onConfirm(true, { commissions });
             }
             return vstack;
@@ -263,12 +278,10 @@ export default class ScomDisperse extends Module {
       //     return {
       //       execute: async () => {
       //         _oldData = { ...this._data };
-      //         this.configDApp.data = this._data;
       //         this.refreshUI();
       //       },
       //       undo: () => {
       //         this._data = { ..._oldData };
-      //         this.configDApp.data = this._data;
       //         this.refreshUI();
       //       },
       //       redo: () => { }
@@ -316,7 +329,6 @@ export default class ScomDisperse extends Module {
         setData: async (data: IDisperseConfigUI) => {
           const defaultData = configData.defaultBuilderData;
           await this.setData({ ...defaultData, ...data });
-          this.setContainerData();
         },
         getTag: this.getTag.bind(this),
         setTag: this.setTag.bind(this)
@@ -342,8 +354,8 @@ export default class ScomDisperse extends Module {
             await this.setData(resultingData);
           }
         },
-        bindOnChanged: (element: Config, callback: (data: any) => Promise<void>) => {
-          element.onCustomCommissionsChanged = async (data: any) => {
+        bindOnChanged: (element: ScomCommissionFeeSetup, callback: (data: any) => Promise<void>) => {
+          element.onChanged = async (data: any) => {
             let resultingData = {
               ...self._data,
               ...data
@@ -352,7 +364,10 @@ export default class ScomDisperse extends Module {
             await callback(data);
           }
         },
-        getData: this.getData.bind(this),
+        getData: () => {
+          const fee = getEmbedderCommissionFee();
+          return {...this.getData(), fee}
+        },
         setData: this.setData.bind(this),
         getTag: this.getTag.bind(this),
         setTag: this.setTag.bind(this)
@@ -384,35 +399,51 @@ export default class ScomDisperse extends Module {
   constructor(parent?: Container, options?: any) {
     super(parent, options);
     setDataFromSCConfig(configData);
-    tokenStore.updateTokenMapData();
     this.$eventBus = application.EventBus;
     this.registerEvent();
   };
 
+  onHide() {
+		this.dappContainer.onHide();
+		const rpcWallet = getRpcWallet();
+		for (let event of this.rpcWalletEvents) {
+			rpcWallet.unregisterWalletEvent(event);
+		}
+		this.rpcWalletEvents = [];
+		for (let event of this.clientEvents) {
+			event.unregister();
+		}
+		this.clientEvents = [];
+	}
+
   private registerEvent = () => {
-    this.$eventBus.register(this, EventId.IsWalletConnected, this.onWalletConnect);
-    this.$eventBus.register(this, EventId.IsWalletDisconnected, this.onWalletConnect);
-    this.$eventBus.register(this, EventId.chainChanged, this.onChainChanged);
+    this.clientEvents.push(this.$eventBus.register(this, EventId.chainChanged, this.onChainChanged));
   }
 
-  private onWalletConnect = (connected: boolean) => {
-    this.setContainerData();
+  private onWalletConnect = async (connected: boolean) => {
+    this.updateButtons();
+    const rpcWallet = getRpcWallet();
+    if (connected && rpcWallet.address) await tokenStore.updateAllTokenBalances(rpcWallet);
     this.checkStepStatus(connected);
   }
 
-  private onChainChanged = () => {
-    this.resetData();
-    this.onWalletConnect(isWalletConnected());
+  private onChainChanged = async () => {
+    this.resetData(false);
+    await this.onWalletConnect(isClientWalletConnected());
+    this.tokenSelection?.initData();
   }
 
-  private setContainerData = () => {
-    const data: IDisperseConfigUI = {
-      defaultChainId: this.defaultChainId,
-      wallets: this.wallets,
-      networks: this.networks,
-      showHeader: this.showHeader
+  private updateButtons() {
+    if (!this.hStackGroupButton) return;
+    const isClientConnected = isClientWalletConnected();
+    if (!isClientConnected || !isRpcWalletConnected()) {
+      this.btnWallet.visible = true;
+      this.btnWallet.caption = !isClientConnected ? 'Connect Wallet' : 'Switch Network';
+      this.hStackGroupButton.visible = false;
+      return;
     }
-    if (this.dappContainer?.setData) this.dappContainer.setData(data);
+    this.btnWallet.visible = false;
+    this.hStackGroupButton.visible = true;
   }
 
   get listAddresses() {
@@ -504,7 +535,7 @@ export default class ScomDisperse extends Module {
   }
 
   private setFourthStatus = async () => {
-    if (isWalletConnected() && this.hasAddress) {
+    if (isClientWalletConnected() && this.hasAddress) {
       this.btnDownload.enabled = true;
       this.containerElm.minHeight = '1000px';
       this.thirdStepElm.visible = true;
@@ -550,9 +581,9 @@ export default class ScomDisperse extends Module {
     this.token = token;
     this.tokenInfoElm.clearInnerHTML();
     if (token) {
-      const img = tokenAssets.tokenPath(token, Wallet.getClientInstance().chainId);
+      const img = tokenAssets.tokenPath(token, getChainId());
       this.tokenInfoElm.appendChild(<i-hstack gap="16px" verticalAlignment="center">
-        <i-image width={40} height={40} minWidth={30} url={img} />
+        <i-image width={40} height={40} minWidth={30} url={img} fallbackUrl={Assets.fullPath('img/tokens/token-placeholder.svg')} />
         <i-label caption={`$${token.symbol}`} font={{ size: '20px', name: 'Montserrat Medium' }} />
         <i-label caption={token.address || token.symbol} font={{ size: '16px', name: 'Montserrat Medium' }} class="break-word" />
       </i-hstack>);
@@ -678,7 +709,11 @@ export default class ScomDisperse extends Module {
     }
   }
 
-  private resetData = () => {
+  private resetData = async (updateBalance?: boolean) => {
+    this.updateButtons();
+    const rpcWallet = getRpcWallet();
+    tokenStore.updateTokenMapData(getChainId());
+    if (updateBalance && rpcWallet.address) await tokenStore.updateAllTokenBalances(rpcWallet);
     this.setEnabledStatus(true);
     this.btnApprove.rightIcon.visible = false;
     this.btnApprove.caption = 'Approve';
@@ -689,15 +724,15 @@ export default class ScomDisperse extends Module {
     this.inputBatch.value = '';
     this.invalidElm.visible = false;
     this.onSelectToken(null);
-    this.checkStepStatus(isWalletConnected());
+    this.checkStepStatus(isClientWalletConnected());
   }
 
   private showMessage = (status: 'warning' | 'success' | 'error', content: string | Error) => {
-    this.disperseResult.message = {
+    this.disperseAlert.message = {
       status,
       content,
     }
-    this.disperseResult.showModal();
+    this.disperseAlert.showModal();
   }
 
   private setEnabledStatus = (enabled: boolean) => {
@@ -727,7 +762,7 @@ export default class ScomDisperse extends Module {
 
   private getApprovalStatus = async () => {
     if (!this.token) return;
-    if (this.remaining.lt(0)) {
+    if (this.remaining.lt(0) || !isRpcWalletConnected()) {
       this.btnApprove.caption = 'Approve';
       this.btnApprove.enabled = false;
       this.btnDisperse.enabled = false;
@@ -737,6 +772,7 @@ export default class ScomDisperse extends Module {
       this.btnApprove.enabled = false;
       this.btnDisperse.enabled = true;
     } else {
+      await Wallet.getClientInstance().init();
       const allowance = await onCheckAllowance(this.token, this.contractAddress);
       if (allowance === null) return;
       const inputVal = new BigNumber(this.total);
@@ -804,10 +840,9 @@ export default class ScomDisperse extends Module {
     };
 
     const confirmationCallBackActions = async () => {
-      await tokenStore.updateAllTokenBalances();
-      this.disperseResult.closeModal();
+      this.disperseAlert.closeModal();
       this.renderResult(token, { receipt, address, timestamp });
-      this.resetData();
+      this.resetData(true);
     };
 
     registerSendTxEvents({
@@ -815,8 +850,28 @@ export default class ScomDisperse extends Module {
       confirmation: confirmationCallBackActions
     });
 
-    onDisperse({ token, data: this.listAddresses, commissions: this.commissions });
+    const { error } = await onDisperse({ token, data: this.listAddresses, commissions: this.commissions });
+		if (error) {
+			this.showMessage('error', error);
+		}
   }
+
+  private connectWallet = async () => {
+		if (!isClientWalletConnected()) {
+			if (this.mdWallet) {
+				await application.loadPackage('@scom/scom-wallet-modal', '*');
+				this.mdWallet.networks = this.networks;
+				this.mdWallet.wallets = this.wallets;
+				this.mdWallet.showModal();
+			}
+			return;
+		}
+		if (!isRpcWalletConnected()) {
+			const chainId = getChainId();
+			const clientWallet = Wallet.getClientInstance();
+			await clientWallet.switchNetwork(chainId);
+		}
+	}
 
   private loadLib() {
     if (!window.jsPDF) {
@@ -825,7 +880,7 @@ export default class ScomDisperse extends Module {
   }
 
   private renderResult = (token: ITokenObject, data: RenderResultData) => {
-    const img = tokenAssets.tokenPath(token, Wallet.getClientInstance().chainId);
+    const img = tokenAssets.tokenPath(token, getChainId());
     const chainId = Wallet.getClientInstance().chainId;
     this.resultElm.clearInnerHTML();
     this.resultElm.appendChild(
@@ -834,7 +889,7 @@ export default class ScomDisperse extends Module {
         <i-vstack gap={16} width={750} maxWidth="100%" horizontalAlignment="center">
           <i-label caption="Token" font={{ size: '24px', name: 'Montserrat Medium' }} />
           <i-hstack width="100%" verticalAlignment="center" horizontalAlignment="center" gap={16} padding={{ top: 20, bottom: 20, left: 60, right: 60 }} border={{ radius: 15, style: 'solid', width: 4 }}>
-            <i-image width={40} height={40} minWidth={30} url={img} />
+            <i-image width={40} height={40} minWidth={30} url={img} fallbackUrl={Assets.fullPath('img/tokens/token-placeholder.svg')} />
             <i-label caption={`$${token.symbol}`} font={{ size: '20px', name: 'Montserrat Medium' }} />
             <i-label class="text-overflow" caption={token.address || token.symbol} font={{ size: '16px', name: 'Montserrat Medium' }} />
           </i-hstack>
@@ -860,7 +915,7 @@ export default class ScomDisperse extends Module {
   onLoad = () => {
     this.containerElm.visible = true;
     this.resultElm.visible = false;
-    this.resetData();
+    this.resetData(true);
   }
 
   async init() {
@@ -868,8 +923,7 @@ export default class ScomDisperse extends Module {
     super.init();
     this.loadLib();
     this.classList.add(disperseLayout);
-    const connected = isWalletConnected();
-    this.checkStepStatus(connected);
+    this.checkStepStatus(isClientWalletConnected());
     this.tokenSelection.isTokenShown = false;
     this.tokenSelection.isCommonShown = true;
     this.tokenSelection.onSelectToken = this.onSelectToken;
@@ -878,16 +932,6 @@ export default class ScomDisperse extends Module {
 
     const lazyLoad = this.getAttribute('lazyLoad', true, false);
 		if (!lazyLoad) {
-      this.setTag({
-        backgoundColor: currentTheme.background.main,
-        fontColor: currentTheme.text.primary,
-        // buttonBackgroundColor: currentTheme.colors.primary.main,
-        // buttonFontColor: currentTheme.colors.primary.contrastText,
-        inputBackgroundColor: currentTheme.input.background,
-        inputFontColor: currentTheme.input.fontColor,
-        secondaryFontColor: currentTheme.colors.secondary.contrastText,
-        secondaryColor: currentTheme.colors.secondary.main
-      });
       const commissions = this.getAttribute('commissions', true, []);
       const defaultChainId = this.getAttribute('defaultChainId', true);
       const networks = this.getAttribute('networks', true);
@@ -895,7 +939,6 @@ export default class ScomDisperse extends Module {
       const showHeader = this.getAttribute('showHeader', true);
       await this.setData({ commissions, defaultChainId, networks, wallets, showHeader });
     }
-    this.setContainerData();
     this.isReadyCallbackQueued = false;
     this.executeReadyCallback();
   }
@@ -981,7 +1024,7 @@ export default class ScomDisperse extends Module {
                       </i-hstack>
                     </i-vstack>
                   </i-hstack>
-                  <i-hstack verticalAlignment="center" horizontalAlignment="center" margin={{ top: 60 }} gap={30}>
+                  <i-hstack id="hStackGroupButton" verticalAlignment="center" horizontalAlignment="center" margin={{ top: 40, bottom: 20 }} gap={30}>
                     <i-button
                       id="btnApprove"
                       caption="Approve"
@@ -1007,13 +1050,25 @@ export default class ScomDisperse extends Module {
                       onClick={this.handleDisperse}
                     />
                   </i-hstack>
+                  <i-button
+                    id="btnWallet"
+                    caption="Connect Wallet"
+                    class="btn-os"
+                    width={300}
+                    maxWidth="100%"
+                    visible={false}
+                    margin={{ top: 40, bottom: 20, left: 'auto', right: 'auto' }}
+                    border={{ radius: 12 }}
+                    padding={{ top: 12, bottom: 12 }}
+                    onClick={this.connectWallet}
+                  />
                 </i-vstack>
               </i-hstack>
             </i-vstack>
             <i-panel id="resultElm" visible={false} margin={{ top: 75, bottom: 100 }} />
           </i-panel>
-          <disperse-result id="disperseResult" />
-          <i-scom-disperse-config id="configDApp" visible={false} />
+          <disperse-alert id="disperseAlert" />
+          <i-scom-commission-fee-setup id="configDApp" visible={false} />
           <i-scom-wallet-modal
             id="mdWallet"
             wallets={[]}

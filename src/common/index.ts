@@ -1,3 +1,3 @@
 export { TokenSelection } from './tokenSelection';
 export { ImportToken } from './importToken';
-export { Result } from './result';
+export { Alert } from './alert';
