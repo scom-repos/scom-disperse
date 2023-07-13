@@ -88,13 +88,18 @@ export const disperseLayout = Styles.style({
               padding: '3.5px',
               width: '18px !important',
               height: '18px !important',
-              background: '#F29224',
-              fill: '#fff !important',
+              background: Theme.colors.primary.main,
+              fill: `${Theme.text.primary} !important`,
+              $nest: {
+                svg: {
+                  fill: `${Theme.text.primary} !important`,
+                }
+              }
             },
             'span': {
               fontWeight: 700,
               fontSize: '1rem',
-              color: '#FF8800'
+              color: Theme.colors.primary.main
             },
           },
         },

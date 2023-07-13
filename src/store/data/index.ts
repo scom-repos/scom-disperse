@@ -2,8 +2,8 @@ export {
   ChainNetwork
 } from './networks';
 
-export {CoreContractAddressesByChainId} from './core';
+export { CoreContractAddressesByChainId } from './core';
 
-export {dummyAddressList} from './dummy';
+export { dummyAddressList } from './dummy';
 
-export {ImportFileWarning} from './warning';
+export { ImportFileWarning } from './warning';

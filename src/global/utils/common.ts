@@ -1,5 +1,6 @@
-import { Wallet, ISendTxEventsOptions } from "@ijstech/eth-wallet"; 
+import { Wallet, ISendTxEventsOptions } from "@ijstech/eth-wallet";
 
+declare const window: any;
 
 export const registerSendTxEvents = (sendTxEventHandlers: ISendTxEventsOptions) => {
   const wallet = Wallet.getClientInstance();
@@ -18,7 +19,6 @@ export const registerSendTxEvents = (sendTxEventHandlers: ISendTxEventsOptions) 
 }
 
 export const isAddressValid = async(address: string) => {
-  let wallet: any = Wallet.getClientInstance();
-  const isValid = wallet.web3.utils.isAddress(address);
+  const isValid = window.Web3.utils.isAddress(address);
   return isValid;
 }

@@ -1,12 +1,9 @@
-import { Erc20, Wallet } from '@ijstech/eth-wallet';
+import { Erc20, Wallet, INetwork } from '@ijstech/eth-wallet';
 import {
-  EventId,
   IExtendedNetwork,
-  ITokenObject,
   SITE_ENV
 } from '../global/index';
 
-import { Contracts as OpenSwapContracts } from '../contracts/oswap-openswap-contract/index';
 import {
   CoreContractAddressesByChainId,
   ChainNetwork
@@ -16,7 +13,7 @@ export * from './data/index';
 
 import { application } from '@ijstech/components';
 import getNetworkList from '@scom/scom-network-list';
-import { ChainNativeTokenByChainId, WETHByChainId } from '@scom/scom-token-list';
+import { ChainNativeTokenByChainId, ITokenObject, WETHByChainId, isWalletConnected } from '@scom/scom-token-list';
 
 export enum WalletPlugin {
   MetaMask = 'metamask',
@@ -206,25 +203,8 @@ export const getEmbedderCommissionFee = () => {
   return state.embedderCommissionFee;
 }
 
-export function isWalletConnected() {
-  const wallet = Wallet.getClientInstance();
-  return wallet.isConnected;
-}
-
-export async function switchNetwork(chainId: number) {
-  const wallet = Wallet.getClientInstance();
-  await wallet.switchNetwork(chainId);
-  if (!isWalletConnected()) {
-    application.EventBus.dispatch(EventId.chainChanged, chainId);
-  }
-}
-
 export const getSupportedNetworks = () => {
   return Object.values(state.networkMap);
-}
-
-export function getChainId() {
-  return isWalletConnected() ? Wallet.getClientInstance().chainId : state.currentChainId || getDefaultChainId();
 }
 
 export const getDefaultChainId = () => {
@@ -258,31 +238,14 @@ export const state = {
   siteEnv: SITE_ENV.TESTNET,
   networkMap: {} as { [key: number]: IExtendedNetwork },
   currentChainId: 0,
-  infuraId: "",
+  infuraId: '',
   userTokens: {} as { [key: string]: ITokenObject[] },
   proxyAddresses: {} as ProxyAddresses,
-  ipfsGatewayUrl: "",
+  ipfsGatewayUrl: '',
   apiGatewayUrls: {} as Record<string, string>,
-  embedderCommissionFee: "0",
-  tokens: []
-}
-
-export const getTokenObject = async (address: string, showBalance?: boolean) => {
-  const ERC20Contract = new OpenSwapContracts.ERC20(Wallet.getClientInstance(), address);
-  const symbol = await ERC20Contract.symbol();
-  const name = await ERC20Contract.name();
-  const decimals = (await ERC20Contract.decimals()).toFixed();
-  let balance;
-  if (showBalance && isWalletConnected()) {
-    balance = (await (ERC20Contract.balanceOf(Wallet.getClientInstance().account.address))).shiftedBy(-decimals).toFixed();
-  }
-  return {
-    address: address.toLowerCase(),
-    decimals: +decimals,
-    name,
-    symbol,
-    balance
-  }
+  embedderCommissionFee: '0',
+  tokens: [],
+  rpcWalletId: ''
 }
 
 export const setUserTokens = (token: ITokenObject, chainId: number) => {
@@ -295,4 +258,48 @@ export const setUserTokens = (token: ITokenObject, chainId: number) => {
 
 export const hasUserToken = (address: string, chainId: number) => {
   return state.userTokens[chainId]?.some((token: ITokenObject) => token.address?.toLocaleLowerCase() === address?.toLocaleLowerCase());
+}
+
+
+export function isClientWalletConnected() {
+  const wallet = Wallet.getClientInstance();
+  return wallet.isConnected;
+}
+
+export function isRpcWalletConnected() {
+  const wallet = getRpcWallet();
+  return wallet?.isConnected;
+}
+
+export function getChainId() {
+  const rpcWallet = getRpcWallet();
+  return rpcWallet?.chainId;
+}
+
+export function initRpcWallet(defaultChainId: number) {
+  if (state.rpcWalletId) {
+    return state.rpcWalletId;
+  }
+  const clientWallet = Wallet.getClientInstance();
+  const networkList: INetwork[] = Object.values(application.store.networkMap);
+  const instanceId = clientWallet.initRpcWallet({
+    networks: networkList,
+    defaultChainId,
+    infuraId: application.store.infuraId,
+    multicalls: application.store.multicalls
+  });
+  state.rpcWalletId = instanceId;
+  if (clientWallet.address) {
+    const rpcWallet = Wallet.getRpcWalletInstance(instanceId);
+    rpcWallet.address = clientWallet.address;
+  }
+  return instanceId;
+}
+
+export function getRpcWallet() {
+  return Wallet.getRpcWalletInstance(state.rpcWalletId);
+}
+
+export function getClientWallet() {
+  return Wallet.getClientInstance();
 }

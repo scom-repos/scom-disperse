@@ -13,19 +13,10 @@ export interface IExtendedNetwork extends INetwork {
 };
 
 export const enum EventId {
-    ConnectWallet = 'DisperseConnectWallet',
-    ChangeNetwork = 'DisperseChangeNetwork',
     IsWalletConnected = 'isWalletConnected',
     IsWalletDisconnected = 'IsWalletDisconnected',
     Paid = 'Paid',
     chainChanged = 'chainChanged',
-    ShowExpertModal = 'showExpertModal',
-    ShowTransactionModal = 'showTransactionModal',
-    SlippageToleranceChanged = 'slippageToleranceChanged',
-    ExpertModeChanged = 'expertModeChanged',
-    ShowResult = 'showResult',
-    SetResultMessage = 'setResultMessage',
-    EmitButtonStatus = 'emitButtonStatus',
     EmitNewToken = 'emitNewToken',
 }
 
@@ -58,5 +49,3 @@ export {
     registerSendTxEvents,
     isAddressValid,
 } from './utils/common';
-
-export { PageBlock } from './pagablock';
