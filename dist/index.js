@@ -16001,7 +16001,7 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
             this.updateStyle('--colors-secondary-main', (_f = this.tag[themeVar]) === null || _f === void 0 ? void 0 : _f.secondaryColor);
             this.updateStyle('--colors-secondary-contrast_text', (_g = this.tag[themeVar]) === null || _g === void 0 ? void 0 : _g.secondaryFontColor);
         }
-        getActions() {
+        getActions(category) {
             const propertiesSchema = {
                 type: "object",
                 properties: {}
@@ -16055,9 +16055,9 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                     }
                 }
             };
-            return this._getActions(propertiesSchema, themeSchema);
+            return this._getActions(propertiesSchema, themeSchema, category);
         }
-        _getActions(propertiesSchema, themeSchema) {
+        _getActions(propertiesSchema, themeSchema, category) {
             const self = this;
             const actions = [
                 {
@@ -16108,7 +16108,10 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                             return vstack;
                         }
                     }
-                },
+                }
+            ];
+            if (category && category !== 'offers') {
+                // actions.push(
                 // {
                 //   name: 'Settings',
                 //   icon: 'cog',
@@ -16131,8 +16134,9 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                 //     }
                 //   },
                 //   userInputDataSchema: propertiesSchema
-                // },
-                {
+                // }
+                // )
+                actions.push({
                     name: 'Theme Settings',
                     icon: 'palette',
                     command: (builder, userInputData) => {
@@ -16164,8 +16168,8 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                         };
                     },
                     userInputDataSchema: themeSchema
-                }
-            ];
+                });
+            }
             return actions;
         }
         getConfigurators() {
@@ -16174,7 +16178,9 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                 {
                     name: 'Builder Configurator',
                     target: 'Builders',
-                    getActions: this.getActions.bind(this),
+                    getActions: (category) => {
+                        return this.getActions(category);
+                    },
                     getData: this.getData.bind(this),
                     setData: async (data) => {
                         const defaultData = data_json_1.default.defaultBuilderData;
