@@ -82,7 +82,7 @@ export default class ScomDisperse extends Module {
   tag: any = {};
   defaultEdit: boolean = true;
   private rpcWalletEvents: IEventBusRegistry[] = [];
-	private clientEvents: any[] = [];
+  private clientEvents: any[] = [];
 
   private getData() {
     return this._data;
@@ -92,21 +92,21 @@ export default class ScomDisperse extends Module {
     this._data = data;
 
     const rpcWalletId = initRpcWallet(this.defaultChainId);
-		const rpcWallet = getRpcWallet();
-		const event = rpcWallet.registerWalletEvent(this, Constants.RpcWalletEvent.Connected, async (connected: boolean) => {
-			this.updateContractAddress();
+    const rpcWallet = getRpcWallet();
+    const event = rpcWallet.registerWalletEvent(this, Constants.RpcWalletEvent.Connected, async (connected: boolean) => {
+      this.updateContractAddress();
       this.onWalletConnect(isClientWalletConnected());
-		});
-		this.rpcWalletEvents.push(event);
+    });
+    this.rpcWalletEvents.push(event);
 
     const containerData = {
-			defaultChainId: this.defaultChainId,
-			wallets: this.wallets,
-			networks: this.networks,
-			showHeader: this.showHeader,
-			rpcWalletId: rpcWallet.instanceId
-		}
-		if (this.dappContainer?.setData) this.dappContainer.setData(containerData);
+      defaultChainId: this.defaultChainId,
+      wallets: this.wallets,
+      networks: this.networks,
+      showHeader: this.showHeader,
+      rpcWalletId: rpcWallet.instanceId
+    }
+    if (this.dappContainer?.setData) this.dappContainer.setData(containerData);
 
     await this.refreshUI();
     if (this.mdWallet) {
@@ -159,7 +159,7 @@ export default class ScomDisperse extends Module {
     this.updateStyle('--colors-secondary-contrast_text', this.tag[themeVar]?.secondaryFontColor);
   }
 
-  private getActions() {
+  private getActions(category?: string) {
     const propertiesSchema: IDataSchema = {
       type: "object",
       properties: {}
@@ -215,12 +215,12 @@ export default class ScomDisperse extends Module {
         }
       }
     }
-    return this._getActions(propertiesSchema, themeSchema);
+    return this._getActions(propertiesSchema, themeSchema, category);
   }
 
-  private _getActions(propertiesSchema: IDataSchema, themeSchema: IDataSchema) {
+  private _getActions(propertiesSchema: IDataSchema, themeSchema: IDataSchema, category?: string) {
     const self = this;
-    const actions = [
+    const actions: any = [
       {
         name: 'Commissions',
         icon: 'dollar-sign',
@@ -265,7 +265,10 @@ export default class ScomDisperse extends Module {
             return vstack;
           }
         }
-      },
+      }
+    ];
+    if (category && category !== 'offers') {
+      // actions.push(
       // {
       //   name: 'Settings',
       //   icon: 'cog',
@@ -288,33 +291,38 @@ export default class ScomDisperse extends Module {
       //     }
       //   },
       //   userInputDataSchema: propertiesSchema
-      // },
-      {
-        name: 'Theme Settings',
-        icon: 'palette',
-        command: (builder: any, userInputData: any) => {
-          let oldTag = {};
-          return {
-            execute: async () => {
-              if (!userInputData) return;
-              oldTag = JSON.parse(JSON.stringify(this.tag));
-              if (builder) builder.setTag(userInputData);
-              else this.setTag(userInputData);
-              if (this.dappContainer) this.dappContainer.setTag(userInputData);
-            },
-            undo: () => {
-              if (!userInputData) return;
-              this.tag = JSON.parse(JSON.stringify(oldTag));
-              if (builder) builder.setTag(this.tag);
-              else this.setTag(this.tag);
-              if (this.dappContainer) this.dappContainer.setTag(this.tag);
-            },
-            redo: () => { }
-          }
-        },
-        userInputDataSchema: themeSchema
-      }
-    ]
+      // }
+      // )
+
+      actions.push(
+        {
+          name: 'Theme Settings',
+          icon: 'palette',
+          command: (builder: any, userInputData: any) => {
+            let oldTag = {};
+            return {
+              execute: async () => {
+                if (!userInputData) return;
+                oldTag = JSON.parse(JSON.stringify(this.tag));
+                if (builder) builder.setTag(userInputData);
+                else this.setTag(userInputData);
+                if (this.dappContainer) this.dappContainer.setTag(userInputData);
+              },
+              undo: () => {
+                if (!userInputData) return;
+                this.tag = JSON.parse(JSON.stringify(oldTag));
+                if (builder) builder.setTag(this.tag);
+                else this.setTag(this.tag);
+                if (this.dappContainer) this.dappContainer.setTag(this.tag);
+              },
+              redo: () => { }
+            }
+          },
+          userInputDataSchema: themeSchema
+        }
+      );
+    }
+
     return actions
   }
 
@@ -324,7 +332,9 @@ export default class ScomDisperse extends Module {
       {
         name: 'Builder Configurator',
         target: 'Builders',
-        getActions: this.getActions.bind(this),
+        getActions: (category?: string) => {
+          return this.getActions(category);
+        },
         getData: this.getData.bind(this),
         setData: async (data: IDisperseConfigUI) => {
           const defaultData = configData.defaultBuilderData;
@@ -366,7 +376,7 @@ export default class ScomDisperse extends Module {
         },
         getData: () => {
           const fee = getEmbedderCommissionFee();
-          return {...this.getData(), fee}
+          return { ...this.getData(), fee }
         },
         setData: this.setData.bind(this),
         getTag: this.getTag.bind(this),
@@ -404,17 +414,17 @@ export default class ScomDisperse extends Module {
   };
 
   onHide() {
-		this.dappContainer.onHide();
-		const rpcWallet = getRpcWallet();
-		for (let event of this.rpcWalletEvents) {
-			rpcWallet.unregisterWalletEvent(event);
-		}
-		this.rpcWalletEvents = [];
-		for (let event of this.clientEvents) {
-			event.unregister();
-		}
-		this.clientEvents = [];
-	}
+    this.dappContainer.onHide();
+    const rpcWallet = getRpcWallet();
+    for (let event of this.rpcWalletEvents) {
+      rpcWallet.unregisterWalletEvent(event);
+    }
+    this.rpcWalletEvents = [];
+    for (let event of this.clientEvents) {
+      event.unregister();
+    }
+    this.clientEvents = [];
+  }
 
   private registerEvent = () => {
     this.clientEvents.push(this.$eventBus.register(this, EventId.chainChanged, this.onChainChanged));
@@ -851,27 +861,27 @@ export default class ScomDisperse extends Module {
     });
 
     const { error } = await onDisperse({ token, data: this.listAddresses, commissions: this.commissions });
-		if (error) {
-			this.showMessage('error', error);
-		}
+    if (error) {
+      this.showMessage('error', error);
+    }
   }
 
   private connectWallet = async () => {
-		if (!isClientWalletConnected()) {
-			if (this.mdWallet) {
-				await application.loadPackage('@scom/scom-wallet-modal', '*');
-				this.mdWallet.networks = this.networks;
-				this.mdWallet.wallets = this.wallets;
-				this.mdWallet.showModal();
-			}
-			return;
-		}
-		if (!isRpcWalletConnected()) {
-			const chainId = getChainId();
-			const clientWallet = Wallet.getClientInstance();
-			await clientWallet.switchNetwork(chainId);
-		}
-	}
+    if (!isClientWalletConnected()) {
+      if (this.mdWallet) {
+        await application.loadPackage('@scom/scom-wallet-modal', '*');
+        this.mdWallet.networks = this.networks;
+        this.mdWallet.wallets = this.wallets;
+        this.mdWallet.showModal();
+      }
+      return;
+    }
+    if (!isRpcWalletConnected()) {
+      const chainId = getChainId();
+      const clientWallet = Wallet.getClientInstance();
+      await clientWallet.switchNetwork(chainId);
+    }
+  }
 
   private loadLib() {
     if (!window.jsPDF) {
@@ -931,7 +941,7 @@ export default class ScomDisperse extends Module {
     this.initInputFile();
 
     const lazyLoad = this.getAttribute('lazyLoad', true, false);
-		if (!lazyLoad) {
+    if (!lazyLoad) {
       const commissions = this.getAttribute('commissions', true, []);
       const defaultChainId = this.getAttribute('defaultChainId', true);
       const networks = this.getAttribute('networks', true);

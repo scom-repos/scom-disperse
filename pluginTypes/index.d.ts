@@ -10761,7 +10761,7 @@ declare module "@scom/scom-disperse" {
         getConfigurators(): ({
             name: string;
             target: string;
-            getActions: any;
+            getActions: (category?: string) => any;
             getData: any;
             setData: (data: IDisperseConfigUI) => Promise<void>;
             getTag: any;
