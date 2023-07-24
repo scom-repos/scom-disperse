@@ -1,6 +1,5 @@
 import { Wallet } from '@ijstech/eth-wallet';
-import { tokenStore, assets as tokenAssets, isWalletConnected } from '@scom/scom-token-list';
-import { getChainId, getChainNativeToken } from './utils';
+import { isWalletConnected } from '@scom/scom-token-list';
 import { Contracts as OpenSwapContracts } from '../contracts/oswap-openswap-contract/index';
 
 export const getTokenObject = async (address: string, showBalance?: boolean) => {
@@ -19,20 +18,6 @@ export const getTokenObject = async (address: string, showBalance?: boolean) => 
     symbol,
     balance
   }
-}
-
-export const getTokenIcon = (address: string) => {
-  if (!address) return '';
-  const tokenMap = tokenStore.tokenMap;
-  let ChainNativeToken;
-  let tokenObject;
-  if (isWalletConnected()) {
-    ChainNativeToken = getChainNativeToken(getChainId());
-    tokenObject = address == ChainNativeToken.symbol ? ChainNativeToken : tokenMap[address.toLowerCase()];
-  } else {
-    tokenObject = tokenMap[address.toLowerCase()];
-  }
-  return tokenAssets.tokenPath(tokenObject, getChainId());
 }
 
 export * from './utils';

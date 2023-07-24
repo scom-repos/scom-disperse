@@ -1,16 +1,5 @@
-import { INetwork } from '@ijstech/eth-wallet';
+import { INetworkConfig } from '@scom/scom-network-picker';
 import { IWalletPlugin } from '@scom/scom-wallet-modal';
-
-export interface IExtendedNetwork extends INetwork {
-    shortName?: string;
-    isDisabled?: boolean;
-    isMainChain?: boolean;
-    isCrossChainSupported?: boolean;
-    explorerName?: string;
-    explorerTxUrl?: string;
-    explorerAddressUrl?: string;
-    isTestnet?: boolean;
-};
 
 export const enum EventId {
     IsWalletConnected = 'isWalletConnected',
@@ -18,11 +7,6 @@ export const enum EventId {
     Paid = 'Paid',
     chainChanged = 'chainChanged',
     EmitNewToken = 'emitNewToken',
-}
-
-export interface INetworkConfig {
-    chainName?: string;
-    chainId: number;
 }
 
 export interface IDisperseConfigUI {
@@ -39,8 +23,14 @@ export interface ICommissionInfo {
     share: string;
 }
 
-export interface IEmbedData {
-    commissions?: ICommissionInfo[];
+export interface RenderResultData {
+    receipt: string;
+    address: string;
+    timestamp: string;
+}
+
+export interface DownloadReportData extends RenderResultData {
+    symbol: string;
 }
 
 export * from './utils/index';

@@ -1,19 +1,64 @@
-import { application, moment, Button, Container, customModule, EventBus, HStack, Input, Label, Module, Panel, VStack, Modal, ControlElement, customElements, RequireJS, IDataSchema, Icon, Styles } from '@ijstech/components'
+import {
+  application,
+  moment,
+  Button,
+  Container,
+  customModule,
+  EventBus,
+  HStack,
+  Input,
+  Label,
+  Module,
+  Panel,
+  VStack,
+  Modal,
+  ControlElement,
+  customElements,
+  RequireJS,
+  Icon,
+  Styles
+} from '@ijstech/components'
+import {
+  EventId,
+  toDisperseData,
+  downloadCSVFile,
+  formatNumber,
+  viewOnExplorerByTxHash,
+  isAddressValid,
+  DisperseData,
+  disperseDataToString,
+  registerSendTxEvents,
+  formatUTCDate,
+  IDisperseConfigUI,
+  ICommissionInfo,
+  RenderResultData,
+  DownloadReportData
+} from './global/index';
+import {
+  dummyAddressList,
+  getChainId,
+  getDisperseAddress,
+  getEmbedderCommissionFee,
+  getProxyAddress,
+  getRpcWallet,
+  ImportFileWarning,
+  initRpcWallet,
+  isClientWalletConnected,
+  isRpcWalletConnected,
+  setDataFromSCConfig
+} from './store/index';
 import { TokenSelection, Alert } from './common/index';
-import { EventId, toDisperseData, downloadCSVFile, formatNumber, viewOnExplorerByTxHash, isAddressValid, DisperseData, disperseDataToString, registerSendTxEvents, formatUTCDate, IDisperseConfigUI, INetworkConfig, ICommissionInfo } from './global/index';
-import { dummyAddressList, getChainId, getDisperseAddress, getEmbedderCommissionFee, getProxyAddress, getRpcWallet, ImportFileWarning, initRpcWallet, isClientWalletConnected, isRpcWalletConnected, setDataFromSCConfig } from './store/index';
 import { BigNumber, Constants, IEventBusRegistry, Wallet } from '@ijstech/eth-wallet';
-import { onApproveToken, onCheckAllowance, onDisperse } from './disperse-utils/index';
-import Assets from './assets';
-import { disperseStyle } from './disperse.css';
-import { disperseLayout } from './index.css';
-import { RenderResultData, DownloadReportData } from './disperse.type';
+import { onApproveToken, onCheckAllowance, onDisperse, getCommissionAmount, getCurrentCommissions } from './disperse-utils/index';
+import { disperseLayout, disperseStyle } from './index.css';
 import { tokenStore, assets as tokenAssets, ITokenObject } from '@scom/scom-token-list';
-import configData from './data.json';
 import ScomWalletModal, { IWalletPlugin } from '@scom/scom-wallet-modal';
 import ScomDappContainer from '@scom/scom-dapp-container';
-import { getCommissionAmount, getCurrentCommissions } from './disperse-utils/API';
 import ScomCommissionFeeSetup from '@scom/scom-commission-fee-setup';
+import { INetworkConfig } from '@scom/scom-network-picker';
+import configData from './data.json';
+import formSchema from './formSchema.json';
+import Assets from './assets';
 const moduleDir = application.currentModuleDir;
 // import { jsPDF } from 'jspdf';
 // import autoTable from 'jspdf-autotable';
@@ -33,7 +78,7 @@ interface ScomDisperseElement extends ControlElement {
 declare global {
   namespace JSX {
     interface IntrinsicElements {
-      ["i-scom-disperse"]: ScomDisperseElement;
+      ['i-scom-disperse']: ScomDisperseElement;
     }
   }
 }
@@ -50,7 +95,6 @@ export default class ScomDisperse extends Module {
   private btnDownload: Button;
   private btnImport: Button;
   private importFileElm: Label;
-  private importWarning: Label;
   private inputBatch: Input;
   private tokenElm: HStack;
   private tokenInfoElm: Label;
@@ -109,10 +153,6 @@ export default class ScomDisperse extends Module {
     if (this.dappContainer?.setData) this.dappContainer.setData(containerData);
 
     await this.refreshUI();
-    if (this.mdWallet) {
-      this.mdWallet.networks = data.networks;
-      this.mdWallet.wallets = data.wallets;
-    }
   }
 
   private updateTag(type: 'light' | 'dark', value: any) {
@@ -160,65 +200,6 @@ export default class ScomDisperse extends Module {
   }
 
   private getActions(category?: string) {
-    const propertiesSchema: IDataSchema = {
-      type: "object",
-      properties: {}
-    }
-
-    const _props: any = {
-      backgroundColor: {
-        type: 'string',
-        format: 'color'
-      },
-      fontColor: {
-        type: 'string',
-        format: 'color'
-      },
-      secondaryColor: {
-        type: 'string',
-        title: 'Block Background Color',
-        format: 'color'
-      },
-      secondaryFontColor: {
-        type: 'string',
-        title: 'Step Font Color',
-        format: 'color'
-      },
-      inputBackgroundColor: {
-        type: 'string',
-        format: 'color'
-      },
-      inputFontColor: {
-        type: 'string',
-        format: 'color'
-      },
-      // buttonBackgroundColor: {
-      // 	type: 'string',
-      // 	format: 'color'
-      // },
-      // buttonFontColor: {
-      // 	type: 'string',
-      // 	format: 'color'
-      // }
-    }
-
-    const themeSchema: IDataSchema = {
-      type: 'object',
-      properties: {
-        "dark": {
-          type: 'object',
-          properties: _props
-        },
-        "light": {
-          type: 'object',
-          properties: _props
-        }
-      }
-    }
-    return this._getActions(propertiesSchema, themeSchema, category);
-  }
-
-  private _getActions(propertiesSchema: IDataSchema, themeSchema: IDataSchema, category?: string) {
     const self = this;
     const actions: any = [
       {
@@ -260,7 +241,7 @@ export default class ScomDisperse extends Module {
               caption: 'Confirm',
               width: '100%',
               height: 40,
-              font: {color: Theme.colors.primary.contrastText}
+              font: { color: Theme.colors.primary.contrastText }
             });
             vstack.append(config);
             vstack.append(hstack);
@@ -296,7 +277,7 @@ export default class ScomDisperse extends Module {
       //       redo: () => { }
       //     }
       //   },
-      //   userInputDataSchema: propertiesSchema
+      //   userInputDataSchema: formSchema.general.dataSchema
       // }
       // )
 
@@ -324,7 +305,7 @@ export default class ScomDisperse extends Module {
               redo: () => { }
             }
           },
-          userInputDataSchema: themeSchema
+          userInputDataSchema: formSchema.theme.dataSchema
         }
       );
     }
@@ -788,7 +769,9 @@ export default class ScomDisperse extends Module {
       this.btnApprove.enabled = false;
       this.btnDisperse.enabled = true;
     } else {
-      await Wallet.getClientInstance().init();
+      try {
+        await Wallet.getClientInstance().init();
+      } catch { }
       const allowance = await onCheckAllowance(this.token, this.contractAddress);
       if (allowance === null) return;
       const inputVal = new BigNumber(this.total);
@@ -996,7 +979,6 @@ export default class ScomDisperse extends Module {
                     <i-label id="importFileElm" visible={false} />
                   </i-hstack>
                 </i-hstack>
-                <i-label id="importWarning" caption="" font={{ size: '13px', name: 'Montserrat Medium' }} />
                 <i-input id="inputBatch" height="auto" enabled={false} placeholder={disperseDataToString(this.DummyDisperseData())} class="input-batch custom-scroll" width="100%" inputType="textarea" rows={4} margin={{ top: 30 }} onChanged={this.onInputBatch} />
               </i-vstack>
               <i-hstack id="thirdStepElm" class="step-elm" minHeight={240} margin={{ top: 40 }}>
@@ -1084,11 +1066,8 @@ export default class ScomDisperse extends Module {
             <i-panel id="resultElm" visible={false} margin={{ top: 75, bottom: 100 }} />
           </i-panel>
           <disperse-alert id="disperseAlert" />
-          <i-scom-commission-fee-setup id="configDApp" visible={false} />
-          <i-scom-wallet-modal
-            id="mdWallet"
-            wallets={[]}
-          />
+          <i-scom-commission-fee-setup visible={false} />
+          <i-scom-wallet-modal id="mdWallet" wallets={[]} />
         </i-panel>
       </i-scom-dapp-container>
     )
