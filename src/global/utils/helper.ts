@@ -1,12 +1,6 @@
 import { moment } from "@ijstech/components";
 import { BigNumber } from "@ijstech/eth-wallet";
 
-export enum SITE_ENV {
-  DEV = 'dev',
-  TESTNET = 'testnet',
-  MAINNET = 'mainnet',
-}
-
 export const explorerTxUrlsByChainId: { [key: number]: string } = {
   1: 'https://etherscan.io/tx/',
   4: 'https://rinkeby.etherscan.io/tx/',
@@ -194,8 +188,4 @@ export const downloadCSVFile = (content: string, name: string) => {
   const encodedUri = encodeURI(csvContent);
   link.href = encodedUri;
   link.click();
-}
-
-export function isWalletAddress(address: string) {
-  return /^0x[a-fA-F0-9]{40}$/.test(address);
 }

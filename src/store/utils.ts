@@ -1,32 +1,16 @@
-import { Erc20, Wallet, INetwork } from '@ijstech/eth-wallet';
-import {
-  IExtendedNetwork,
-  SITE_ENV
-} from '../global/index';
-
-import {
-  CoreContractAddressesByChainId,
-  ChainNetwork
-} from './data/index';
+import { Wallet, INetwork } from '@ijstech/eth-wallet';
+import { CoreContractAddressesByChainId } from './data/index';
+import { application } from '@ijstech/components';
+import getNetworkList from '@scom/scom-network-list';
+import { ITokenObject } from '@scom/scom-token-list';
 
 export * from './data/index';
 
-import { application } from '@ijstech/components';
-import getNetworkList from '@scom/scom-network-list';
-import { ChainNativeTokenByChainId, ITokenObject, WETHByChainId, isWalletConnected } from '@scom/scom-token-list';
-
 export enum WalletPlugin {
   MetaMask = 'metamask',
-  Coin98 = 'coin98',
-  TrustWallet = 'trustwallet',
-  BinanceChainWallet = 'binancechainwallet',
-  ONTOWallet = 'onto',
-  WalletConnect = 'walletconnect',
-  BitKeepWallet = 'bitkeepwallet',
-  FrontierWallet = 'frontierwallet',
+  WalletConnect = 'walletconnect'
 }
 
-export const nullAddress = "0x0000000000000000000000000000000000000000";
 export const INFINITE = "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
 
 const TOKENS = "oswap_user_tokens_";
@@ -63,19 +47,6 @@ export const addUserTokens = (token: ITokenObject) => {
   localStorage[TOKENS + chainId] = JSON.stringify(tokens);
 }
 
-export const setSiteEnv = (value: string) => {
-  if (Object.values(SITE_ENV).includes(value as SITE_ENV)) {
-    state.siteEnv = value as SITE_ENV;
-  } else {
-    state.siteEnv = SITE_ENV.TESTNET;
-  }
-
-}
-
-export const getSiteEnv = (): SITE_ENV => {
-  return state.siteEnv;
-}
-
 const setInfuraId = (infuraId: string) => {
   state.infuraId = infuraId;
 }
@@ -84,7 +55,7 @@ export const getInfuraId = () => {
   return state.infuraId;
 }
 
-const setNetworkList = (networkList: IExtendedNetwork[], infuraId?: string) => {
+const setNetworkList = (networkList: INetwork[], infuraId?: string) => {
   const wallet = Wallet.getClientInstance();
   state.networkMap = {};
   const defaultNetworkList = getNetworkList();
@@ -108,46 +79,10 @@ const setNetworkList = (networkList: IExtendedNetwork[], infuraId?: string) => {
   }
 }
 
-export const getNetworkInfo = (chainId: number) => {
-  return state.networkMap[chainId];
-}
-
-export const getNetworkExplorerName = (chainId: number) => {
-  if (getNetworkInfo(chainId)) {
-    return getNetworkInfo(chainId).explorerName;
-  }
-  return 'Unknown';
-}
-
-export const setCurrentChainId = (value: number) => {
-  state.currentChainId = value;
-}
-
-export const getCurrentChainId = (): number => {
-  return state.currentChainId;
-}
-
-export function getAddresses(chainId: number) {
-  return CoreContractAddressesByChainId[chainId];
-};
-
 export function getDisperseAddress(chainId?: number) {
   const address = CoreContractAddressesByChainId[chainId || getChainId()];
   return address ? address[Disperse] : null;
 }
-
-export function canDisperse(chainId: number) {
-  return !!getDisperseAddress(chainId);
-}
-
-export const getChainNativeToken = (chainId: number): ITokenObject => {
-  return ChainNativeTokenByChainId[chainId];
-};
-
-export const getWETH = (chainId: number): ITokenObject => {
-  let wrappedToken = WETHByChainId[chainId];
-  return wrappedToken;
-};
 
 export const setDataFromSCConfig = (options: any) => {
   if (options.infuraId) {
@@ -158,12 +93,6 @@ export const setDataFromSCConfig = (options: any) => {
   }
   if (options.proxyAddresses) {
     setProxyAddresses(options.proxyAddresses)
-  }
-  if (options.ipfsGatewayUrl) {
-    setIPFSGatewayUrl(options.ipfsGatewayUrl);
-  }
-  if (options.apiGatewayUrls) {
-    setAPIGatewayUrls(options.apiGatewayUrls);
   }
   if (options.embedderCommissionFee) {
     setEmbedderCommissionFee(options.embedderCommissionFee);
@@ -183,18 +112,6 @@ export const getProxyAddress = (chainId?: number) => {
   return null;
 }
 
-export const setIPFSGatewayUrl = (url: string) => {
-  state.ipfsGatewayUrl = url;
-}
-
-export const getIPFSGatewayUrl = () => {
-  return state.ipfsGatewayUrl;
-}
-
-export const setAPIGatewayUrls = (urls: Record<string, string>) => {
-  state.apiGatewayUrls = urls;
-}
-
 const setEmbedderCommissionFee = (fee: string) => {
   state.embedderCommissionFee = fee;
 }
@@ -203,46 +120,18 @@ export const getEmbedderCommissionFee = () => {
   return state.embedderCommissionFee;
 }
 
-export const getSupportedNetworks = () => {
-  return Object.values(state.networkMap);
-}
-
-export const getDefaultChainId = () => {
-  switch (getSiteEnv()) {
-    case SITE_ENV.TESTNET:
-    // return ChainNetwork.Fuju;
-    case SITE_ENV.DEV:
-    case SITE_ENV.MAINNET:
-    default:
-      return ChainNetwork.Avalanche;
-  }
-}
-
-export function getWalletProvider() {
-  return localStorage.getItem('walletProvider') || '';
-}
-
 export const hasMetaMask = function () {
   const wallet = Wallet.getClientInstance();
   return wallet?.clientSideProvider?.name === WalletPlugin.MetaMask;
 }
 
-export function getErc20(address: string) {
-  const wallet = Wallet.getClientInstance();
-  return new Erc20(wallet, address);
-}
-
 export type ProxyAddresses = { [key: number]: string };
 
 export const state = {
-  siteEnv: SITE_ENV.TESTNET,
-  networkMap: {} as { [key: number]: IExtendedNetwork },
-  currentChainId: 0,
+  networkMap: {} as { [key: number]: INetwork },
   infuraId: '',
   userTokens: {} as { [key: string]: ITokenObject[] },
   proxyAddresses: {} as ProxyAddresses,
-  ipfsGatewayUrl: '',
-  apiGatewayUrls: {} as Record<string, string>,
   embedderCommissionFee: '0',
   tokens: [],
   rpcWalletId: ''
@@ -259,7 +148,6 @@ export const setUserTokens = (token: ITokenObject, chainId: number) => {
 export const hasUserToken = (address: string, chainId: number) => {
   return state.userTokens[chainId]?.some((token: ITokenObject) => token.address?.toLocaleLowerCase() === address?.toLocaleLowerCase());
 }
-
 
 export function isClientWalletConnected() {
   const wallet = Wallet.getClientInstance();

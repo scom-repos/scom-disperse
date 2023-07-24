@@ -25,10 +25,5 @@ export async function parseContractError(oMessage:string, tokens: string[]):Prom
         'execution reverted: Amount exceeds available fund' : 'Insufficient liquidity',
     }
 
-    let s = staticMessageMap[oMessage];
-    if (s) {
-        return s;
-    }
-
-    return oMessage;
+    return staticMessageMap[oMessage] ?? oMessage;
 }
