@@ -47,10 +47,9 @@ import {
   isRpcWalletConnected,
   setDataFromSCConfig
 } from './store/index';
-import { TokenSelection, Alert } from './common/index';
 import { BigNumber, Constants, IEventBusRegistry, Wallet } from '@ijstech/eth-wallet';
 import { onApproveToken, onCheckAllowance, onDisperse, getCommissionAmount, getCurrentCommissions } from './disperse-utils/index';
-import { disperseLayout, disperseStyle } from './index.css';
+import { disperseLayout, disperseStyle, tokenModalStyle } from './index.css';
 import { tokenStore, assets as tokenAssets, ITokenObject } from '@scom/scom-token-list';
 import ScomWalletModal, { IWalletPlugin } from '@scom/scom-wallet-modal';
 import ScomDappContainer from '@scom/scom-dapp-container';
@@ -59,6 +58,8 @@ import { INetworkConfig } from '@scom/scom-network-picker';
 import configData from './data.json';
 import formSchema from './formSchema.json';
 import Assets from './assets';
+import ScomTokenModal from '@scom/scom-token-modal';
+import ScomTxStatusModal from '@scom/scom-tx-status-modal';
 const moduleDir = application.currentModuleDir;
 // import { jsPDF } from 'jspdf';
 // import autoTable from 'jspdf-autotable';
@@ -98,7 +99,7 @@ export default class ScomDisperse extends Module {
   private inputBatch: Input;
   private tokenElm: HStack;
   private tokenInfoElm: Label;
-  private tokenSelection: TokenSelection;
+  private mdToken: ScomTokenModal;
   private token: ITokenObject | null;
   private addressesElm: VStack;
   private totalElm: Label;
@@ -106,7 +107,7 @@ export default class ScomDisperse extends Module {
   private remainingElm: Label;
   private btnApprove: Button;
   private btnDisperse: Button;
-  private disperseAlert: Alert;
+  private txStatusModal: ScomTxStatusModal;
   private resultAddresses: DisperseData[] = [];
   private invalidElm: Label;
   private messageModal: Modal;
@@ -152,6 +153,10 @@ export default class ScomDisperse extends Module {
     }
     if (this.dappContainer?.setData) this.dappContainer.setData(containerData);
 
+    if (!this.mdToken.isConnected) await this.mdToken.ready();
+    if (this.mdToken.rpcWalletId !== rpcWallet.instanceId) {
+      this.mdToken.rpcWalletId = rpcWallet.instanceId;
+    }
     await this.refreshUI();
   }
 
@@ -427,7 +432,6 @@ export default class ScomDisperse extends Module {
   private onChainChanged = async () => {
     this.resetData(false);
     await this.onWalletConnect(isClientWalletConnected());
-    this.tokenSelection?.initData();
   }
 
   private updateButtons() {
@@ -513,10 +517,9 @@ export default class ScomDisperse extends Module {
 
   private checkStepStatus = (connected: boolean) => {
     this.firstStepElm.enabled = connected;
-    this.tokenSelection.enabled = connected;
     this.tokenElm.enabled = connected;
     if (!connected) {
-      this.tokenSelection.token = undefined;
+      this.mdToken.token = undefined;
       this.onSelectToken(null);
     }
     this.setThirdStatus(!!this.token);
@@ -725,15 +728,15 @@ export default class ScomDisperse extends Module {
   }
 
   private showMessage = (status: 'warning' | 'success' | 'error', content: string | Error) => {
-    this.disperseAlert.message = {
+    this.txStatusModal.message = {
       status,
       content,
     }
-    this.disperseAlert.showModal();
+    this.txStatusModal.showModal();
   }
 
   private setEnabledStatus = (enabled: boolean) => {
-    this.tokenElm.onClick = () => enabled ? this.tokenSelection.showModal() : {};
+    this.tokenElm.onClick = () => enabled ? this.mdToken.showModal() : {};
     this.tokenElm.enabled = enabled;
     this.btnImport.enabled = enabled;
     this.inputBatch.enabled = enabled;
@@ -769,9 +772,7 @@ export default class ScomDisperse extends Module {
       this.btnApprove.enabled = false;
       this.btnDisperse.enabled = true;
     } else {
-      try {
-        await Wallet.getClientInstance().init();
-      } catch { }
+      await this.initWallet();
       const allowance = await onCheckAllowance(this.token, this.contractAddress);
       if (allowance === null) return;
       const inputVal = new BigNumber(this.total);
@@ -782,6 +783,14 @@ export default class ScomDisperse extends Module {
       this.btnApprove.enabled = !isApproved;
       this.btnDisperse.enabled = isApproved;
     }
+  }
+
+  private initWallet = async () => {
+    try {
+      await Wallet.getClientInstance().init();
+			const rpcWallet = getRpcWallet();
+			await rpcWallet.init();
+    } catch { }
   }
 
   private handleApprove = async () => {
@@ -839,7 +848,7 @@ export default class ScomDisperse extends Module {
     };
 
     const confirmationCallBackActions = async () => {
-      this.disperseAlert.closeModal();
+      this.txStatusModal.closeModal();
       this.renderResult(token, { receipt, address, timestamp });
       this.resetData(true);
     };
@@ -923,10 +932,8 @@ export default class ScomDisperse extends Module {
     this.loadLib();
     this.classList.add(disperseLayout);
     this.checkStepStatus(isClientWalletConnected());
-    this.tokenSelection.isTokenShown = false;
-    this.tokenSelection.isCommonShown = true;
-    this.tokenSelection.onSelectToken = this.onSelectToken;
-    this.tokenElm.onClick = () => this.tokenSelection.showModal();
+    this.mdToken.onSelectToken = this.onSelectToken;
+    this.tokenElm.onClick = () => this.mdToken.showModal();
     this.initInputFile();
 
     const lazyLoad = this.getAttribute('lazyLoad', true, false);
@@ -963,7 +970,11 @@ export default class ScomDisperse extends Module {
                     </i-hstack>
                     <i-icon name="caret-down" fill={Theme.text.primary} width={24} height={24} />
                   </i-hstack>
-                  <token-selection id="tokenSelection" />
+                  <i-scom-token-modal
+                    id="mdToken"
+                    isCommonShown={false}
+                    class={tokenModalStyle}
+                  />
                 </i-hstack>
               </i-hstack>
               <i-vstack id="secondStepElm" class="step-elm" minHeight={300} margin={{ top: 40 }} padding={{ left: 50, right: 50, top: 10, bottom: 10 }} border={{ radius: 30 }} verticalAlignment="center" background={{ color: Theme.colors.secondary.main }}>
@@ -1065,7 +1076,7 @@ export default class ScomDisperse extends Module {
             </i-vstack>
             <i-panel id="resultElm" visible={false} margin={{ top: 75, bottom: 100 }} />
           </i-panel>
-          <disperse-alert id="disperseAlert" />
+          <i-scom-tx-status-modal id="txStatusModal" />
           <i-scom-commission-fee-setup visible={false} />
           <i-scom-wallet-modal id="mdWallet" wallets={[]} />
         </i-panel>

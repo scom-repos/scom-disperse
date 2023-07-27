@@ -81,23 +81,11 @@ export const disperseLayout = Styles.style({
           fontSize: '1.25rem',
           fontWeight: 700,
           $nest: {
-            'i-icon': {
-              padding: '3.5px',
-              width: '18px !important',
-              height: '18px !important',
-              background: Theme.colors.primary.main,
-              fill: `${Theme.text.primary} !important`,
-              $nest: {
-                svg: {
-                  fill: `${Theme.text.primary} !important`,
-                }
-              }
-            },
             'span': {
               fontWeight: 700,
               fontSize: '1rem',
               color: Theme.colors.primary.main
-            },
+            }
           },
         },
       },
@@ -263,6 +251,44 @@ export const disperseStyle = Styles.style({
     }
   },
 });
+
+export const tokenModalStyle = Styles.style({
+  $nest: {
+    '.i-modal_header': {
+      display: 'none'
+    },
+    '#gridTokenList': {
+      maxHeight: '50vh',
+      overflow: 'auto',
+      $nest: {
+        '&::-webkit-scrollbar-track': {
+          background: 'transparent',
+        },
+        '&::-webkit-scrollbar': {
+          width: '5px',
+          height: '5px'
+        },
+        '&::-webkit-scrollbar-thumb': {
+          background: '#FF8800',
+          borderRadius: '5px'
+        }
+      }
+    },
+    '#pnlSortBalance': {
+      $nest: {
+        '.icon-sort-up': {
+          top: 1
+        },
+        '.icon-sort-down': {
+          bottom: 1
+        },
+        'i-icon svg': {
+          fill: 'inherit'
+        }
+      }
+    }
+  }
+})
 
 Styles.fontFace({
   fontFamily: "Montserrat",
