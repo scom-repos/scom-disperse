@@ -2,50 +2,11 @@ import { Wallet, INetwork } from '@ijstech/eth-wallet';
 import { CoreContractAddressesByChainId } from './data/index';
 import { application } from '@ijstech/components';
 import getNetworkList from '@scom/scom-network-list';
-import { ITokenObject } from '@scom/scom-token-list';
 
 export * from './data/index';
-
-export enum WalletPlugin {
-  MetaMask = 'metamask',
-  WalletConnect = 'walletconnect'
-}
-
 export const INFINITE = "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
 
-const TOKENS = "oswap_user_tokens_";
-
 const Disperse = "Disperse";
-
-export const getUserTokens = (chainId: number) => {
-  let tokens = localStorage[TOKENS + chainId];
-  if (tokens) {
-    tokens = JSON.parse(tokens);
-  } else {
-    tokens = [];
-  }
-  const userTokens = state.userTokens[chainId];
-  if (userTokens && userTokens.length) {
-    tokens = tokens.concat(userTokens);
-  }
-  return tokens.length ? tokens : null;
-}
-
-export const addUserTokens = (token: ITokenObject) => {
-  const chainId = getChainId();
-  let tokens = localStorage[TOKENS + chainId];
-  let i = -1;
-  if (tokens) {
-    tokens = JSON.parse(tokens);
-    i = tokens.findIndex((item: ITokenObject) => item.address == token.address);
-  } else {
-    tokens = [];
-  }
-  if (i == -1) {
-    tokens.push(token);
-  }
-  localStorage[TOKENS + chainId] = JSON.stringify(tokens);
-}
 
 const setInfuraId = (infuraId: string) => {
   state.infuraId = infuraId;
@@ -120,33 +81,14 @@ export const getEmbedderCommissionFee = () => {
   return state.embedderCommissionFee;
 }
 
-export const hasMetaMask = function () {
-  const wallet = Wallet.getClientInstance();
-  return wallet?.clientSideProvider?.name === WalletPlugin.MetaMask;
-}
-
 export type ProxyAddresses = { [key: number]: string };
 
 export const state = {
   networkMap: {} as { [key: number]: INetwork },
   infuraId: '',
-  userTokens: {} as { [key: string]: ITokenObject[] },
   proxyAddresses: {} as ProxyAddresses,
   embedderCommissionFee: '0',
-  tokens: [],
   rpcWalletId: ''
-}
-
-export const setUserTokens = (token: ITokenObject, chainId: number) => {
-  if (!state.userTokens[chainId]) {
-    state.userTokens[chainId] = [token];
-  } else {
-    state.userTokens[chainId].push(token);
-  }
-}
-
-export const hasUserToken = (address: string, chainId: number) => {
-  return state.userTokens[chainId]?.some((token: ITokenObject) => token.address?.toLocaleLowerCase() === address?.toLocaleLowerCase());
 }
 
 export function isClientWalletConnected() {
