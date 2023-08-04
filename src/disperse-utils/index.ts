@@ -1,9 +1,9 @@
 import { getChainId, getDisperseAddress, getProxyAddress, INFINITE } from "../store/index";
 import { DisperseData, ICommissionInfo } from "../global/index"
 import { Wallet, BigNumber, Utils } from "@ijstech/eth-wallet";
-import { Contracts as OpenSwapContracts } from "../contracts/oswap-openswap-contract/index";
-import { Contracts as ProxyContracts } from "../contracts/scom-commission-proxy-contract/index";
-import { Contracts } from "../contracts/scom-disperse-contract/index";
+import { Contracts as OpenSwapContracts } from "@scom/oswap-openswap-contract";
+import { Contracts as ProxyContracts } from "@scom/scom-commission-proxy-contract";
+import { Contracts } from "@scom/scom-disperse-contract";
 import { ITokenObject } from "@scom/scom-token-list";
 
 const onCheckAllowance = async (token: ITokenObject, spender: string) => {

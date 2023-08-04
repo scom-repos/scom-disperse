@@ -11,7 +11,7 @@
   },
   "scripts": {
     "copy": "sh ./scripts/copy.sh",
-    "build": "rm -rf dist && npx @ijstech/compiler && cp -r lib dist/lib && npm run copy",
+    "build": "rm -rf dist && npx @ijstech/compiler && cp -r lib dist/lib",
     "test": "cd test && npm run test && cd .."
   },
   "dependencies": {
