@@ -1,6 +1,8 @@
 import * as Contracts from './contracts/index';
 export {Contracts};
 import {IWallet, BigNumber, Utils} from '@ijstech/eth-wallet';
+import * as ContractUtils from './utils';
+export {ContractUtils};
 
 export interface IDeployOptions {
     version?: string;
