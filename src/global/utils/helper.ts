@@ -17,22 +17,6 @@ export const explorerTxUrlsByChainId: { [key: number]: string } = {
   421613: 'https://goerli.arbiscan.io/tx/'
 }
 
-export const explorerAddressUrlsByChainId: { [key: number]: string } = {
-  1: 'https://etherscan.io/address/',
-  4: 'https://rinkeby.etherscan.io/address/',
-  42: 'https://kovan.etherscan.io/address/',
-  97: 'https://testnet.bscscan.com/address/',
-  56: 'https://bscscan.com/address/',
-  43113: 'https://testnet.snowtrace.io/address/',
-  43114: 'https://snowtrace.io/address/',
-  137: 'https://polygonscan.com/address/',
-  80001: 'https://mumbai.polygonscan.com/address/',
-  250: 'https://ftmscan.com/address/',
-  4002: 'https://testnet.ftmscan.com/address/',
-  13370: 'https://aminoxtestnet.blockscout.alphacarbon.network/address/',
-  421613: 'https://goerli.arbiscan.io/address/'
-}
-
 export const DefaultDateFormat = 'YYYY/MM/DD HH:mm:ss';
 
 export const formatUTCDate = (date: any, formatType = DefaultDateFormat) => {
@@ -76,13 +60,6 @@ export const formatNumberWithSeparators = (value: number, precision?: number) =>
 export const viewOnExplorerByTxHash = (chainId: number, txHash: string) => {
   if (explorerTxUrlsByChainId[chainId]) {
     let url = `${explorerTxUrlsByChainId[chainId]}${txHash}`;
-    window.open(url);
-  }
-}
-
-export const viewOnExplorerByAddress = (chainId: number, address: string) => {
-  if (explorerAddressUrlsByChainId[chainId]) {
-    let url = `${explorerAddressUrlsByChainId[chainId]}${address}`;
     window.open(url);
   }
 }

@@ -8,7 +8,6 @@
         "@scom/scom-wallet-modal",
         "@ijstech/eth-wallet",
         "@scom/scom-network-list",
-        "@scom/oswap-openswap-contract",
         "@scom/scom-commission-proxy-contract",
         "@scom/scom-disperse-contract",
         "@scom/scom-token-list",

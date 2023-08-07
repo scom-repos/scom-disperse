@@ -2,15 +2,10 @@
 /// <reference path="@scom/scom-commission-proxy-contract/@ijstech/eth-wallet/index.d.ts" />
 /// <reference path="@scom/scom-dapp-container/@ijstech/eth-wallet/index.d.ts" />
 /// <reference path="@scom/scom-token-modal/@ijstech/eth-wallet/index.d.ts" />
-/// <reference path="@ijstech/eth-contract/index.d.ts" />
-/// <reference path="@scom/scom-disperse-contract/@ijstech/eth-contract/index.d.ts" />
 /// <amd-module name="@scom/scom-disperse/global/utils/helper.ts" />
 declare module "@scom/scom-disperse/global/utils/helper.ts" {
     import { BigNumber } from "@ijstech/eth-wallet";
     export const explorerTxUrlsByChainId: {
-        [key: number]: string;
-    };
-    export const explorerAddressUrlsByChainId: {
         [key: number]: string;
     };
     export const DefaultDateFormat = "YYYY/MM/DD HH:mm:ss";
@@ -18,7 +13,6 @@ declare module "@scom/scom-disperse/global/utils/helper.ts" {
     export const formatNumber: (value: any, decimals?: number) => string;
     export const formatNumberWithSeparators: (value: number, precision?: number) => string;
     export const viewOnExplorerByTxHash: (chainId: number, txHash: string) => void;
-    export const viewOnExplorerByAddress: (chainId: number, address: string) => void;
     export interface DisperseData {
         address: string;
         amount: BigNumber;
@@ -33,32 +27,21 @@ declare module "@scom/scom-disperse/global/utils/helper.ts" {
     export const toDisperseData: (inputText: string) => DisperseData[];
     export const downloadCSVFile: (content: string, name: string) => void;
 }
-/// <amd-module name="@scom/scom-disperse/global/utils/error.ts" />
-declare module "@scom/scom-disperse/global/utils/error.ts" {
-    export function parseContractError(oMessage: string, tokens: string[]): Promise<string>;
-}
-/// <amd-module name="@scom/scom-disperse/global/utils/index.ts" />
-declare module "@scom/scom-disperse/global/utils/index.ts" {
-    export * from "@scom/scom-disperse/global/utils/helper.ts";
-    export { parseContractError } from "@scom/scom-disperse/global/utils/error.ts";
-}
 /// <amd-module name="@scom/scom-disperse/global/utils/common.ts" />
 declare module "@scom/scom-disperse/global/utils/common.ts" {
     import { ISendTxEventsOptions } from "@ijstech/eth-wallet";
     export const registerSendTxEvents: (sendTxEventHandlers: ISendTxEventsOptions) => void;
     export const isAddressValid: (address: string) => Promise<any>;
 }
+/// <amd-module name="@scom/scom-disperse/global/utils/index.ts" />
+declare module "@scom/scom-disperse/global/utils/index.ts" {
+    export * from "@scom/scom-disperse/global/utils/helper.ts";
+    export * from "@scom/scom-disperse/global/utils/common.ts";
+}
 /// <amd-module name="@scom/scom-disperse/global/index.ts" />
 declare module "@scom/scom-disperse/global/index.ts" {
     import { INetworkConfig } from '@scom/scom-network-picker';
     import { IWalletPlugin } from '@scom/scom-wallet-modal';
-    export const enum EventId {
-        IsWalletConnected = "isWalletConnected",
-        IsWalletDisconnected = "IsWalletDisconnected",
-        Paid = "Paid",
-        chainChanged = "chainChanged",
-        EmitNewToken = "emitNewToken"
-    }
     export interface IDisperseConfigUI {
         commissions?: ICommissionInfo[];
         defaultChainId: number;
@@ -80,7 +63,6 @@ declare module "@scom/scom-disperse/global/index.ts" {
         symbol: string;
     }
     export * from "@scom/scom-disperse/global/utils/index.ts";
-    export { registerSendTxEvents, isAddressValid, } from "@scom/scom-disperse/global/utils/common.ts";
 }
 /// <amd-module name="@scom/scom-disperse/store/data/core.ts" />
 declare module "@scom/scom-disperse/store/data/core.ts" {
@@ -111,19 +93,13 @@ declare module "@scom/scom-disperse/store/data/index.ts" {
 }
 /// <amd-module name="@scom/scom-disperse/store/utils.ts" />
 declare module "@scom/scom-disperse/store/utils.ts" {
-    import { INetwork } from '@ijstech/eth-wallet';
+    import { INetwork, ERC20ApprovalModel, IERC20ApprovalEventOptions, BigNumber } from '@ijstech/eth-wallet';
+    import { ICommissionInfo } from "@scom/scom-disperse/global/index.ts";
     export * from "@scom/scom-disperse/store/data/index.ts";
-    export const INFINITE = "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
-    export const getInfuraId: () => string;
-    export function getDisperseAddress(chainId?: number): string;
-    export const setDataFromSCConfig: (options: any) => void;
-    export const setProxyAddresses: (data: ProxyAddresses) => void;
-    export const getProxyAddress: (chainId?: number) => string;
-    export const getEmbedderCommissionFee: () => string;
     export type ProxyAddresses = {
         [key: number]: string;
     };
-    export const state: {
+    export class State {
         networkMap: {
             [key: number]: INetwork;
         };
@@ -131,13 +107,21 @@ declare module "@scom/scom-disperse/store/utils.ts" {
         proxyAddresses: ProxyAddresses;
         embedderCommissionFee: string;
         rpcWalletId: string;
-    };
+        approvalModel: ERC20ApprovalModel;
+        constructor(options: any);
+        initRpcWallet(defaultChainId: number): string;
+        private initData;
+        private setNetworkList;
+        getProxyAddress(chainId?: number): string;
+        getRpcWallet(): import("@ijstech/eth-wallet").IRpcWallet;
+        isRpcWalletConnected(): boolean;
+        getChainId(): number;
+        getDisperseAddress(chainId?: number): string;
+        getCurrentCommissions(commissions: ICommissionInfo[]): ICommissionInfo[];
+        getCommissionAmount: (commissions: ICommissionInfo[], amount: BigNumber) => BigNumber;
+        setApprovalModelAction(options: IERC20ApprovalEventOptions): Promise<import("@ijstech/eth-wallet").IERC20ApprovalAction>;
+    }
     export function isClientWalletConnected(): boolean;
-    export function isRpcWalletConnected(): boolean;
-    export function getChainId(): number;
-    export function initRpcWallet(defaultChainId: number): string;
-    export function getRpcWallet(): import("@ijstech/eth-wallet").IRpcWallet;
-    export function getClientWallet(): import("@ijstech/eth-wallet").IClientWallet;
 }
 /// <amd-module name="@scom/scom-disperse/store/index.ts" />
 declare module "@scom/scom-disperse/store/index.ts" {
@@ -145,27 +129,22 @@ declare module "@scom/scom-disperse/store/index.ts" {
 }
 /// <amd-module name="@scom/scom-disperse/disperse-utils/index.ts" />
 declare module "@scom/scom-disperse/disperse-utils/index.ts" {
-    import { getDisperseAddress } from "@scom/scom-disperse/store/index.ts";
+    import { State } from "@scom/scom-disperse/store/index.ts";
     import { DisperseData, ICommissionInfo } from "@scom/scom-disperse/global/index.ts";
-    import { BigNumber } from "@ijstech/eth-wallet";
     import { ITokenObject } from "@scom/scom-token-list";
-    const onCheckAllowance: (token: ITokenObject, spender: string) => Promise<BigNumber>;
-    const onApproveToken: (token: ITokenObject, spender: string) => Promise<import("@ijstech/eth-contract").TransactionReceipt>;
-    const getCurrentCommissions: (commissions: ICommissionInfo[]) => ICommissionInfo[];
-    const getCommissionAmount: (commissions: ICommissionInfo[], amount: BigNumber) => BigNumber;
     interface IDisperseData {
         token: ITokenObject;
         data: DisperseData[];
         commissions?: ICommissionInfo[];
     }
-    const onDisperse: (disperseData: IDisperseData) => Promise<{
+    const onDisperse: (state: State, disperseData: IDisperseData) => Promise<{
         receipt: any;
         error: any;
     } | {
         receipt: any;
         error?: undefined;
     }>;
-    export { getDisperseAddress, onCheckAllowance, onApproveToken, onDisperse, getCurrentCommissions, getCommissionAmount };
+    export { onDisperse };
 }
 /// <amd-module name="@scom/scom-disperse/assets.ts" />
 declare module "@scom/scom-disperse/assets.ts" {
@@ -312,7 +291,7 @@ declare module "@scom/scom-disperse" {
         }
     }
     export default class ScomDisperse extends Module {
-        private $eventBus;
+        private state;
         private containerElm;
         private resultElm;
         private firstStepElm;
@@ -347,8 +326,9 @@ declare module "@scom/scom-disperse" {
         tag: any;
         defaultEdit: boolean;
         private rpcWalletEvents;
-        private clientEvents;
+        private approvalModelAction;
         private getData;
+        private resetRpcWallet;
         private setData;
         private updateTag;
         private setTag;
@@ -393,11 +373,14 @@ declare module "@scom/scom-disperse" {
         private DummyDisperseData;
         private refreshUI;
         constructor(parent?: Container, options?: any);
+        removeRpcWalletEvents(): void;
         onHide(): void;
-        private registerEvent;
         private onWalletConnect;
         private onChainChanged;
+        private updateTokenModal;
         private updateButtons;
+        private get chainId();
+        private get rpcWallet();
         get listAddresses(): DisperseData[];
         get hasAddress(): boolean;
         get balance(): string;
@@ -430,10 +413,11 @@ declare module "@scom/scom-disperse" {
         private setEnabledStatus;
         private updateCommissionsTooltip;
         private updateContractAddress;
-        private getApprovalStatus;
-        private initWallet;
+        private initApprovalModelAction;
+        private checkAllowance;
         private handleApprove;
         private handleDisperse;
+        private initWallet;
         private connectWallet;
         private loadLib;
         private renderResult;

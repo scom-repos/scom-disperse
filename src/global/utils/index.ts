@@ -1,3 +1,2 @@
 export * from './helper';
-
-export { parseContractError } from './error'
+export * from './common';

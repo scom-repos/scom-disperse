@@ -21,7 +21,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 define("@scom/scom-disperse/global/utils/helper.ts", ["require", "exports", "@ijstech/components", "@ijstech/eth-wallet"], function (require, exports, components_1, eth_wallet_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.downloadCSVFile = exports.toDisperseData = exports.disperseDataToString = exports.viewOnExplorerByAddress = exports.viewOnExplorerByTxHash = exports.formatNumberWithSeparators = exports.formatNumber = exports.formatUTCDate = exports.DefaultDateFormat = exports.explorerAddressUrlsByChainId = exports.explorerTxUrlsByChainId = void 0;
+    exports.downloadCSVFile = exports.toDisperseData = exports.disperseDataToString = exports.viewOnExplorerByTxHash = exports.formatNumberWithSeparators = exports.formatNumber = exports.formatUTCDate = exports.DefaultDateFormat = exports.explorerTxUrlsByChainId = void 0;
     exports.explorerTxUrlsByChainId = {
         1: 'https://etherscan.io/tx/',
         4: 'https://rinkeby.etherscan.io/tx/',
@@ -36,21 +36,6 @@ define("@scom/scom-disperse/global/utils/helper.ts", ["require", "exports", "@ij
         4002: 'https://testnet.ftmscan.com/tx/',
         13370: 'https://aminoxtestnet.blockscout.alphacarbon.network/tx/',
         421613: 'https://goerli.arbiscan.io/tx/'
-    };
-    exports.explorerAddressUrlsByChainId = {
-        1: 'https://etherscan.io/address/',
-        4: 'https://rinkeby.etherscan.io/address/',
-        42: 'https://kovan.etherscan.io/address/',
-        97: 'https://testnet.bscscan.com/address/',
-        56: 'https://bscscan.com/address/',
-        43113: 'https://testnet.snowtrace.io/address/',
-        43114: 'https://snowtrace.io/address/',
-        137: 'https://polygonscan.com/address/',
-        80001: 'https://mumbai.polygonscan.com/address/',
-        250: 'https://ftmscan.com/address/',
-        4002: 'https://testnet.ftmscan.com/address/',
-        13370: 'https://aminoxtestnet.blockscout.alphacarbon.network/address/',
-        421613: 'https://goerli.arbiscan.io/address/'
     };
     exports.DefaultDateFormat = 'YYYY/MM/DD HH:mm:ss';
     const formatUTCDate = (date, formatType = exports.DefaultDateFormat) => {
@@ -101,13 +86,6 @@ define("@scom/scom-disperse/global/utils/helper.ts", ["require", "exports", "@ij
         }
     };
     exports.viewOnExplorerByTxHash = viewOnExplorerByTxHash;
-    const viewOnExplorerByAddress = (chainId, address) => {
-        if (exports.explorerAddressUrlsByChainId[chainId]) {
-            let url = `${exports.explorerAddressUrlsByChainId[chainId]}${address}`;
-            window.open(url);
-        }
-    };
-    exports.viewOnExplorerByAddress = viewOnExplorerByAddress;
     const delimiters = [",", ":", "=", " "];
     const newline = "[\\r\\n]+"; // one or more of "\r" or "\n" or "\r\n" will be iditified
     const addressReg = /^0x/;
@@ -207,50 +185,6 @@ define("@scom/scom-disperse/global/utils/helper.ts", ["require", "exports", "@ij
     };
     exports.downloadCSVFile = downloadCSVFile;
 });
-define("@scom/scom-disperse/global/utils/error.ts", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.parseContractError = void 0;
-    ///<amd-module name='@scom/scom-disperse/global/utils/error.ts'/> 
-    async function parseContractError(oMessage, tokens) {
-        var _a;
-        const staticMessageMap = {
-            'execution reverted: OAXDEX: K': 'x * y = k Violated',
-            'execution reverted: OAXDEX: FORBIDDEN': 'Forbidden',
-            'execution reverted: OAXDEX: INSUFFICIENT_INPUT_AMOUNT': 'Insufficient input amount',
-            'execution reverted: OAXDEX: INVALID_TO': 'Invalid to',
-            'execution reverted: OAXDEX: INSUFFICIENT_LIQUIDITY': 'Insufficient liquidity',
-            'execution reverted: OAXDEX: INSUFFICIENT_OUTPUT_AMOUNT': 'Insufficient output amount',
-            'execution reverted: OAXDEX: PAIR PAUSED': 'Pair paused',
-            'execution reverted: OAXDEX: GLOBALLY PAUSED': 'Globally paused',
-            'execution reverted: OAXDEX: INSUFFICIENT_LIQUIDITY_BURNED': 'Insufficient liquidity burned',
-            'execution reverted: OAXDEX: INSUFFICIENT_LIQUIDITY_MINTED': 'Insufficient liquidity minted',
-            'execution reverted: OAXDEX: OVERFLOW': 'Overflow',
-            'execution reverted: OAXDEX_Pair: INSUFFICIENT_LIQUIDITY': 'Insufficient liquidity',
-            'execution reverted: OAXDEX_Pair: INSUFFICIENT_OUTPUT_AMOUNT': 'Insufficient output amount',
-            'execution reverted: OAXDEX_Pair: INSUFFICIENT_INPUT_AMOUNT': 'Insufficient input amount',
-            'execution reverted: OAXDEX: LOCKED': 'Locked',
-            'execution reverted: OAXDEX: INVALID_SIGNATURE': 'Invalid signature',
-            'execution reverted: OAXDEX: EXPIRED': 'Expired',
-            'Returned error: MetaMask Tx Signature: User denied transaction signature.': 'User denied transaction signature',
-            'execution reverted: OracleAdaptor: Price outside allowed range': 'Circuit Breaker: Exceeds Price Protection Range',
-            'execution reverted: PAIR_NOT_MATCH': 'Pair Not Match',
-            'execution reverted: Cap exceeded': 'Trolls have been sold out',
-            'execution reverted: No oracle found': 'No Oracle found',
-            'execution reverted: Amount exceeds available fund': 'Insufficient liquidity',
-        };
-        return (_a = staticMessageMap[oMessage]) !== null && _a !== void 0 ? _a : oMessage;
-    }
-    exports.parseContractError = parseContractError;
-});
-define("@scom/scom-disperse/global/utils/index.ts", ["require", "exports", "@scom/scom-disperse/global/utils/helper.ts", "@scom/scom-disperse/global/utils/error.ts"], function (require, exports, helper_1, error_1) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.parseContractError = void 0;
-    ///<amd-module name='@scom/scom-disperse/global/utils/index.ts'/> 
-    __exportStar(helper_1, exports);
-    Object.defineProperty(exports, "parseContractError", { enumerable: true, get: function () { return error_1.parseContractError; } });
-});
 define("@scom/scom-disperse/global/utils/common.ts", ["require", "exports", "@ijstech/eth-wallet"], function (require, exports, eth_wallet_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -277,13 +211,17 @@ define("@scom/scom-disperse/global/utils/common.ts", ["require", "exports", "@ij
     };
     exports.isAddressValid = isAddressValid;
 });
-define("@scom/scom-disperse/global/index.ts", ["require", "exports", "@scom/scom-disperse/global/utils/index.ts", "@scom/scom-disperse/global/utils/common.ts"], function (require, exports, index_1, common_1) {
+define("@scom/scom-disperse/global/utils/index.ts", ["require", "exports", "@scom/scom-disperse/global/utils/helper.ts", "@scom/scom-disperse/global/utils/common.ts"], function (require, exports, helper_1, common_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.isAddressValid = exports.registerSendTxEvents = void 0;
+    ///<amd-module name='@scom/scom-disperse/global/utils/index.ts'/> 
+    __exportStar(helper_1, exports);
+    __exportStar(common_1, exports);
+});
+define("@scom/scom-disperse/global/index.ts", ["require", "exports", "@scom/scom-disperse/global/utils/index.ts"], function (require, exports, index_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     __exportStar(index_1, exports);
-    Object.defineProperty(exports, "registerSendTxEvents", { enumerable: true, get: function () { return common_1.registerSendTxEvents; } });
-    Object.defineProperty(exports, "isAddressValid", { enumerable: true, get: function () { return common_1.isAddressValid; } });
 });
 define("@scom/scom-disperse/store/data/core.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -373,128 +311,124 @@ define("@scom/scom-disperse/store/data/index.ts", ["require", "exports", "@scom/
 define("@scom/scom-disperse/store/utils.ts", ["require", "exports", "@ijstech/eth-wallet", "@scom/scom-disperse/store/data/index.ts", "@ijstech/components", "@scom/scom-network-list", "@scom/scom-disperse/store/data/index.ts"], function (require, exports, eth_wallet_3, index_2, components_2, scom_network_list_1, index_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.getClientWallet = exports.getRpcWallet = exports.initRpcWallet = exports.getChainId = exports.isRpcWalletConnected = exports.isClientWalletConnected = exports.state = exports.getEmbedderCommissionFee = exports.getProxyAddress = exports.setProxyAddresses = exports.setDataFromSCConfig = exports.getDisperseAddress = exports.getInfuraId = exports.INFINITE = void 0;
+    exports.isClientWalletConnected = exports.State = void 0;
     __exportStar(index_3, exports);
-    exports.INFINITE = "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
     const Disperse = "Disperse";
-    const setInfuraId = (infuraId) => {
-        exports.state.infuraId = infuraId;
-    };
-    const getInfuraId = () => {
-        return exports.state.infuraId;
-    };
-    exports.getInfuraId = getInfuraId;
-    const setNetworkList = (networkList, infuraId) => {
-        const wallet = eth_wallet_3.Wallet.getClientInstance();
-        exports.state.networkMap = {};
-        const defaultNetworkList = (0, scom_network_list_1.default)();
-        const defaultNetworkMap = defaultNetworkList.reduce((acc, cur) => {
-            acc[cur.chainId] = cur;
-            return acc;
-        }, {});
-        for (let network of networkList) {
-            const networkInfo = defaultNetworkMap[network.chainId];
-            if (!networkInfo)
-                continue;
-            if (infuraId && network.rpcUrls && network.rpcUrls.length > 0) {
-                for (let i = 0; i < network.rpcUrls.length; i++) {
-                    network.rpcUrls[i] = network.rpcUrls[i].replace(/{InfuraId}/g, infuraId);
-                }
+    class State {
+        constructor(options) {
+            this.networkMap = {};
+            this.infuraId = '';
+            this.proxyAddresses = {};
+            this.embedderCommissionFee = '0';
+            this.rpcWalletId = '';
+            this.getCommissionAmount = (commissions, amount) => {
+                const _commissions = (commissions || []).filter(v => v.chainId == this.getChainId()).map(v => {
+                    return {
+                        to: v.walletAddress,
+                        amount: amount.times(v.share)
+                    };
+                });
+                const commissionsAmount = _commissions.length ? _commissions.map(v => v.amount).reduce((a, b) => a.plus(b)) : new eth_wallet_3.BigNumber(0);
+                return commissionsAmount;
+            };
+            this.networkMap = (0, scom_network_list_1.default)();
+            this.initData(options);
+        }
+        initRpcWallet(defaultChainId) {
+            var _a, _b, _c;
+            if (this.rpcWalletId) {
+                return this.rpcWalletId;
             }
-            exports.state.networkMap[network.chainId] = Object.assign(Object.assign({}, networkInfo), network);
-            wallet.setNetworkInfo(exports.state.networkMap[network.chainId]);
+            const clientWallet = eth_wallet_3.Wallet.getClientInstance();
+            const networkList = Object.values(((_a = components_2.application.store) === null || _a === void 0 ? void 0 : _a.networkMap) || []);
+            const instanceId = clientWallet.initRpcWallet({
+                networks: networkList,
+                defaultChainId,
+                infuraId: (_b = components_2.application.store) === null || _b === void 0 ? void 0 : _b.infuraId,
+                multicalls: (_c = components_2.application.store) === null || _c === void 0 ? void 0 : _c.multicalls
+            });
+            this.rpcWalletId = instanceId;
+            if (clientWallet.address) {
+                const rpcWallet = eth_wallet_3.Wallet.getRpcWalletInstance(instanceId);
+                rpcWallet.address = clientWallet.address;
+            }
+            return instanceId;
         }
-    };
-    function getDisperseAddress(chainId) {
-        const address = index_2.CoreContractAddressesByChainId[chainId || getChainId()];
-        return address ? address[Disperse] : null;
+        initData(options) {
+            if (options.infuraId) {
+                this.infuraId = options.infuraId;
+            }
+            if (options.networks) {
+                this.setNetworkList(options.networks, options.infuraId);
+            }
+            if (options.proxyAddresses) {
+                this.proxyAddresses = options.proxyAddresses;
+            }
+            if (options.embedderCommissionFee) {
+                this.embedderCommissionFee = options.embedderCommissionFee;
+            }
+        }
+        setNetworkList(networkList, infuraId) {
+            const wallet = eth_wallet_3.Wallet.getClientInstance();
+            this.networkMap = {};
+            const defaultNetworkList = (0, scom_network_list_1.default)();
+            const defaultNetworkMap = defaultNetworkList.reduce((acc, cur) => {
+                acc[cur.chainId] = cur;
+                return acc;
+            }, {});
+            for (let network of networkList) {
+                const networkInfo = defaultNetworkMap[network.chainId];
+                if (!networkInfo)
+                    continue;
+                if (infuraId && network.rpcUrls && network.rpcUrls.length > 0) {
+                    for (let i = 0; i < network.rpcUrls.length; i++) {
+                        network.rpcUrls[i] = network.rpcUrls[i].replace(/{InfuraId}/g, infuraId);
+                    }
+                }
+                this.networkMap[network.chainId] = Object.assign(Object.assign({}, networkInfo), network);
+                wallet.setNetworkInfo(this.networkMap[network.chainId]);
+            }
+        }
+        getProxyAddress(chainId) {
+            const _chainId = chainId || eth_wallet_3.Wallet.getInstance().chainId;
+            const proxyAddresses = this.proxyAddresses;
+            if (proxyAddresses) {
+                return proxyAddresses[_chainId];
+            }
+            return null;
+        }
+        getRpcWallet() {
+            return this.rpcWalletId ? eth_wallet_3.Wallet.getRpcWalletInstance(this.rpcWalletId) : null;
+        }
+        isRpcWalletConnected() {
+            const wallet = this.getRpcWallet();
+            return wallet === null || wallet === void 0 ? void 0 : wallet.isConnected;
+        }
+        getChainId() {
+            const rpcWallet = this.getRpcWallet();
+            return rpcWallet === null || rpcWallet === void 0 ? void 0 : rpcWallet.chainId;
+        }
+        getDisperseAddress(chainId) {
+            const address = index_2.CoreContractAddressesByChainId[chainId || this.getChainId()];
+            return address ? address[Disperse] : null;
+        }
+        getCurrentCommissions(commissions) {
+            return (commissions || []).filter(v => v.chainId == this.getChainId());
+        }
+        async setApprovalModelAction(options) {
+            const approvalOptions = Object.assign(Object.assign({}, options), { spenderAddress: '' });
+            let wallet = this.getRpcWallet();
+            this.approvalModel = new eth_wallet_3.ERC20ApprovalModel(wallet, approvalOptions);
+            let approvalModelAction = this.approvalModel.getAction();
+            return approvalModelAction;
+        }
     }
-    exports.getDisperseAddress = getDisperseAddress;
-    const setDataFromSCConfig = (options) => {
-        if (options.infuraId) {
-            setInfuraId(options.infuraId);
-        }
-        if (options.networks) {
-            setNetworkList(options.networks, options.infuraId);
-        }
-        if (options.proxyAddresses) {
-            (0, exports.setProxyAddresses)(options.proxyAddresses);
-        }
-        if (options.embedderCommissionFee) {
-            setEmbedderCommissionFee(options.embedderCommissionFee);
-        }
-    };
-    exports.setDataFromSCConfig = setDataFromSCConfig;
-    const setProxyAddresses = (data) => {
-        exports.state.proxyAddresses = data;
-    };
-    exports.setProxyAddresses = setProxyAddresses;
-    const getProxyAddress = (chainId) => {
-        const _chainId = chainId || eth_wallet_3.Wallet.getInstance().chainId;
-        const proxyAddresses = exports.state.proxyAddresses;
-        if (proxyAddresses) {
-            return proxyAddresses[_chainId];
-        }
-        return null;
-    };
-    exports.getProxyAddress = getProxyAddress;
-    const setEmbedderCommissionFee = (fee) => {
-        exports.state.embedderCommissionFee = fee;
-    };
-    const getEmbedderCommissionFee = () => {
-        return exports.state.embedderCommissionFee;
-    };
-    exports.getEmbedderCommissionFee = getEmbedderCommissionFee;
-    exports.state = {
-        networkMap: {},
-        infuraId: '',
-        proxyAddresses: {},
-        embedderCommissionFee: '0',
-        rpcWalletId: ''
-    };
+    exports.State = State;
     function isClientWalletConnected() {
         const wallet = eth_wallet_3.Wallet.getClientInstance();
         return wallet.isConnected;
     }
     exports.isClientWalletConnected = isClientWalletConnected;
-    function isRpcWalletConnected() {
-        const wallet = getRpcWallet();
-        return wallet === null || wallet === void 0 ? void 0 : wallet.isConnected;
-    }
-    exports.isRpcWalletConnected = isRpcWalletConnected;
-    function getChainId() {
-        const rpcWallet = getRpcWallet();
-        return rpcWallet === null || rpcWallet === void 0 ? void 0 : rpcWallet.chainId;
-    }
-    exports.getChainId = getChainId;
-    function initRpcWallet(defaultChainId) {
-        if (exports.state.rpcWalletId) {
-            return exports.state.rpcWalletId;
-        }
-        const clientWallet = eth_wallet_3.Wallet.getClientInstance();
-        const networkList = Object.values(components_2.application.store.networkMap);
-        const instanceId = clientWallet.initRpcWallet({
-            networks: networkList,
-            defaultChainId,
-            infuraId: components_2.application.store.infuraId,
-            multicalls: components_2.application.store.multicalls
-        });
-        exports.state.rpcWalletId = instanceId;
-        if (clientWallet.address) {
-            const rpcWallet = eth_wallet_3.Wallet.getRpcWalletInstance(instanceId);
-            rpcWallet.address = clientWallet.address;
-        }
-        return instanceId;
-    }
-    exports.initRpcWallet = initRpcWallet;
-    function getRpcWallet() {
-        return eth_wallet_3.Wallet.getRpcWalletInstance(exports.state.rpcWalletId);
-    }
-    exports.getRpcWallet = getRpcWallet;
-    function getClientWallet() {
-        return eth_wallet_3.Wallet.getClientInstance();
-    }
-    exports.getClientWallet = getClientWallet;
 });
 define("@scom/scom-disperse/store/index.ts", ["require", "exports", "@scom/scom-disperse/store/utils.ts"], function (require, exports, utils_1) {
     "use strict";
@@ -502,56 +436,17 @@ define("@scom/scom-disperse/store/index.ts", ["require", "exports", "@scom/scom-
     ///<amd-module name='@scom/scom-disperse/store/index.ts'/> 
     __exportStar(utils_1, exports);
 });
-define("@scom/scom-disperse/disperse-utils/index.ts", ["require", "exports", "@scom/scom-disperse/store/index.ts", "@ijstech/eth-wallet", "@scom/oswap-openswap-contract", "@scom/scom-commission-proxy-contract", "@scom/scom-disperse-contract"], function (require, exports, index_4, eth_wallet_4, oswap_openswap_contract_1, scom_commission_proxy_contract_1, scom_disperse_contract_1) {
+define("@scom/scom-disperse/disperse-utils/index.ts", ["require", "exports", "@ijstech/eth-wallet", "@scom/scom-commission-proxy-contract", "@scom/scom-disperse-contract"], function (require, exports, eth_wallet_4, scom_commission_proxy_contract_1, scom_disperse_contract_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.getCommissionAmount = exports.getCurrentCommissions = exports.onDisperse = exports.onApproveToken = exports.onCheckAllowance = exports.getDisperseAddress = void 0;
-    Object.defineProperty(exports, "getDisperseAddress", { enumerable: true, get: function () { return index_4.getDisperseAddress; } });
-    const onCheckAllowance = async (token, spender) => {
-        if (!token.address)
-            return null;
-        let wallet = eth_wallet_4.Wallet.getClientInstance();
-        let erc20 = new oswap_openswap_contract_1.Contracts.ERC20(wallet, token.address);
-        let allowance = await erc20.allowance({
-            owner: wallet.account.address,
-            spender,
-        });
-        return eth_wallet_4.Utils.fromDecimals(allowance, token.decimals || 18);
-    };
-    exports.onCheckAllowance = onCheckAllowance;
-    const onApproveToken = async (token, spender) => {
-        if (!token.address)
-            return;
-        let erc20 = new oswap_openswap_contract_1.Contracts.ERC20(eth_wallet_4.Wallet.getClientInstance(), token.address);
-        let receipt = await erc20.approve({
-            spender,
-            amount: new eth_wallet_4.BigNumber(index_4.INFINITE)
-        });
-        return receipt;
-    };
-    exports.onApproveToken = onApproveToken;
-    const getCurrentCommissions = (commissions) => {
-        return (commissions || []).filter(v => v.chainId == (0, index_4.getChainId)());
-    };
-    exports.getCurrentCommissions = getCurrentCommissions;
-    const getCommissionAmount = (commissions, amount) => {
-        const _commissions = (commissions || []).filter(v => v.chainId == (0, index_4.getChainId)()).map(v => {
-            return {
-                to: v.walletAddress,
-                amount: amount.times(v.share)
-            };
-        });
-        const commissionsAmount = _commissions.length ? _commissions.map(v => v.amount).reduce((a, b) => a.plus(b)) : new eth_wallet_4.BigNumber(0);
-        return commissionsAmount;
-    };
-    exports.getCommissionAmount = getCommissionAmount;
-    const onDisperse = async (disperseData) => {
+    exports.onDisperse = void 0;
+    const onDisperse = async (state, disperseData) => {
         const { token, data, commissions } = disperseData;
         const wallet = eth_wallet_4.Wallet.getClientInstance();
-        const disperseAddress = (0, index_4.getDisperseAddress)();
+        const disperseAddress = state.getDisperseAddress();
         const disperseContract = new scom_disperse_contract_1.Contracts.Disperse(wallet, disperseAddress);
         const amount = eth_wallet_4.Utils.toDecimals(data.reduce((pv, cv) => pv.plus(cv.amount), new eth_wallet_4.BigNumber('0'))).dp(0);
-        const _commissions = (commissions || []).filter(v => v.chainId == (0, index_4.getChainId)()).map(v => {
+        const _commissions = (commissions || []).filter(v => v.chainId == state.getChainId()).map(v => {
             return {
                 to: v.walletAddress,
                 amount: amount.times(v.share).dp(0)
@@ -564,7 +459,7 @@ define("@scom/scom-disperse/disperse-utils/index.ts", ["require", "exports", "@s
         let receipt;
         try {
             if (_commissions.length) {
-                const proxyAddress = (0, index_4.getProxyAddress)();
+                const proxyAddress = state.getProxyAddress();
                 const proxy = new scom_commission_proxy_contract_1.Contracts.Proxy(wallet, proxyAddress);
                 const tokensIn = {
                     token: token.address || eth_wallet_4.Utils.nullAddress,
@@ -1043,7 +938,7 @@ define("@scom/scom-disperse/formSchema.json.ts", ["require", "exports"], functio
         }
     };
 });
-define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@scom/scom-disperse/global/index.ts", "@scom/scom-disperse/store/index.ts", "@ijstech/eth-wallet", "@scom/scom-disperse/disperse-utils/index.ts", "@scom/scom-disperse/index.css.ts", "@scom/scom-token-list", "@scom/scom-commission-fee-setup", "@scom/scom-disperse/data.json.ts", "@scom/scom-disperse/formSchema.json.ts", "@scom/scom-disperse/assets.ts"], function (require, exports, components_5, index_5, index_6, eth_wallet_5, index_7, index_css_1, scom_token_list_1, scom_commission_fee_setup_1, data_json_1, formSchema_json_1, assets_2) {
+define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@scom/scom-disperse/global/index.ts", "@scom/scom-disperse/store/index.ts", "@ijstech/eth-wallet", "@scom/scom-disperse/disperse-utils/index.ts", "@scom/scom-disperse/index.css.ts", "@scom/scom-token-list", "@scom/scom-commission-fee-setup", "@scom/scom-disperse/data.json.ts", "@scom/scom-disperse/formSchema.json.ts", "@scom/scom-disperse/assets.ts"], function (require, exports, components_5, index_4, index_5, eth_wallet_5, index_6, index_css_1, scom_token_list_1, scom_commission_fee_setup_1, data_json_1, formSchema_json_1, assets_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     const moduleDir = components_5.application.currentModuleDir;
@@ -1054,17 +949,20 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
         getData() {
             return this._data;
         }
-        async setData(data) {
+        async resetRpcWallet() {
             var _a;
-            this._data = data;
-            const rpcWalletId = (0, index_6.initRpcWallet)(this.defaultChainId);
-            const rpcWallet = (0, index_6.getRpcWallet)();
-            const event = rpcWallet.registerWalletEvent(this, eth_wallet_5.Constants.RpcWalletEvent.Connected, async (connected) => {
-                this.updateContractAddress();
-                this.onWalletConnect((0, index_6.isClientWalletConnected)());
+            this.removeRpcWalletEvents();
+            const rpcWalletId = await this.state.initRpcWallet(this.defaultChainId);
+            const rpcWallet = this.rpcWallet;
+            const chainChangedEvent = rpcWallet.registerWalletEvent(this, eth_wallet_5.Constants.RpcWalletEvent.ChainChanged, async (chainId) => {
+                this.onChainChanged();
             });
-            this.rpcWalletEvents.push(event);
-            const containerData = {
+            const connectedEvent = rpcWallet.registerWalletEvent(this, eth_wallet_5.Constants.RpcWalletEvent.Connected, async (connected) => {
+                this.updateContractAddress();
+                this.onWalletConnect((0, index_5.isClientWalletConnected)());
+            });
+            this.rpcWalletEvents.push(chainChangedEvent, connectedEvent);
+            const data = {
                 defaultChainId: this.defaultChainId,
                 wallets: this.wallets,
                 networks: this.networks,
@@ -1072,12 +970,12 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                 rpcWalletId: rpcWallet.instanceId
             };
             if ((_a = this.dappContainer) === null || _a === void 0 ? void 0 : _a.setData)
-                this.dappContainer.setData(containerData);
-            if (!this.mdToken.isConnected)
-                await this.mdToken.ready();
-            if (this.mdToken.rpcWalletId !== rpcWallet.instanceId) {
-                this.mdToken.rpcWalletId = rpcWallet.instanceId;
-            }
+                this.dappContainer.setData(data);
+        }
+        async setData(data) {
+            this._data = data;
+            await this.resetRpcWallet();
+            await this.updateTokenModal();
             await this.refreshUI();
         }
         updateTag(type, value) {
@@ -1157,7 +1055,7 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                             const vstack = new components_5.VStack();
                             const config = new scom_commission_fee_setup_1.default(null, {
                                 commissions: self._data.commissions,
-                                fee: (0, index_6.getEmbedderCommissionFee)(),
+                                fee: this.state.embedderCommissionFee,
                                 networks: self._data.networks
                             });
                             const hstack = new components_5.HStack(null, {
@@ -1195,6 +1093,7 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                 //     return {
                 //       execute: async () => {
                 //         _oldData = { ...this._data };
+                //         await this.resetRpcWallet();
                 //         this.refreshUI();
                 //       },
                 //       undo: () => {
@@ -1286,7 +1185,7 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                         };
                     },
                     getData: () => {
-                        const fee = (0, index_6.getEmbedderCommissionFee)();
+                        const fee = this.state.embedderCommissionFee;
                         return Object.assign(Object.assign({}, this.getData()), { fee });
                     },
                     setData: this.setData.bind(this),
@@ -1298,15 +1197,15 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
         DummyDisperseData() {
             return [
                 {
-                    address: index_6.dummyAddressList[0],
+                    address: index_5.dummyAddressList[0],
                     amount: new eth_wallet_5.BigNumber(100.1)
                 },
                 {
-                    address: index_6.dummyAddressList[1],
+                    address: index_5.dummyAddressList[1],
                     amount: new eth_wallet_5.BigNumber(5.8)
                 },
                 {
-                    address: index_6.dummyAddressList[2],
+                    address: index_5.dummyAddressList[2],
                     amount: new eth_wallet_5.BigNumber(333)
                 }
             ];
@@ -1325,22 +1224,28 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
             this.tag = {};
             this.defaultEdit = true;
             this.rpcWalletEvents = [];
-            this.clientEvents = [];
-            this.registerEvent = () => {
-                this.clientEvents.push(this.$eventBus.register(this, "chainChanged" /* EventId.chainChanged */, this.onChainChanged));
-            };
             this.onWalletConnect = async (connected) => {
                 this.updateButtons();
-                const rpcWallet = (0, index_6.getRpcWallet)();
-                if (connected && rpcWallet.address)
+                const rpcWallet = this.rpcWallet;
+                if (connected && rpcWallet.address) {
+                    await this.updateTokenModal();
                     await scom_token_list_1.tokenStore.updateAllTokenBalances(rpcWallet);
-                this.checkStepStatus(connected);
+                }
+                await this.checkStepStatus(connected);
             };
             this.onChainChanged = async () => {
                 this.resetData(false);
-                await this.onWalletConnect((0, index_6.isClientWalletConnected)());
+                await this.onWalletConnect((0, index_5.isClientWalletConnected)());
             };
-            this.checkStepStatus = (connected) => {
+            this.updateTokenModal = async () => {
+                const rpcWallet = this.rpcWallet;
+                if (!this.mdToken.isConnected)
+                    await this.mdToken.ready();
+                if (this.mdToken.rpcWalletId !== rpcWallet.instanceId) {
+                    this.mdToken.rpcWalletId = rpcWallet.instanceId;
+                }
+            };
+            this.checkStepStatus = async (connected) => {
                 this.firstStepElm.enabled = connected;
                 this.tokenElm.enabled = connected;
                 if (!connected) {
@@ -1349,6 +1254,10 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                 }
                 this.setThirdStatus(!!this.token);
                 this.updateCommissionsTooltip();
+                await this.initWallet();
+                if (this.state.isRpcWalletConnected()) {
+                    await this.initApprovalModelAction();
+                }
                 this.updateContractAddress();
             };
             this.setThirdStatus = (enabled) => {
@@ -1359,7 +1268,7 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
             };
             this.setFourthStatus = async () => {
                 var _a;
-                if ((0, index_6.isClientWalletConnected)() && this.hasAddress) {
+                if ((0, index_5.isClientWalletConnected)() && this.hasAddress) {
                     this.btnDownload.enabled = true;
                     this.containerElm.minHeight = '1000px';
                     this.thirdStepElm.visible = true;
@@ -1367,7 +1276,7 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                     this.addressesElm.clearInnerHTML();
                     let countInvalid = 0;
                     for (const item of this.listAddresses) {
-                        const valid = await (0, index_5.isAddressValid)(item.address);
+                        const valid = await (0, index_4.isAddressValid)(item.address);
                         if (!valid) {
                             ++countInvalid;
                         }
@@ -1377,9 +1286,9 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                             this.$render("i-label", { caption: `${item.amount.toFixed()} ${symbol}`, opacity: 0.75, font: { size: '16px', name: 'Montserrat Medium' }, class: "text-right" })));
                     }
                     ;
-                    this.totalElm.caption = `${(0, index_5.formatNumber)(this.total)} ${symbol}`;
-                    this.balanceElm.caption = `${(0, index_5.formatNumber)(this.balance)} ${symbol}`;
-                    this.remainingElm.caption = `${(0, index_5.formatNumber)(this.remaining)} ${symbol}`;
+                    this.totalElm.caption = `${(0, index_4.formatNumber)(this.total)} ${symbol}`;
+                    this.balanceElm.caption = `${(0, index_4.formatNumber)(this.balance)} ${symbol}`;
+                    this.remainingElm.caption = `${(0, index_4.formatNumber)(this.remaining)} ${symbol}`;
                     if (countInvalid) {
                         this.invalidElm.caption = `There ${countInvalid === 1 ? 'is' : 'are'} ${countInvalid} invalid ${countInvalid === 1 ? 'address' : 'addresses'}!`;
                         this.invalidElm.visible = true;
@@ -1389,7 +1298,7 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                     }
                     else {
                         this.invalidElm.visible = false;
-                        this.getApprovalStatus();
+                        this.checkAllowance();
                     }
                 }
                 else {
@@ -1402,7 +1311,7 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                 this.token = token;
                 this.tokenInfoElm.clearInnerHTML();
                 if (token) {
-                    const img = scom_token_list_1.assets.tokenPath(token, (0, index_6.getChainId)());
+                    const img = scom_token_list_1.assets.tokenPath(token, this.chainId);
                     this.tokenInfoElm.appendChild(this.$render("i-hstack", { gap: "16px", verticalAlignment: "center" },
                         this.$render("i-image", { width: 40, height: 40, minWidth: 30, url: img, fallbackUrl: assets_2.default.fullPath('img/tokens/token-placeholder.svg') }),
                         this.$render("i-label", { caption: `$${token.symbol}`, font: { size: '20px', name: 'Montserrat Medium' } }),
@@ -1426,8 +1335,8 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                 const doc = new window.jsPDF();
                 const logo = assets_2.default.fullPath('./img/sc-header.png');
                 const totalAmount = this.resultAddresses.reduce((pv, cv) => pv.plus(cv.amount), new eth_wallet_5.BigNumber('0'));
-                const rows = this.resultAddresses.map(item => [item.address, (0, index_5.formatNumber)(item.amount)]);
-                rows.push(['Total', (0, index_5.formatNumber)(totalAmount)]);
+                const rows = this.resultAddresses.map(item => [item.address, (0, index_4.formatNumber)(item.amount)]);
+                rows.push(['Total', (0, index_4.formatNumber)(totalAmount)]);
                 // doc.addImage(logo, 'png', 15, 10, 20, 24);
                 doc.setFontSize(36);
                 doc.setFont('helvetica', 'bold');
@@ -1437,7 +1346,7 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                 doc.text(`Transaction Hash: ${data.receipt}`, 15, 42);
                 doc.text(`Timestamp: ${data.timestamp}`, 15, 50);
                 doc.text(`From Address: ${data.address}`, 15, 58);
-                doc.text(`Total Amount: ${(0, index_5.formatNumber)(totalAmount)} ${data.symbol}`, 15, 66);
+                doc.text(`Total Amount: ${(0, index_4.formatNumber)(totalAmount)} ${data.symbol}`, 15, 66);
                 const cols = ['TRANSFER TO', 'TRANSFER AMOUNT'];
                 const table = [cols, ...rows];
                 let y = 75;
@@ -1466,7 +1375,7 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                 arr.forEach((item) => {
                     content += `${item.address},${item.amount.toFixed()}\r\n`;
                 });
-                (0, index_5.downloadCSVFile)(content, 'disperse.csv');
+                (0, index_4.downloadCSVFile)(content, 'disperse.csv');
             };
             this.onImportFile = () => {
                 var _a, _b;
@@ -1477,14 +1386,14 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
             };
             this.convertCSVToText = (result) => {
                 if (!result)
-                    this.showImportCSVError(index_6.ImportFileWarning.Broken);
-                const arr = (0, index_5.toDisperseData)(result.replace(/"/g, ''));
+                    this.showImportCSVError(index_5.ImportFileWarning.Broken);
+                const arr = (0, index_4.toDisperseData)(result.replace(/"/g, ''));
                 if (arr.length > 0) {
                     let text = arr.reduce((prev, next, idx) => prev += `${idx ? '\n' : ''}${next.address}, ${next.amount.toFixed()}`, "");
                     this.inputBatch.value = text;
                 }
                 else {
-                    this.showImportCSVError(index_6.ImportFileWarning.Empty);
+                    this.showImportCSVError(index_5.ImportFileWarning.Empty);
                 }
                 this.setFourthStatus();
             };
@@ -1523,8 +1432,8 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
             };
             this.resetData = async (updateBalance) => {
                 this.updateButtons();
-                const rpcWallet = (0, index_6.getRpcWallet)();
-                scom_token_list_1.tokenStore.updateTokenMapData((0, index_6.getChainId)());
+                const rpcWallet = this.rpcWallet;
+                scom_token_list_1.tokenStore.updateTokenMapData(this.chainId);
                 if (updateBalance && rpcWallet.address)
                     await scom_token_list_1.tokenStore.updateAllTokenBalances(rpcWallet);
                 this.setEnabledStatus(true);
@@ -1537,7 +1446,7 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                 this.inputBatch.value = '';
                 this.invalidElm.visible = false;
                 this.onSelectToken(null);
-                this.checkStepStatus((0, index_6.isClientWalletConnected)());
+                await this.checkStepStatus((0, index_5.isClientWalletConnected)());
             };
             this.showMessage = (status, content) => {
                 this.txStatusModal.message = {
@@ -1553,8 +1462,8 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                 this.inputBatch.enabled = enabled;
             };
             this.updateCommissionsTooltip = () => {
-                const commissionFee = new eth_wallet_5.BigNumber((0, index_6.getEmbedderCommissionFee)());
-                if (commissionFee.gt(0) && (0, index_7.getCurrentCommissions)(this.commissions).length) {
+                const commissionFee = new eth_wallet_5.BigNumber(this.state.embedderCommissionFee);
+                if (commissionFee.gt(0) && this.state.getCurrentCommissions(this.commissions).length) {
                     this.iconTotal.visible = true;
                     this.iconTotal.tooltip.content = `A commission fee of ${commissionFee.times(100)}% will be applied to the total amount you input.`;
                 }
@@ -1563,17 +1472,64 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                 }
             };
             this.updateContractAddress = () => {
-                if ((0, index_7.getCurrentCommissions)(this.commissions).length) {
-                    this.contractAddress = (0, index_6.getProxyAddress)();
+                var _a;
+                if (this.state.getCurrentCommissions(this.commissions).length) {
+                    this.contractAddress = this.state.getProxyAddress();
                 }
                 else {
-                    this.contractAddress = (0, index_6.getDisperseAddress)();
+                    this.contractAddress = this.state.getDisperseAddress();
+                }
+                if ((_a = this.state) === null || _a === void 0 ? void 0 : _a.approvalModel) {
+                    this.state.approvalModel.spenderAddress = this.contractAddress;
                 }
             };
-            this.getApprovalStatus = async () => {
+            this.initApprovalModelAction = async () => {
+                if (this.approvalModelAction) {
+                    this.state.approvalModel.spenderAddress = this.contractAddress;
+                    return;
+                }
+                this.approvalModelAction = await this.state.setApprovalModelAction({
+                    sender: this,
+                    payAction: async () => {
+                        await this.handleDisperse();
+                    },
+                    onToBeApproved: async (token) => {
+                        this.btnApprove.caption = 'Approve';
+                        this.btnApprove.enabled = true;
+                        this.btnDisperse.enabled = false;
+                    },
+                    onToBePaid: async (token) => {
+                        this.btnApprove.caption = 'Approved';
+                        this.btnApprove.enabled = false;
+                        this.btnDisperse.enabled = this.remaining.gte(0) && this.total.gt(0);
+                    },
+                    onApproving: async (token, receipt) => {
+                        if (receipt) {
+                            this.showMessage('success', receipt);
+                            this.btnApprove.rightIcon.visible = true;
+                            this.btnApprove.caption = 'Approving';
+                            this.setEnabledStatus(false);
+                        }
+                    },
+                    onApproved: async (token) => {
+                        this.btnApprove.rightIcon.visible = false;
+                        this.btnApprove.caption = this.btnApprove.enabled ? 'Approve' : 'Approved';
+                        this.btnDisperse.enabled = !this.btnApprove.enabled && this.remaining.gte(0);
+                        this.setEnabledStatus(true);
+                    },
+                    onApprovingError: async (token, err) => {
+                        this.showMessage('error', err);
+                    },
+                    onPaying: async (receipt) => { },
+                    onPaid: async () => { },
+                    onPayingError: async (err) => { }
+                });
+                this.state.approvalModel.spenderAddress = this.contractAddress;
+            };
+            this.checkAllowance = async () => {
                 if (!this.token)
                     return;
-                if (this.remaining.lt(0) || !(0, index_6.isRpcWalletConnected)()) {
+                if (this.remaining.lt(0) || !this.state.isRpcWalletConnected()) {
                     this.btnApprove.caption = 'Approve';
                     this.btnApprove.enabled = false;
                     this.btnDisperse.enabled = false;
@@ -1584,54 +1540,15 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                     this.btnDisperse.enabled = true;
                 }
                 else {
-                    await this.initWallet();
-                    const allowance = await (0, index_7.onCheckAllowance)(this.token, this.contractAddress);
-                    if (allowance === null)
-                        return;
-                    const inputVal = new eth_wallet_5.BigNumber(this.total);
-                    const isApproved = !inputVal.gt(0) || inputVal.lte(allowance);
-                    if (!isApproved) {
-                        this.btnApprove.caption = 'Approve';
-                    }
-                    this.btnApprove.enabled = !isApproved;
-                    this.btnDisperse.enabled = isApproved;
+                    await this.initApprovalModelAction();
+                    await this.approvalModelAction.checkAllowance(this.token, this.total.toFixed());
                 }
-            };
-            this.initWallet = async () => {
-                try {
-                    await eth_wallet_5.Wallet.getClientInstance().init();
-                    const rpcWallet = (0, index_6.getRpcWallet)();
-                    await rpcWallet.init();
-                }
-                catch (_a) { }
             };
             this.handleApprove = async () => {
                 if (!this.token)
                     return;
-                this.showMessage('warning', 'Approving');
-                const callBackActions = async (err, receipt) => {
-                    if (err) {
-                        this.showMessage('error', err);
-                    }
-                    else if (receipt) {
-                        this.showMessage('success', receipt);
-                        this.btnApprove.rightIcon.visible = true;
-                        this.btnApprove.caption = 'Approving';
-                        this.setEnabledStatus(false);
-                    }
-                };
-                const confirmationCallBackActions = async () => {
-                    this.btnApprove.rightIcon.visible = false;
-                    await this.getApprovalStatus();
-                    this.btnApprove.caption = this.btnApprove.enabled ? 'Approve' : 'Approved';
-                    this.btnDisperse.enabled = !this.btnApprove.enabled && this.remaining.gte(0);
-                    this.setEnabledStatus(true);
-                };
-                (0, index_5.registerSendTxEvents)({
-                    transactionHash: callBackActions,
-                    confirmation: confirmationCallBackActions
-                });
-                (0, index_7.onApproveToken)(this.token, this.contractAddress);
+                this.showMessage('warning', `Approving ${this.token.symbol}`);
+                this.approvalModelAction.doApproveAction(this.token, this.total.toFixed());
             };
             this.handleDisperse = async () => {
                 const token = Object.assign({}, this.token);
@@ -1647,7 +1564,7 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                         this.showMessage('error', err);
                     }
                     else if (_receipt) {
-                        timestamp = (0, index_5.formatUTCDate)((0, components_5.moment)());
+                        timestamp = (0, index_4.formatUTCDate)((0, components_5.moment)());
                         receipt = _receipt;
                         this.btnDisperse.rightIcon.visible = true;
                         this.btnDisperse.caption = 'Dispersing';
@@ -1660,17 +1577,24 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                     this.renderResult(token, { receipt, address, timestamp });
                     this.resetData(true);
                 };
-                (0, index_5.registerSendTxEvents)({
+                (0, index_4.registerSendTxEvents)({
                     transactionHash: callBackActions,
                     confirmation: confirmationCallBackActions
                 });
-                const { error } = await (0, index_7.onDisperse)({ token, data: this.listAddresses, commissions: this.commissions });
+                const { error } = await (0, index_6.onDisperse)(this.state, { token, data: this.listAddresses, commissions: this.commissions });
                 if (error) {
                     this.showMessage('error', error);
                 }
             };
+            this.initWallet = async () => {
+                try {
+                    await eth_wallet_5.Wallet.getClientInstance().init();
+                    await this.rpcWallet.init();
+                }
+                catch (_a) { }
+            };
             this.connectWallet = async () => {
-                if (!(0, index_6.isClientWalletConnected)()) {
+                if (!(0, index_5.isClientWalletConnected)()) {
                     if (this.mdWallet) {
                         await components_5.application.loadPackage('@scom/scom-wallet-modal', '*');
                         this.mdWallet.networks = this.networks;
@@ -1679,14 +1603,13 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                     }
                     return;
                 }
-                if (!(0, index_6.isRpcWalletConnected)()) {
-                    const chainId = (0, index_6.getChainId)();
+                if (!this.state.isRpcWalletConnected()) {
                     const clientWallet = eth_wallet_5.Wallet.getClientInstance();
-                    await clientWallet.switchNetwork(chainId);
+                    await clientWallet.switchNetwork(this.chainId);
                 }
             };
             this.renderResult = (token, data) => {
-                const img = scom_token_list_1.assets.tokenPath(token, (0, index_6.getChainId)());
+                const img = scom_token_list_1.assets.tokenPath(token, this.chainId);
                 const chainId = eth_wallet_5.Wallet.getClientInstance().chainId;
                 this.resultElm.clearInnerHTML();
                 this.resultElm.appendChild(this.$render("i-vstack", { gap: 50, horizontalAlignment: "center" },
@@ -1699,7 +1622,7 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                             this.$render("i-label", { class: "text-overflow", caption: token.address || token.symbol, font: { size: '16px', name: 'Montserrat Medium' } }))),
                     this.$render("i-vstack", { gap: 8, width: 750, maxWidth: "100%", horizontalAlignment: "center" },
                         this.$render("i-label", { caption: "Explorer", font: { size: '24px', name: 'Montserrat Medium' } }),
-                        this.$render("i-hstack", { class: "pointer", wrap: "nowrap", width: "100%", minHeight: 88, verticalAlignment: "center", horizontalAlignment: "center", gap: 16, padding: { top: 20, bottom: 20, left: 20, right: 20 }, border: { radius: 15, style: 'solid', width: 4 }, onClick: () => (0, index_5.viewOnExplorerByTxHash)(chainId, data.receipt) },
+                        this.$render("i-hstack", { class: "pointer", wrap: "nowrap", width: "100%", minHeight: 88, verticalAlignment: "center", horizontalAlignment: "center", gap: 16, padding: { top: 20, bottom: 20, left: 20, right: 20 }, border: { radius: 15, style: 'solid', width: 4 }, onClick: () => (0, index_4.viewOnExplorerByTxHash)(chainId, data.receipt) },
                             this.$render("i-label", { class: "text-overflow", caption: data.receipt, font: { size: '16px', name: 'Montserrat Medium' } }),
                             this.$render("i-icon", { class: "link-icon", name: "external-link-alt", width: 20, height: 20, fill: Theme.text.primary }))),
                     this.$render("i-hstack", { gap: 30, maxWidth: "100%", horizontalAlignment: "center", verticalAlignment: "center", wrap: "wrap" },
@@ -1714,28 +1637,23 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                 this.resultElm.visible = false;
                 this.resetData(true);
             };
-            (0, index_6.setDataFromSCConfig)(data_json_1.default);
-            this.$eventBus = components_5.application.EventBus;
-            this.registerEvent();
         }
-        ;
-        onHide() {
-            this.dappContainer.onHide();
-            const rpcWallet = (0, index_6.getRpcWallet)();
+        removeRpcWalletEvents() {
+            const rpcWallet = this.rpcWallet;
             for (let event of this.rpcWalletEvents) {
                 rpcWallet.unregisterWalletEvent(event);
             }
             this.rpcWalletEvents = [];
-            for (let event of this.clientEvents) {
-                event.unregister();
-            }
-            this.clientEvents = [];
+        }
+        onHide() {
+            this.dappContainer.onHide();
+            this.removeRpcWalletEvents();
         }
         updateButtons() {
             if (!this.hStackGroupButton)
                 return;
-            const isClientConnected = (0, index_6.isClientWalletConnected)();
-            if (!isClientConnected || !(0, index_6.isRpcWalletConnected)()) {
+            const isClientConnected = (0, index_5.isClientWalletConnected)();
+            if (!isClientConnected || !this.state.isRpcWalletConnected()) {
                 this.btnWallet.visible = true;
                 this.btnWallet.caption = !isClientConnected ? 'Connect Wallet' : 'Switch Network';
                 this.hStackGroupButton.visible = false;
@@ -1744,9 +1662,15 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
             this.btnWallet.visible = false;
             this.hStackGroupButton.visible = true;
         }
+        get chainId() {
+            return this.state.getChainId();
+        }
+        get rpcWallet() {
+            return this.state.getRpcWallet();
+        }
         get listAddresses() {
             if (this.inputBatch.value) {
-                return (0, index_5.toDisperseData)(this.inputBatch.value);
+                return (0, index_4.toDisperseData)(this.inputBatch.value);
             }
             return [];
         }
@@ -1762,7 +1686,7 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
         }
         get total() {
             const _total = this.listAddresses.reduce((pv, cv) => pv.plus(cv.amount), new eth_wallet_5.BigNumber('0'));
-            const commissionsAmount = (0, index_7.getCommissionAmount)(this.commissions, _total);
+            const commissionsAmount = this.state.getCommissionAmount(this.commissions, _total);
             return _total.plus(commissionsAmount);
         }
         get remaining() {
@@ -1815,9 +1739,10 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
         async init() {
             this.isReadyCallbackQueued = true;
             super.init();
+            this.state = new index_5.State(data_json_1.default);
             this.loadLib();
             this.classList.add(index_css_1.disperseLayout);
-            this.checkStepStatus((0, index_6.isClientWalletConnected)());
+            this.checkStepStatus((0, index_5.isClientWalletConnected)());
             this.mdToken.onSelectToken = this.onSelectToken;
             this.tokenElm.onClick = () => this.mdToken.showModal();
             this.initInputFile();
@@ -1860,7 +1785,7 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                                         this.$render("i-button", { id: "btnDownload", caption: "Download CSV", enabled: false, class: "csv-button", onClick: () => this.onDownloadFile() }),
                                         this.$render("i-button", { id: "btnImport", caption: "Import CSV", enabled: false, class: "csv-button", onClick: this.onImportFile }),
                                         this.$render("i-label", { id: "importFileElm", visible: false }))),
-                                this.$render("i-input", { id: "inputBatch", height: "auto", enabled: false, placeholder: (0, index_5.disperseDataToString)(this.DummyDisperseData()), class: "input-batch custom-scroll", width: "100%", inputType: "textarea", rows: 4, margin: { top: 30 }, onChanged: this.onInputBatch })),
+                                this.$render("i-input", { id: "inputBatch", height: "auto", enabled: false, placeholder: (0, index_4.disperseDataToString)(this.DummyDisperseData()), class: "input-batch custom-scroll", width: "100%", inputType: "textarea", rows: 4, margin: { top: 30 }, onChanged: this.onInputBatch })),
                             this.$render("i-hstack", { id: "thirdStepElm", class: "step-elm", minHeight: 240, margin: { top: 40 } },
                                 this.$render("i-vstack", { width: "100%" },
                                     this.$render("i-hstack", { verticalAlignment: "center", horizontalAlignment: "space-between", wrap: "wrap", background: { color: Theme.input.background }, border: { radius: 30 } },
