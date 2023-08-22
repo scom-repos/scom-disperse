@@ -681,9 +681,6 @@ define("@scom/scom-disperse/index.css.ts", ["require", "exports", "@ijstech/comp
                     },
                 },
             },
-            '.overflow-auto': {
-                overflow: 'auto',
-            },
             '.custom-scroll': {
                 $nest: {
                     '::-webkit-scrollbar-track': {
@@ -812,11 +809,6 @@ define("@scom/scom-disperse/index.css.ts", ["require", "exports", "@ijstech/comp
         fontFamily: "Montserrat",
         src: `url("${assets_1.default.fullPath('fonts/montserrat/Montserrat-Bold.ttf')}") format("truetype")`,
         fontWeight: 'bold',
-        fontStyle: 'normal'
-    });
-    components_4.Styles.fontFace({
-        fontFamily: "Montserrat Light",
-        src: `url("${assets_1.default.fullPath('fonts/montserrat/Montserrat-Light.ttf')}") format("truetype")`,
         fontStyle: 'normal'
     });
     components_4.Styles.fontFace({
@@ -1313,7 +1305,7 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                 if (token) {
                     const img = scom_token_list_1.assets.tokenPath(token, this.chainId);
                     this.tokenInfoElm.appendChild(this.$render("i-hstack", { gap: "16px", verticalAlignment: "center" },
-                        this.$render("i-image", { width: 40, height: 40, minWidth: 30, url: img, fallbackUrl: assets_2.default.fullPath('img/tokens/token-placeholder.svg') }),
+                        this.$render("i-image", { width: 40, height: 40, minWidth: 30, url: img, fallbackUrl: assets_2.default.fullPath('img/token-placeholder.svg') }),
                         this.$render("i-label", { caption: `$${token.symbol}`, font: { size: '20px', name: 'Montserrat Medium' } }),
                         this.$render("i-label", { caption: token.address || token.symbol, font: { size: '16px', name: 'Montserrat Medium' }, class: "break-word" })));
                 }
@@ -1617,7 +1609,7 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                     this.$render("i-vstack", { gap: 16, width: 750, maxWidth: "100%", horizontalAlignment: "center" },
                         this.$render("i-label", { caption: "Token", font: { size: '24px', name: 'Montserrat Medium' } }),
                         this.$render("i-hstack", { width: "100%", verticalAlignment: "center", horizontalAlignment: "center", gap: 16, padding: { top: 20, bottom: 20, left: 60, right: 60 }, border: { radius: 15, style: 'solid', width: 4 } },
-                            this.$render("i-image", { width: 40, height: 40, minWidth: 30, url: img, fallbackUrl: assets_2.default.fullPath('img/tokens/token-placeholder.svg') }),
+                            this.$render("i-image", { width: 40, height: 40, minWidth: 30, url: img, fallbackUrl: assets_2.default.fullPath('img/token-placeholder.svg') }),
                             this.$render("i-label", { caption: `$${token.symbol}`, font: { size: '20px', name: 'Montserrat Medium' } }),
                             this.$render("i-label", { class: "text-overflow", caption: token.address || token.symbol, font: { size: '16px', name: 'Montserrat Medium' } }))),
                     this.$render("i-vstack", { gap: 8, width: 750, maxWidth: "100%", horizontalAlignment: "center" },
@@ -1800,7 +1792,7 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                                                         this.$render("i-vstack", { width: 450 },
                                                             this.$render("i-label", { caption: "Addresses", font: { size: '16px', name: 'Montserrat Medium' } })),
                                                         this.$render("i-label", { caption: "Amount", font: { size: '16px', name: 'Montserrat Medium' } })),
-                                                    this.$render("i-vstack", { width: "100%", height: 100, class: "overflow-auto", padding: { right: 5 } },
+                                                    this.$render("i-vstack", { width: "100%", height: 100, overflow: "auto", padding: { right: 5 } },
                                                         this.$render("i-vstack", { id: "addressesElm", width: "100%", height: "100%", verticalAlignment: "start", gap: 4 }))))),
                                         this.$render("i-vstack", { class: "step-3", width: 500, maxWidth: "100%", verticalAlignment: "center", gap: 20, padding: { left: 30, right: 50 } },
                                             this.$render("i-hstack", { gap: 10, verticalAlignment: "center", horizontalAlignment: "space-between", wrap: "wrap" },
@@ -1820,7 +1812,6 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                                     this.$render("i-button", { id: "btnWallet", caption: "Connect Wallet", class: "btn-os", width: 300, maxWidth: "100%", visible: false, margin: { top: 40, bottom: 20, left: 'auto', right: 'auto' }, border: { radius: 12 }, padding: { top: 12, bottom: 12 }, onClick: this.connectWallet })))),
                         this.$render("i-panel", { id: "resultElm", visible: false, margin: { top: 75, bottom: 100 } })),
                     this.$render("i-scom-tx-status-modal", { id: "txStatusModal" }),
-                    this.$render("i-scom-commission-fee-setup", { visible: false }),
                     this.$render("i-scom-wallet-modal", { id: "mdWallet", wallets: [] }))));
         }
     };
