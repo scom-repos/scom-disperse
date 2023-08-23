@@ -594,7 +594,7 @@ export default class ScomDisperse extends Module {
     if (token) {
       const img = tokenAssets.tokenPath(token, this.chainId);
       this.tokenInfoElm.appendChild(<i-hstack gap="16px" verticalAlignment="center">
-        <i-image width={40} height={40} minWidth={30} url={img} fallbackUrl={Assets.fullPath('img/tokens/token-placeholder.svg')} />
+        <i-image width={40} height={40} minWidth={30} url={img} fallbackUrl={Assets.fullPath('img/token-placeholder.svg')} />
         <i-label caption={`$${token.symbol}`} font={{ size: '20px', name: 'Montserrat Medium' }} />
         <i-label caption={token.address || token.symbol} font={{ size: '16px', name: 'Montserrat Medium' }} class="break-word" />
       </i-hstack>);
@@ -920,7 +920,7 @@ export default class ScomDisperse extends Module {
         <i-vstack gap={16} width={750} maxWidth="100%" horizontalAlignment="center">
           <i-label caption="Token" font={{ size: '24px', name: 'Montserrat Medium' }} />
           <i-hstack width="100%" verticalAlignment="center" horizontalAlignment="center" gap={16} padding={{ top: 20, bottom: 20, left: 60, right: 60 }} border={{ radius: 15, style: 'solid', width: 4 }}>
-            <i-image width={40} height={40} minWidth={30} url={img} fallbackUrl={Assets.fullPath('img/tokens/token-placeholder.svg')} />
+            <i-image width={40} height={40} minWidth={30} url={img} fallbackUrl={Assets.fullPath('img/token-placeholder.svg')} />
             <i-label caption={`$${token.symbol}`} font={{ size: '20px', name: 'Montserrat Medium' }} />
             <i-label class="text-overflow" caption={token.address || token.symbol} font={{ size: '16px', name: 'Montserrat Medium' }} />
           </i-hstack>
@@ -1033,7 +1033,7 @@ export default class ScomDisperse extends Module {
                             </i-vstack>
                             <i-label caption="Amount" font={{ size: '16px', name: 'Montserrat Medium' }} />
                           </i-hstack>
-                          <i-vstack width="100%" height={100} class="overflow-auto" padding={{ right: 5 }}>
+                          <i-vstack width="100%" height={100} overflow="auto" padding={{ right: 5 }}>
                             <i-vstack id="addressesElm" width="100%" height="100%" verticalAlignment="start" gap={4} />
                           </i-vstack>
                         </i-vstack>
@@ -1101,7 +1101,6 @@ export default class ScomDisperse extends Module {
             <i-panel id="resultElm" visible={false} margin={{ top: 75, bottom: 100 }} />
           </i-panel>
           <i-scom-tx-status-modal id="txStatusModal" />
-          <i-scom-commission-fee-setup visible={false} />
           <i-scom-wallet-modal id="mdWallet" wallets={[]} />
         </i-panel>
       </i-scom-dapp-container>

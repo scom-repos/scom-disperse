@@ -167,9 +167,6 @@ export const disperseStyle = Styles.style({
         },
       },
     },
-    '.overflow-auto': {
-      overflow: 'auto',
-    },
     '.custom-scroll': {
       $nest: {
         '::-webkit-scrollbar-track': {
@@ -301,12 +298,6 @@ Styles.fontFace({
   fontFamily: "Montserrat",
   src: `url("${Assets.fullPath('fonts/montserrat/Montserrat-Bold.ttf')}") format("truetype")`,
   fontWeight: 'bold',
-  fontStyle: 'normal'
-})
-
-Styles.fontFace({
-  fontFamily: "Montserrat Light",
-  src: `url("${Assets.fullPath('fonts/montserrat/Montserrat-Light.ttf')}") format("truetype")`,
   fontStyle: 'normal'
 })
 
