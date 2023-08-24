@@ -500,31 +500,18 @@ define("@scom/scom-disperse/disperse-utils/index.ts", ["require", "exports", "@i
     };
     exports.onDisperse = onDisperse;
 });
-define("@scom/scom-disperse/assets.ts", ["require", "exports", "@ijstech/components"], function (require, exports, components_3) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    let moduleDir = components_3.application.currentModuleDir;
-    function fullPath(path) {
-        if (path.indexOf('://') > 0)
-            return path;
-        return `${moduleDir}/${path}`;
-    }
-    exports.default = {
-        fullPath
-    };
-});
-define("@scom/scom-disperse/index.css.ts", ["require", "exports", "@ijstech/components", "@scom/scom-disperse/assets.ts"], function (require, exports, components_4, assets_1) {
+define("@scom/scom-disperse/index.css.ts", ["require", "exports", "@ijstech/components"], function (require, exports, components_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.tokenModalStyle = exports.disperseStyle = exports.disperseLayout = void 0;
-    const Theme = components_4.Styles.Theme.ThemeVars;
+    const Theme = components_3.Styles.Theme.ThemeVars;
     const colorVar = {
         primaryButton: 'transparent linear-gradient(270deg, #FF9900 0%, #FC7428 100%) 0% 0% no-repeat padding-box',
         primaryGradient: 'linear-gradient(270deg, #FF9900 0%, #FC7428 100%)',
         darkBg: '#181E3E 0% 0% no-repeat padding-box',
         primaryDisabled: 'transparent linear-gradient(270deg, #7B7B7B 0%, #929292 100%) 0% 0% no-repeat padding-box'
     };
-    exports.disperseLayout = components_4.Styles.style({
+    exports.disperseLayout = components_3.Styles.style({
         background: Theme.background.main,
         marginInline: 'auto',
         $nest: {
@@ -610,7 +597,7 @@ define("@scom/scom-disperse/index.css.ts", ["require", "exports", "@ijstech/comp
             }
         }
     });
-    exports.disperseStyle = components_4.Styles.style({
+    exports.disperseStyle = components_3.Styles.style({
         $nest: {
             'i-hstack.disabled': {
                 opacity: '0.5',
@@ -645,7 +632,6 @@ define("@scom/scom-disperse/index.css.ts", ["require", "exports", "@ijstech/comp
                 $nest: {
                     '*': {
                         fontSize: 18,
-                        fontFamily: 'Montserrat',
                         fontWeight: 'bold',
                     },
                     '&:hover': {
@@ -762,7 +748,7 @@ define("@scom/scom-disperse/index.css.ts", ["require", "exports", "@ijstech/comp
             }
         },
     });
-    exports.tokenModalStyle = components_4.Styles.style({
+    exports.tokenModalStyle = components_3.Styles.style({
         $nest: {
             '.i-modal_header': {
                 display: 'none'
@@ -798,28 +784,6 @@ define("@scom/scom-disperse/index.css.ts", ["require", "exports", "@ijstech/comp
                 }
             }
         }
-    });
-    components_4.Styles.fontFace({
-        fontFamily: "Montserrat",
-        src: `url("${assets_1.default.fullPath('fonts/montserrat/Montserrat-Regular.ttf')}") format("truetype")`,
-        fontWeight: 'nomal',
-        fontStyle: 'normal'
-    });
-    components_4.Styles.fontFace({
-        fontFamily: "Montserrat",
-        src: `url("${assets_1.default.fullPath('fonts/montserrat/Montserrat-Bold.ttf')}") format("truetype")`,
-        fontWeight: 'bold',
-        fontStyle: 'normal'
-    });
-    components_4.Styles.fontFace({
-        fontFamily: "Montserrat Medium",
-        src: `url("${assets_1.default.fullPath('fonts/montserrat/Montserrat-Medium.ttf')}") format("truetype")`,
-        fontStyle: 'normal'
-    });
-    components_4.Styles.fontFace({
-        fontFamily: "Montserrat SemiBold",
-        src: `url("${assets_1.default.fullPath('fonts/montserrat/Montserrat-SemiBold.ttf')}") format("truetype")`,
-        fontStyle: 'normal'
     });
 });
 define("@scom/scom-disperse/data.json.ts", ["require", "exports"], function (require, exports) {
@@ -930,7 +894,20 @@ define("@scom/scom-disperse/formSchema.json.ts", ["require", "exports"], functio
         }
     };
 });
-define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@scom/scom-disperse/global/index.ts", "@scom/scom-disperse/store/index.ts", "@ijstech/eth-wallet", "@scom/scom-disperse/disperse-utils/index.ts", "@scom/scom-disperse/index.css.ts", "@scom/scom-token-list", "@scom/scom-commission-fee-setup", "@scom/scom-disperse/data.json.ts", "@scom/scom-disperse/formSchema.json.ts", "@scom/scom-disperse/assets.ts"], function (require, exports, components_5, index_4, index_5, eth_wallet_5, index_6, index_css_1, scom_token_list_1, scom_commission_fee_setup_1, data_json_1, formSchema_json_1, assets_2) {
+define("@scom/scom-disperse/assets.ts", ["require", "exports", "@ijstech/components"], function (require, exports, components_4) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    let moduleDir = components_4.application.currentModuleDir;
+    function fullPath(path) {
+        if (path.indexOf('://') > 0)
+            return path;
+        return `${moduleDir}/${path}`;
+    }
+    exports.default = {
+        fullPath
+    };
+});
+define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@scom/scom-disperse/global/index.ts", "@scom/scom-disperse/store/index.ts", "@ijstech/eth-wallet", "@scom/scom-disperse/disperse-utils/index.ts", "@scom/scom-disperse/index.css.ts", "@scom/scom-token-list", "@scom/scom-commission-fee-setup", "@scom/scom-disperse/data.json.ts", "@scom/scom-disperse/formSchema.json.ts", "@scom/scom-disperse/assets.ts"], function (require, exports, components_5, index_4, index_5, eth_wallet_5, index_6, index_css_1, scom_token_list_1, scom_commission_fee_setup_1, data_json_1, formSchema_json_1, assets_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     const moduleDir = components_5.application.currentModuleDir;
@@ -1274,8 +1251,8 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                         }
                         this.addressesElm.appendChild(this.$render("i-hstack", { width: "100%", verticalAlignment: "center", gap: 30 },
                             this.$render("i-vstack", { width: 450 },
-                                this.$render("i-label", { caption: item.address, opacity: 0.75, font: { size: '16px', color: valid ? Theme.text.primary : '#F05E61', name: 'Montserrat Medium' } })),
-                            this.$render("i-label", { caption: `${item.amount.toFixed()} ${symbol}`, opacity: 0.75, font: { size: '16px', name: 'Montserrat Medium' }, class: "text-right" })));
+                                this.$render("i-label", { caption: item.address, opacity: 0.75, font: { size: '16px', color: valid ? Theme.text.primary : '#F05E61' } })),
+                            this.$render("i-label", { caption: `${item.amount.toFixed()} ${symbol}`, opacity: 0.75, font: { size: '16px' }, class: "text-right" })));
                     }
                     ;
                     this.totalElm.caption = `${(0, index_4.formatNumber)(this.total)} ${symbol}`;
@@ -1305,12 +1282,12 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                 if (token) {
                     const img = scom_token_list_1.assets.tokenPath(token, this.chainId);
                     this.tokenInfoElm.appendChild(this.$render("i-hstack", { gap: "16px", verticalAlignment: "center" },
-                        this.$render("i-image", { width: 40, height: 40, minWidth: 30, url: img, fallbackUrl: assets_2.default.fullPath('img/token-placeholder.svg') }),
-                        this.$render("i-label", { caption: `$${token.symbol}`, font: { size: '20px', name: 'Montserrat Medium' } }),
-                        this.$render("i-label", { caption: token.address || token.symbol, font: { size: '16px', name: 'Montserrat Medium' }, class: "break-word" })));
+                        this.$render("i-image", { width: 40, height: 40, minWidth: 30, url: img, fallbackUrl: assets_1.default.fullPath('img/token-placeholder.svg') }),
+                        this.$render("i-label", { caption: `$${token.symbol}`, font: { size: '20px' } }),
+                        this.$render("i-label", { caption: token.address || token.symbol, font: { size: '16px' }, class: "break-word" })));
                 }
                 else {
-                    this.tokenInfoElm.appendChild(this.$render("i-label", { caption: "Please Select Token", font: { size: '16px', name: 'Montserrat Medium' }, opacity: 0.75 }));
+                    this.tokenInfoElm.appendChild(this.$render("i-label", { caption: "Please Select Token", font: { size: '16px' }, opacity: 0.75 }));
                 }
                 this.setThirdStatus(!!token);
             };
@@ -1325,7 +1302,7 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
             };
             this.onDownloadReport = (data) => {
                 const doc = new window.jsPDF();
-                const logo = assets_2.default.fullPath('./img/sc-header.png');
+                const logo = assets_1.default.fullPath('./img/sc-header.png');
                 const totalAmount = this.resultAddresses.reduce((pv, cv) => pv.plus(cv.amount), new eth_wallet_5.BigNumber('0'));
                 const rows = this.resultAddresses.map(item => [item.address, (0, index_4.formatNumber)(item.amount)]);
                 rows.push(['Total', (0, index_4.formatNumber)(totalAmount)]);
@@ -1605,17 +1582,17 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                 const chainId = eth_wallet_5.Wallet.getClientInstance().chainId;
                 this.resultElm.clearInnerHTML();
                 this.resultElm.appendChild(this.$render("i-vstack", { gap: 50, horizontalAlignment: "center" },
-                    this.$render("i-label", { caption: "\uD83C\uDF89 Disperse Successful! \uD83C\uDF89", class: "text-center", font: { size: '48px', name: 'Montserrat', bold: true } }),
+                    this.$render("i-label", { caption: "\uD83C\uDF89 Disperse Successful! \uD83C\uDF89", class: "text-center", font: { size: '48px', bold: true } }),
                     this.$render("i-vstack", { gap: 16, width: 750, maxWidth: "100%", horizontalAlignment: "center" },
-                        this.$render("i-label", { caption: "Token", font: { size: '24px', name: 'Montserrat Medium' } }),
+                        this.$render("i-label", { caption: "Token", font: { size: '24px' } }),
                         this.$render("i-hstack", { width: "100%", verticalAlignment: "center", horizontalAlignment: "center", gap: 16, padding: { top: 20, bottom: 20, left: 60, right: 60 }, border: { radius: 15, style: 'solid', width: 4 } },
-                            this.$render("i-image", { width: 40, height: 40, minWidth: 30, url: img, fallbackUrl: assets_2.default.fullPath('img/token-placeholder.svg') }),
-                            this.$render("i-label", { caption: `$${token.symbol}`, font: { size: '20px', name: 'Montserrat Medium' } }),
-                            this.$render("i-label", { class: "text-overflow", caption: token.address || token.symbol, font: { size: '16px', name: 'Montserrat Medium' } }))),
+                            this.$render("i-image", { width: 40, height: 40, minWidth: 30, url: img, fallbackUrl: assets_1.default.fullPath('img/token-placeholder.svg') }),
+                            this.$render("i-label", { caption: `$${token.symbol}`, font: { size: '20px' } }),
+                            this.$render("i-label", { class: "text-overflow", caption: token.address || token.symbol, font: { size: '16px' } }))),
                     this.$render("i-vstack", { gap: 8, width: 750, maxWidth: "100%", horizontalAlignment: "center" },
-                        this.$render("i-label", { caption: "Explorer", font: { size: '24px', name: 'Montserrat Medium' } }),
+                        this.$render("i-label", { caption: "Explorer", font: { size: '24px' } }),
                         this.$render("i-hstack", { class: "pointer", wrap: "nowrap", width: "100%", minHeight: 88, verticalAlignment: "center", horizontalAlignment: "center", gap: 16, padding: { top: 20, bottom: 20, left: 20, right: 20 }, border: { radius: 15, style: 'solid', width: 4 }, onClick: () => (0, index_4.viewOnExplorerByTxHash)(chainId, data.receipt) },
-                            this.$render("i-label", { class: "text-overflow", caption: data.receipt, font: { size: '16px', name: 'Montserrat Medium' } }),
+                            this.$render("i-label", { class: "text-overflow", caption: data.receipt, font: { size: '16px' } }),
                             this.$render("i-icon", { class: "link-icon", name: "external-link-alt", width: 20, height: 20, fill: Theme.text.primary }))),
                     this.$render("i-hstack", { gap: 30, maxWidth: "100%", horizontalAlignment: "center", verticalAlignment: "center", wrap: "wrap" },
                         this.$render("i-button", { caption: "DOWNLOAD CSV", background: { color: "#34343A" }, width: 270, border: { radius: 12 }, padding: { top: 12, bottom: 12 }, onClick: () => this.onDownloadFile(true) }),
@@ -1759,20 +1736,20 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                         this.$render("i-vstack", { id: "containerElm", position: "relative", minHeight: 600 },
                             this.$render("i-hstack", { id: "firstStepElm", class: "step-elm", minHeight: 200, margin: { top: 40 }, padding: { left: 50, right: 50, top: 10, bottom: 10 }, border: { radius: 30 }, verticalAlignment: "center", horizontalAlignment: "space-between", background: { color: Theme.colors.secondary.main } },
                                 this.$render("i-hstack", { class: "step-1", verticalAlignment: "center", wrap: "wrap", gap: 15, margin: { right: 100 } },
-                                    this.$render("i-label", { caption: "STEP 1", font: { size: '20px', name: 'Montserrat SemiBold', color: Theme.colors.secondary.contrastText } }),
-                                    this.$render("i-label", { caption: "Enter Token to Disperse", font: { size: '20px', name: 'Montserrat SemiBold' } })),
+                                    this.$render("i-label", { caption: "STEP 1", font: { size: '20px', bold: true, color: Theme.colors.secondary.contrastText } }),
+                                    this.$render("i-label", { caption: "Enter Token to Disperse", font: { size: '20px', bold: true } })),
                                 this.$render("i-hstack", { class: "step-1" },
                                     this.$render("i-hstack", { id: "tokenElm", width: "100%", wrap: "nowrap", verticalAlignment: "center", horizontalAlignment: "space-between", padding: { top: 20, bottom: 20, left: 60, right: 60 }, border: { radius: 15, style: 'solid', width: 4 } },
                                         this.$render("i-hstack", { id: "tokenInfoElm" },
-                                            this.$render("i-label", { caption: "Please Select Token", opacity: 0.75, font: { size: '16px', name: 'Montserrat Medium' } })),
+                                            this.$render("i-label", { caption: "Please Select Token", opacity: 0.75, font: { size: '16px' } })),
                                         this.$render("i-icon", { name: "caret-down", fill: Theme.text.primary, width: 24, height: 24 })),
                                     this.$render("i-scom-token-modal", { id: "mdToken", isCommonShown: false, class: index_css_1.tokenModalStyle }))),
                             this.$render("i-vstack", { id: "secondStepElm", class: "step-elm", minHeight: 300, margin: { top: 40 }, padding: { left: 50, right: 50, top: 10, bottom: 10 }, border: { radius: 30 }, verticalAlignment: "center", background: { color: Theme.colors.secondary.main } },
                                 this.$render("i-hstack", { width: "100%", verticalAlignment: "center", horizontalAlignment: "space-between", wrap: "wrap", gap: 15 },
                                     this.$render("i-hstack", { verticalAlignment: "center", wrap: "wrap", gap: 15, margin: { right: 15 } },
-                                        this.$render("i-label", { caption: "STEP 2", font: { size: '20px', name: 'Montserrat SemiBold', color: Theme.colors.secondary.contrastText } }),
-                                        this.$render("i-label", { caption: "Enter Recipients and Amounts", font: { size: '20px', name: 'Montserrat SemiBold' }, margin: { right: 60 } }),
-                                        this.$render("i-label", { caption: "Enter one address and amount on each line. Supports any format.", font: { size: '13px', name: 'Montserrat Medium' }, maxWidth: "280px", class: "break-word" })),
+                                        this.$render("i-label", { caption: "STEP 2", font: { size: '20px', bold: true, color: Theme.colors.secondary.contrastText } }),
+                                        this.$render("i-label", { caption: "Enter Recipients and Amounts", font: { size: '20px', bold: true }, margin: { right: 60 } }),
+                                        this.$render("i-label", { caption: "Enter one address and amount on each line. Supports any format.", font: { size: '13px' }, maxWidth: "280px", class: "break-word" })),
                                     this.$render("i-hstack", { verticalAlignment: "center", wrap: "wrap", class: "ml-auto", horizontalAlignment: "end", gap: 15 },
                                         this.$render("i-button", { id: "btnDownload", caption: "Download CSV", enabled: false, class: "csv-button", onClick: () => this.onDownloadFile() }),
                                         this.$render("i-button", { id: "btnImport", caption: "Import CSV", enabled: false, class: "csv-button", onClick: this.onImportFile }),
@@ -1783,29 +1760,29 @@ define("@scom/scom-disperse", ["require", "exports", "@ijstech/components", "@sc
                                     this.$render("i-hstack", { verticalAlignment: "center", horizontalAlignment: "space-between", wrap: "wrap", background: { color: Theme.input.background }, border: { radius: 30 } },
                                         this.$render("i-vstack", { class: "step-3", background: { color: Theme.colors.secondary.main }, width: 800, padding: { top: 50, bottom: 21, left: 50, right: 50 }, gap: 15, border: { radius: 30 } },
                                             this.$render("i-hstack", { width: "100%", verticalAlignment: "center", gap: 15 },
-                                                this.$render("i-label", { caption: "STEP 3", font: { size: '20px', name: 'Montserrat SemiBold', color: Theme.colors.secondary.contrastText } }),
-                                                this.$render("i-label", { caption: "Confirm Disperse", font: { size: '20px', name: 'Montserrat SemiBold' } })),
+                                                this.$render("i-label", { caption: "STEP 3", font: { size: '20px', bold: true, color: Theme.colors.secondary.contrastText } }),
+                                                this.$render("i-label", { caption: "Confirm Disperse", font: { size: '20px', bold: true } })),
                                             this.$render("i-vstack", { width: "100%", verticalAlignment: "center", gap: 10, class: "custom-scroll" },
                                                 this.$render("i-label", { id: "invalidElm", font: { size: '18px', color: '#F05E61' } }),
                                                 this.$render("i-vstack", { gap: 10, class: "address-elm" },
                                                     this.$render("i-hstack", { width: "100%", verticalAlignment: "center", gap: 30 },
                                                         this.$render("i-vstack", { width: 450 },
-                                                            this.$render("i-label", { caption: "Addresses", font: { size: '16px', name: 'Montserrat Medium' } })),
-                                                        this.$render("i-label", { caption: "Amount", font: { size: '16px', name: 'Montserrat Medium' } })),
+                                                            this.$render("i-label", { caption: "Addresses", font: { size: '16px' } })),
+                                                        this.$render("i-label", { caption: "Amount", font: { size: '16px' } })),
                                                     this.$render("i-vstack", { width: "100%", height: 100, overflow: "auto", padding: { right: 5 } },
                                                         this.$render("i-vstack", { id: "addressesElm", width: "100%", height: "100%", verticalAlignment: "start", gap: 4 }))))),
                                         this.$render("i-vstack", { class: "step-3", width: 500, maxWidth: "100%", verticalAlignment: "center", gap: 20, padding: { left: 30, right: 50 } },
                                             this.$render("i-hstack", { gap: 10, verticalAlignment: "center", horizontalAlignment: "space-between", wrap: "wrap" },
                                                 this.$render("i-hstack", { gap: 4, verticalAlignment: "center" },
-                                                    this.$render("i-label", { caption: "Total", font: { size: '20px', name: 'Montserrat SemiBold', color: Theme.input.fontColor } }),
+                                                    this.$render("i-label", { caption: "Total", font: { size: '20px', bold: true, color: Theme.input.fontColor } }),
                                                     this.$render("i-icon", { id: "iconTotal", name: "question-circle", fill: Theme.input.fontColor, width: 20, height: 20, visible: false })),
-                                                this.$render("i-label", { id: "totalElm", class: "text-right ml-auto", font: { size: '20px', name: 'Montserrat SemiBold', color: Theme.input.fontColor }, opacity: 0.75 })),
+                                                this.$render("i-label", { id: "totalElm", class: "text-right ml-auto", font: { size: '20px', bold: true, color: Theme.input.fontColor }, opacity: 0.75 })),
                                             this.$render("i-hstack", { gap: 10, verticalAlignment: "center", horizontalAlignment: "space-between", wrap: "wrap" },
-                                                this.$render("i-label", { caption: "Your Balance", font: { size: '20px', name: 'Montserrat SemiBold', color: Theme.input.fontColor } }),
-                                                this.$render("i-label", { id: "balanceElm", class: "text-right ml-auto", font: { size: '20px', name: 'Montserrat SemiBold', color: Theme.input.fontColor }, opacity: 0.75 })),
+                                                this.$render("i-label", { caption: "Your Balance", font: { size: '20px', bold: true, color: Theme.input.fontColor } }),
+                                                this.$render("i-label", { id: "balanceElm", class: "text-right ml-auto", font: { size: '20px', bold: true, color: Theme.input.fontColor }, opacity: 0.75 })),
                                             this.$render("i-hstack", { gap: 10, verticalAlignment: "center", horizontalAlignment: "space-between", wrap: "wrap" },
-                                                this.$render("i-label", { caption: "Remaining", font: { size: '20px', name: 'Montserrat SemiBold', color: Theme.input.fontColor } }),
-                                                this.$render("i-label", { id: "remainingElm", class: "text-right ml-auto", font: { size: '20px', name: 'Montserrat SemiBold', color: Theme.input.fontColor }, opacity: 0.75 })))),
+                                                this.$render("i-label", { caption: "Remaining", font: { size: '20px', bold: true, color: Theme.input.fontColor } }),
+                                                this.$render("i-label", { id: "remainingElm", class: "text-right ml-auto", font: { size: '20px', bold: true, color: Theme.input.fontColor }, opacity: 0.75 })))),
                                     this.$render("i-hstack", { id: "hStackGroupButton", verticalAlignment: "center", horizontalAlignment: "center", margin: { top: 40, bottom: 20 }, gap: 30 },
                                         this.$render("i-button", { id: "btnApprove", caption: "Approve", class: "btn-os", width: 300, maxWidth: "100%", enabled: false, rightIcon: { spin: true, visible: false }, border: { radius: 12 }, padding: { top: 12, bottom: 12 }, onClick: this.handleApprove }),
                                         this.$render("i-button", { id: "btnDisperse", caption: "Disperse", class: "btn-os", width: 300, maxWidth: "100%", enabled: false, rightIcon: { spin: true, visible: false }, border: { radius: 12 }, padding: { top: 12, bottom: 12 }, onClick: this.handleDisperse })),

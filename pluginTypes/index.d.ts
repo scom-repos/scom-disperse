@@ -146,14 +146,6 @@ declare module "@scom/scom-disperse/disperse-utils/index.ts" {
     }>;
     export { onDisperse };
 }
-/// <amd-module name="@scom/scom-disperse/assets.ts" />
-declare module "@scom/scom-disperse/assets.ts" {
-    function fullPath(path: string): string;
-    const _default: {
-        fullPath: typeof fullPath;
-    };
-    export default _default;
-}
 /// <amd-module name="@scom/scom-disperse/index.css.ts" />
 declare module "@scom/scom-disperse/index.css.ts" {
     export const disperseLayout: string;
@@ -162,7 +154,7 @@ declare module "@scom/scom-disperse/index.css.ts" {
 }
 /// <amd-module name="@scom/scom-disperse/data.json.ts" />
 declare module "@scom/scom-disperse/data.json.ts" {
-    const _default_1: {
+    const _default: {
         infuraId: string;
         networks: {
             chainId: number;
@@ -185,11 +177,11 @@ declare module "@scom/scom-disperse/data.json.ts" {
             }[];
         };
     };
-    export default _default_1;
+    export default _default;
 }
 /// <amd-module name="@scom/scom-disperse/formSchema.json.ts" />
 declare module "@scom/scom-disperse/formSchema.json.ts" {
-    const _default_2: {
+    const _default_1: {
         general: {
             dataSchema: {
                 type: string;
@@ -265,6 +257,14 @@ declare module "@scom/scom-disperse/formSchema.json.ts" {
                 };
             };
         };
+    };
+    export default _default_1;
+}
+/// <amd-module name="@scom/scom-disperse/assets.ts" />
+declare module "@scom/scom-disperse/assets.ts" {
+    function fullPath(path: string): string;
+    const _default_2: {
+        fullPath: typeof fullPath;
     };
     export default _default_2;
 }
