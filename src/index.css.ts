@@ -1,5 +1,4 @@
 import { Styles } from '@ijstech/components';
-import Assets from './assets';
 const Theme = Styles.Theme.ThemeVars;
 
 const colorVar = {
@@ -131,7 +130,6 @@ export const disperseStyle = Styles.style({
       $nest: {
         '*': {
           fontSize: 18,
-          fontFamily: 'Montserrat',
           fontWeight: 'bold',
         },
         '&:hover': {
@@ -285,30 +283,4 @@ export const tokenModalStyle = Styles.style({
       }
     }
   }
-})
-
-Styles.fontFace({
-  fontFamily: "Montserrat",
-  src: `url("${Assets.fullPath('fonts/montserrat/Montserrat-Regular.ttf')}") format("truetype")`,
-  fontWeight: 'nomal',
-  fontStyle: 'normal'
-})
-
-Styles.fontFace({
-  fontFamily: "Montserrat",
-  src: `url("${Assets.fullPath('fonts/montserrat/Montserrat-Bold.ttf')}") format("truetype")`,
-  fontWeight: 'bold',
-  fontStyle: 'normal'
-})
-
-Styles.fontFace({
-  fontFamily: "Montserrat Medium",
-  src: `url("${Assets.fullPath('fonts/montserrat/Montserrat-Medium.ttf')}") format("truetype")`,
-  fontStyle: 'normal'
-})
-
-Styles.fontFace({
-  fontFamily: "Montserrat SemiBold",
-  src: `url("${Assets.fullPath('fonts/montserrat/Montserrat-SemiBold.ttf')}") format("truetype")`,
-  fontStyle: 'normal'
 })
