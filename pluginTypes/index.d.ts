@@ -10,8 +10,7 @@ declare module "@scom/scom-disperse/global/utils/helper.ts" {
     };
     export const DefaultDateFormat = "YYYY/MM/DD HH:mm:ss";
     export const formatUTCDate: (date: any, formatType?: string) => string;
-    export const formatNumber: (value: any, decimals?: number) => string;
-    export const formatNumberWithSeparators: (value: number, precision?: number) => string;
+    export const formatNumber: (value: number | string | BigNumber, decimalFigures?: number) => string;
     export const viewOnExplorerByTxHash: (chainId: number, txHash: string) => void;
     export interface DisperseData {
         address: string;

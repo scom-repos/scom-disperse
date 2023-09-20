@@ -21,7 +21,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 define("@scom/scom-disperse/global/utils/helper.ts", ["require", "exports", "@ijstech/components", "@ijstech/eth-wallet"], function (require, exports, components_1, eth_wallet_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.downloadCSVFile = exports.toDisperseData = exports.disperseDataToString = exports.viewOnExplorerByTxHash = exports.formatNumberWithSeparators = exports.formatNumber = exports.formatUTCDate = exports.DefaultDateFormat = exports.explorerTxUrlsByChainId = void 0;
+    exports.downloadCSVFile = exports.toDisperseData = exports.disperseDataToString = exports.viewOnExplorerByTxHash = exports.formatNumber = exports.formatUTCDate = exports.DefaultDateFormat = exports.explorerTxUrlsByChainId = void 0;
     exports.explorerTxUrlsByChainId = {
         1: 'https://etherscan.io/tx/',
         4: 'https://rinkeby.etherscan.io/tx/',
@@ -43,42 +43,14 @@ define("@scom/scom-disperse/global/utils/helper.ts", ["require", "exports", "@ij
         return `${formatted} (UTC+${(0, components_1.moment)().utcOffset() / 60})`;
     };
     exports.formatUTCDate = formatUTCDate;
-    const formatNumber = (value, decimals) => {
-        let val = value;
+    const formatNumber = (value, decimalFigures) => {
+        if (typeof value === 'object') {
+            value = value.toString();
+        }
         const minValue = '0.0000001';
-        if (typeof value === 'string') {
-            val = new eth_wallet_1.BigNumber(value).toNumber();
-        }
-        else if (typeof value === 'object') {
-            val = value.toNumber();
-        }
-        if (val != 0 && new eth_wallet_1.BigNumber(val).lt(minValue)) {
-            return `<${minValue}`;
-        }
-        return (0, exports.formatNumberWithSeparators)(val, decimals || 4);
+        return components_1.FormatUtils.formatNumber(value, { decimalFigures: decimalFigures || 4, minValue });
     };
     exports.formatNumber = formatNumber;
-    const formatNumberWithSeparators = (value, precision) => {
-        if (!value)
-            value = 0;
-        if (precision) {
-            let outputStr = '';
-            if (value >= 1) {
-                const unit = Math.pow(10, precision);
-                const rounded = Math.floor(value * unit) / unit;
-                outputStr = rounded.toLocaleString('en-US', { maximumFractionDigits: precision });
-            }
-            else {
-                outputStr = value.toLocaleString('en-US', { maximumSignificantDigits: precision });
-            }
-            if (outputStr.length > 18) {
-                outputStr = outputStr.substring(0, 18) + '...';
-            }
-            return outputStr;
-        }
-        return value.toLocaleString('en-US');
-    };
-    exports.formatNumberWithSeparators = formatNumberWithSeparators;
     const viewOnExplorerByTxHash = (chainId, txHash) => {
         if (exports.explorerTxUrlsByChainId[chainId]) {
             let url = `${exports.explorerTxUrlsByChainId[chainId]}${txHash}`;
